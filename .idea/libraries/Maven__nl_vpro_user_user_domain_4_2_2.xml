@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: nl.vpro.user:user-domain:4.2.2">
+    <CLASSES>
+      <root url="jar://$M2_REPO$/nl/vpro/user/user-domain/4.2.2/user-domain-4.2.2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$M2_REPO$/nl/vpro/user/user-domain/4.2.2/user-domain-4.2.2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$M2_REPO$/nl/vpro/user/user-domain/4.2.2/user-domain-4.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
