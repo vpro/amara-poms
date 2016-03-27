@@ -6,12 +6,23 @@
   <artifactId>amara-poms-importer</artifactId>
   <version>1.0-SNAPSHOT</version>
   <packaging>jar</packaging>
+  
+  <properties>
+    <poms.version>4.2.6</poms.version>
+  </properties>
 
   <dependencies>
     <dependency>
       <groupId>nl.vpro.api-client</groupId>
       <artifactId>media-backend-rs-client</artifactId>
-      <version>4.2.6</version>
+      <version>${poms.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>nl.vpro.api-client</groupId>
+      <artifactId>media-backend-rs-client</artifactId>
+      <version>${poms.version}</version>
+      <scope>test</scope>
+      <classifier>tests</classifier>
     </dependency>
   </dependencies>
 
