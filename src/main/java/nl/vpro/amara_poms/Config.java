@@ -55,7 +55,7 @@ public class Config {
         String returnValue = properties.getProperty(propertyName);
 
         if (returnValue == null) {
-            logger.error("poms.username not set in app.confg");
+            logger.error(propertyName + " not set in app.confg");
             System.exit((ERROR_CONFIG_ERROR));
         }
 
@@ -73,7 +73,7 @@ public class Config {
         String returnValue[] = {};
 
         if (propertyValue == null) {
-            logger.error("poms.username not set in app.confg");
+            logger.error(propertyName + " not set in app.confg");
             System.exit((ERROR_CONFIG_ERROR));
         } else {
             returnValue = propertyValue.split(",");
