@@ -2,11 +2,11 @@ package nl.vpro.amara_poms.amara;
 
 import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
-import org.junit.Test;
+import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
+import org.apache.commons.lang.StringUtils;
+import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by joost on 06/04/16.
@@ -35,5 +35,23 @@ public class AmaraSubtitlesTest extends TestCase {
         AmaraSubtitles newAmaraSubtitles = AmaraSubtitles.post(amaraSubtitles, "gDq7bAA5XFCR", "nl");
 
         assertNotNull(newAmaraSubtitles);
+    }
+
+    public void testGetVTT() {
+        String amaraSubtitles = AmaraSubtitles.getAsVTT("G3CnVJdMw21Y", "nl");
+
+        assertNotNull(amaraSubtitles);
+
+        logger.info(amaraSubtitles);
+    }
+
+    public  void testGet() {
+        AmaraSubtitles amaraSubtitles = AmaraSubtitles.get("G3CnVJdMw21Y", "nl");
+
+        assertNotNull(amaraSubtitles);
+
+        logger.info(StringUtils.abbreviate(amaraSubtitles.subtitles, 20));
+        logger.info((amaraSubtitles.version_no));
+
     }
 }

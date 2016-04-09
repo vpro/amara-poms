@@ -64,4 +64,38 @@ public class Utils {
         return (builder.build().encode().toUri());
     }
 
+    /**
+     * Uri for url
+     * @return
+     */
+    public  static URI getUriForUri(String url) {
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+
+        return (builder.build().encode().toUri());
+    }
+
+    /**
+     * Uri for url with team
+     * @return
+     */
+    public  static URI getUriForUriWithTeam(String url) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("team", Config.getRequiredConfig("amara.api.team"));
+
+        return (builder.build().encode().toUri());
+    }
+
+    /**
+     * Uri for path
+     * @return
+     */
+    public  static URI getUriForPath(String path) {
+        String url = Config.getRequiredConfig("amara.api.url") + path;
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+
+        return (builder.build().encode().toUri());
+    }
+
 }

@@ -1,7 +1,13 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara_poms.amara.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.Utils;
+
+import org.joda.time.DateTime;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -20,10 +26,36 @@ import static com.sun.xml.bind.v2.util.XmlFactory.logger;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmaraTask {
 
-    private String video_id;
-    private String language;
-    private String type;
-    private String assignee;
+
+    final static Logger logger = LoggerFactory.getLogger(AmaraTask.class);
+
+    public final static String TYPE_TRANSLATE = "Translate";
+
+    public final static String TASK_APPROVED = "Approve";
+
+    public String video_id;
+    public String language;
+    public String type;
+    public String assignee;
+
+    public int priority;
+    public DateTime completed;
+    public String approved;
+    public String resource_uri;
+
+    @Override
+    public String toString() {
+        return "AmaraTask{" +
+                "video_id='" + video_id + '\'' +
+                ", language='" + language + '\'' +
+                ", type='" + type + '\'' +
+                ", assignee='" + assignee + '\'' +
+                ", priority=" + priority +
+                ", completed=" + completed +
+                ", approved='" + approved + '\'' +
+                ", resource_uri='" + resource_uri + '\'' +
+                '}';
+    }
 
     public AmaraTask() {}
 
@@ -31,34 +63,6 @@ public class AmaraTask {
         this.video_id = video_id;
         this.language = language;
         this.type = type;
-        this.assignee = assignee;
-    }
-
-    public String getVideo_id() {
-        return video_id;
-    }
-    public void setVideo_id(String video_id) {
-        this.video_id = video_id;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-    public void setLanguage(String language) {
-        this.language = language;
-    }
-
-    public String getType() {
-        return type;
-    }
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getAssignee() {
-        return assignee;
-    }
-    public void setAssignee(String assignee) {
         this.assignee = assignee;
     }
 

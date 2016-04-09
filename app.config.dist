@@ -20,8 +20,10 @@ download.url.base=http://download.omroep.nl/
 # subtitle config
 subtitle.url=http://e.omroep.nl/tt888/
 subtitle.url.backup=http://files.vpro.nl/netinnederland/subtitles/nl/
-subtitle.filename=subtitles.vtt
+subtitle.filenameTasks=subtitles.vtt
 subtitle.notfoundmsg=No subtitle found
+subtitle.basepath=/home/omroep/vpro_admin/files.vpro.nl/pages/netinnederland/subtitles
+subtitle.target.filename=subtitles.vtt
 
 # amara config
 amara.api.username=netinnl

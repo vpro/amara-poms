@@ -25,6 +25,7 @@ public class Config {
     public static final int ERROR_INPUT_FILE_NOT_FOUND = 3;
     public static final int ERROR_COPY_INPUTFILE = 4;
     public static final int ERROR_CREATING_OUTPUTDIR = 5;
+    public static final int ERROR_LOCKFILE_EXISTS = 6;
 
     public static final int ERROR_POM_SUBTITLES_MALFORMED_URL = 6;
     public static final int ERROR_POM_SUBTITLES_URL_OPEN = 7;
@@ -61,6 +62,59 @@ public class Config {
 
         return  returnValue;
     }
+
+    /**
+     * Get required config and exit if not found
+     *
+     * @param propertyName
+     * @return
+     */
+    public static int getRequiredConfigAsInt(String propertyName) {
+        String propertyValue = properties.getProperty(propertyName);
+
+        if (propertyValue == null) {
+            logger.error(propertyName + " not set in app.confg");
+            System.exit(ERROR_CONFIG_ERROR);
+        }
+
+        int returnValue = 0;
+        try {
+            returnValue = Integer.parseInt(propertyValue);
+        } catch (NumberFormatException e)
+        {
+            logger.error(propertyName + "-> not integer");
+            System.exit(ERROR_CONFIG_ERROR);
+        }
+
+        return  returnValue;
+    }
+
+    /**
+     * Get required config and exit if not found
+     *
+     * @param propertyName
+     * @return
+     */
+    public static long getRequiredConfigAsLong(String propertyName) {
+        String propertyValue = properties.getProperty(propertyName);
+
+        if (propertyValue == null) {
+            logger.error(propertyName + " not set in app.confg");
+            System.exit(ERROR_CONFIG_ERROR);
+        }
+
+        long returnValue = 0;
+        try {
+            returnValue = Long.parseLong(propertyValue);
+        } catch (NumberFormatException e)
+        {
+            logger.error(propertyName + "-> not long");
+            System.exit(ERROR_CONFIG_ERROR);
+        }
+
+        return  returnValue;
+    }
+
 
     /**
      * Get required config as array and exit if not found

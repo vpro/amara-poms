@@ -1,10 +1,4 @@
-package nl.vpro.amara_poms.database;
-
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+package nl.vpro.amara_poms.database.activity;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -12,23 +6,29 @@ import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 /**
- * Created by joost on 07/04/16.
+ * Created by joost on 09/04/16.
  */
-public class Reader {
+public class ActivityReader {
 
-    final static Logger logger = LoggerFactory.getLogger(Reader.class);
 
-    public static ArrayList<Task> readCsvFile(String fileName) {
+    final static Logger logger = LoggerFactory.getLogger(ActivityReader.class);
 
-        ArrayList<Task> tasks = new ArrayList<Task>();
+    public static ArrayList<Activity> readCsvFile(String fileName) {
+
+        ArrayList<Activity> activities = new ArrayList<Activity>();
 
         FileReader fileReader = null;
 
         CSVParser csvFileParser = null;
 
         // Create the CSVFormat object with the header mapping
-        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(Task.getFileHeaderForReading());
+        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(Activity.getFileHeaderForReading());
 
         try {
 
@@ -45,7 +45,7 @@ public class Reader {
 
             // loop
             while (iterator.hasNext()) {
-                tasks.add(Task.Factory(iterator.next()));
+                activities.add(Activity.Factory(iterator.next()));
             }
 
         }
@@ -62,7 +62,8 @@ public class Reader {
             }
         }
 
-        return tasks;
+        return activities;
 
     }
+
 }

@@ -1,25 +1,23 @@
-package nl.vpro.amara_poms.database;
+package nl.vpro.amara_poms.database.activity;
+
+import nl.vpro.amara_poms.database.activity.Activity;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
-import org.apache.commons.collections.iterators.ArrayListIterator;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVPrinter;
-
 
 /**
-* Created by joost on 07/04/16.
-*/
-public class Writer {
+ * Created by joost on 09/04/16.
+ */
+public class ActivityWriter {
 
     //Delimiter used in CSV file
     private static final String NEW_LINE_SEPARATOR = "\n";
 
 
-    public static void writeCsvFile(String fileName, ArrayList<Task> tasks) {
+    public static void writeCsvFile(String fileName, ArrayList<Activity> activities) {
 
         FileWriter fileWriter = null;
 
@@ -37,11 +35,11 @@ public class Writer {
             csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 
             // Create CSV file header
-            csvFilePrinter.printRecord(Task.getFileHeader());
+            csvFilePrinter.printRecord(Activity.getFileHeader());
 
-            // Write a new task object list to the CSV file
-            for (Task task : tasks) {
-                csvFilePrinter.printRecord(task.get());
+            // Write a new activity object list to the CSV file
+            for (Activity activity : activities) {
+                csvFilePrinter.printRecord(activity.get());
             }
 
             System.out.println("CSV file was created successfully !!!");
@@ -60,5 +58,5 @@ public class Writer {
             }
         }
     }
-}
 
+}

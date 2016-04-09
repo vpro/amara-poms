@@ -1,20 +1,19 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara_poms.amara.video;
 
+import nl.vpro.amara_poms.amara.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
-import org.springframework.web.util.UriComponentsBuilder;
-
 /**
  * Created by joost on 05/04/16.
  */
-public class AmaraCollection {
+public class AmaraVideoCollection {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraCollection.class);
+    final static Logger logger = LoggerFactory.getLogger(AmaraVideoCollection.class);
 
-    static void getAllVideos() {
+    public static void getAllVideos() {
 
         HttpEntity<?> request = new HttpEntity<>(Utils.getGetHeaders());
 

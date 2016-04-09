@@ -1,18 +1,14 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara_poms.amara.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.vpro.amara_poms.Config;
 
+import nl.vpro.amara_poms.amara.language.AmaraLanguage;
+import nl.vpro.amara_poms.amara.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.ArrayList;
 
 /**
  * Created by joost on 05/04/16.

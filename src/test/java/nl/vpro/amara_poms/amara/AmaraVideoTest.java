@@ -1,13 +1,11 @@
 package nl.vpro.amara_poms.amara;
 
-import com.sun.tools.classfile.ConstantPool;
 import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
-import org.junit.Test;
+import nl.vpro.amara_poms.amara.video.AmaraVideo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.*;
 import static org.junit.Assert.assertNotNull;
 
 /**

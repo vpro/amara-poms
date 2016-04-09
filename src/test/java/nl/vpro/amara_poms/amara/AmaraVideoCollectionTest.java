@@ -2,18 +2,16 @@ package nl.vpro.amara_poms.amara;
 
 import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
-import org.junit.Test;
+import nl.vpro.amara_poms.amara.video.AmaraVideoCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.Assert.*;
 
 /**
  * Created by joost on 05/04/16.
  */
-public class AmaraCollectionTest extends TestCase{
+public class AmaraVideoCollectionTest extends TestCase{
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraCollectionTest.class);
+    final static Logger logger = LoggerFactory.getLogger(AmaraVideoCollectionTest.class);
 
     protected void setUp() {
 
@@ -23,6 +21,6 @@ public class AmaraCollectionTest extends TestCase{
     public void testGetAllVideos(){
 
 
-        AmaraCollection.getAllVideos();
+        AmaraVideoCollection.getAllVideos();
     }
 }

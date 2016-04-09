@@ -1,7 +1,6 @@
-package nl.vpro.amara_poms.database;
+package nl.vpro.amara_poms.database.task;
 
 import org.apache.commons.csv.CSVRecord;
-import org.apache.james.mime4j.field.datetime.DateTime;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -11,11 +10,20 @@ import java.util.ArrayList;
  */
 public class Task {
 
-    static final String STATUS_INITTIAL = "0";
+    public static final String STATUS_UPLOADED_VIDEO_TO_AMARA = "0";
+    public static final String STATUS_UPLOADED_SUBTITLE_TO_AMARA = "1";
+    public static final String STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION = "2";
+    public static final String STATUS_NEW_AMARA_SUBTITLES_FOUND = "3";
+    public static final String STATUS_UPLOADED_TO_POMS = "4";
+    public static final String STATUS_POMS_UPDATED = "5";
+
 
     private String videoId;
     private String language;
     private String status;
+    private String pomsSourceMid;
+    private String pomsTargetId;
+    private String subtitlesVersionNo;
     private ZonedDateTime createDateTime;
     private ZonedDateTime updateDateTime;
 
@@ -34,7 +42,8 @@ public class Task {
         task.videoId = csvRecord.get("videoId");
         task.language = csvRecord.get("language");
         task.status = csvRecord.get("status");
-        String dt = csvRecord.get("createDateTime");
+        task.pomsSourceMid = csvRecord.get("pomsSourceMid");
+        task.pomsTargetId = csvRecord.get("pomsTargetMid");
         task.createDateTime = ZonedDateTime.parse(csvRecord.get("createDateTime"));
         task.updateDateTime = ZonedDateTime.parse(csvRecord.get("updateDateTime"));
 
@@ -82,12 +91,38 @@ public class Task {
         this.updateDateTime = updateDateTime;
     }
 
+    public String getPomsSourceMid() {
+        return pomsSourceMid;
+    }
+
+    public void setPomsSourceMid(String pomsSourceMid) {
+        this.pomsSourceMid = pomsSourceMid;
+    }
+
+    public String getPomsTargetId() {
+        return pomsTargetId;
+    }
+
+    public void setPomsTargetId(String pomsTargetId) {
+        this.pomsTargetId = pomsTargetId;
+    }
+
+    public String getSubtitlesVersionNo() {
+        return subtitlesVersionNo;
+    }
+
+    public void setSubtitlesVersionNo(String subtitlesVersionNo) {
+        this.subtitlesVersionNo = subtitlesVersionNo;
+    }
+
     @Override
     public String toString() {
-        return "task{" +
+        return "Task{" +
                 "videoId='" + videoId + '\'' +
                 ", language='" + language + '\'' +
                 ", status='" + status + '\'' +
+                ", pomsSourceMid='" + pomsSourceMid + '\'' +
+                ", pomsTargetId='" + pomsTargetId + '\'' +
                 ", createDateTime=" + createDateTime +
                 ", updateDateTime=" + updateDateTime +
                 '}';
@@ -98,6 +133,8 @@ public class Task {
         list.add(videoId);
         list.add(language);
         list.add(status);
+        list.add(pomsSourceMid);
+        list.add(pomsTargetId);
         list.add(createDateTime);
         list.add(updateDateTime);
 
@@ -105,7 +142,7 @@ public class Task {
     }
 
     // CSV file header
-    private static final Object[] FILE_HEADER = {"videoId","language","status","createDateTime","updateDateTime"};
+    private static final Object[] FILE_HEADER = {"videoId","language","status", "pomsSourceMid", "pomsTargetMid", "createDateTime","updateDateTime"};
 
     // for writing
     public static Object[] getFileHeader() {
@@ -113,7 +150,7 @@ public class Task {
     }
 
     // CSV file header for reading
-    private static final String[] FILE_HEADER_MAPPING = {"videoId","language","status","createDateTime","updateDateTime"};
+    private static final String[] FILE_HEADER_MAPPING = {"videoId","language","status","pomsSourceMid", "pomsTargetMid", "createDateTime","updateDateTime"};
 
     public static String[] getFileHeaderForReading() {
         return  FILE_HEADER_MAPPING;
