@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
