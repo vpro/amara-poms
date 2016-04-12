@@ -31,6 +31,7 @@ public class Config {
     public static final int ERROR_POM_SUBTITLES_URL_OPEN = 7;
     public static final int ERROR_POM_SUBTITLES_RESPONSE = 8;
     public static final int ERROR_POM_SUBTITLES_NOT_FOUND = 9;
+    public static final int ERROR_WRITING_SUBTITLES_TO_FILE = 10;
 
     public static void init() {
         // load config

@@ -21,14 +21,14 @@ public class AmaraTaskTest extends TestCase {
         Config.init();
     }
 
-    public void testPost() {
-
-        AmaraTask amaraTask = new AmaraTask("gDq7bAA5XFCR", "nl", "Translate", "netinnl");
-
-        AmaraTask newAmaraTask = AmaraTask.post(amaraTask);
-
-        assertNotNull(newAmaraTask);
-    }
+//    public void testPost() {
+//
+//        AmaraTask amaraTask = new AmaraTask("gDq7bAA5XFCR", "nl", "Translate", "netinnl");
+//
+//        AmaraTask newAmaraTask = AmaraTask.post(amaraTask);
+//
+//        assertNotNull(newAmaraTask);
+//    }
 
     public void testGet() {
         long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");

@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.amara.task;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.amara.Utils;
@@ -31,7 +32,7 @@ public class AmaraTask {
 
     public final static String TYPE_TRANSLATE = "Translate";
 
-    public final static String TASK_APPROVED = "Approve";
+    public final static String TASK_APPROVED = "Approved";
 
     public String video_id;
     public String language;
@@ -40,8 +41,17 @@ public class AmaraTask {
 
     public int priority;
     public DateTime completed;
-    public String approved;
+    private String approved;
     public String resource_uri;
+
+    @JsonIgnore
+    public String getApproved() {
+        return approved;
+    }
+
+    public void setApproved(String approved) {
+        this.approved = approved;
+    }
 
     @Override
     public String toString() {

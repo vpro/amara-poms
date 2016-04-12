@@ -53,6 +53,7 @@ public class AmaraTaskCollection {
         String url = Config.getRequiredConfig("amara.api.url") + "api/teams/" + Config.getRequiredConfig("amara.api.team") + "/tasks";
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
                 .queryParam("type", taskType)
+                .queryParam("limit", 200)
                 .queryParam("completed")
                 .queryParam("completed-after", afterTimestampInSeconds);
         URI uri = builder.build().encode().toUri();
@@ -64,7 +65,7 @@ public class AmaraTaskCollection {
         AmaraTaskCollection amaryActivityCollection = response.getBody();
 
         HttpStatus httpStatus = response.getStatusCode();
-        logger.info(String.valueOf(response));
+//        logger.info(String.valueOf(response));
 
         return  amaryActivityCollection.amaraTasks;
     }

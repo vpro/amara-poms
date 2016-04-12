@@ -14,9 +14,14 @@ public class AmaraVideoMetadata {
 
     @JsonProperty("speaker-name")
     public String speaker_name;
-    public String location;
+    public String location; // set Poms mid
 
     public AmaraVideoMetadata() {
+    }
+
+    public AmaraVideoMetadata(String speaker_name, String location) {
+        this.speaker_name = speaker_name;
+        this.location = location;
     }
 
     @Override

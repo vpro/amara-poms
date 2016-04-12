@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.amara.subtitles;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import nl.vpro.amara_poms.Config;
@@ -59,13 +60,22 @@ public class AmaraSubtitles {
 
     public String title; // Video title, translated into the subtitle’s language
     public String description; // Video description, translated into the subtitle’s language
-    public AmaraVideoMetadata metadata; // Video metadata, translated into the subtitle’s language
+    private AmaraVideoMetadata metadata; // Video metadata, translated into the subtitle’s language
     public String video_title; // Video title, translated into the video’s language
     public String video_description; // Video description, translated into the video’s language
     public String resource_uri; // API URI for the subtitles
     public String site_uri; // URI to view the subtitles on site
     public String video; // Copy of video_title (deprecated)
     public String version_no; // Copy of version_number (deprecated)
+
+    @JsonIgnore
+    public AmaraVideoMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(AmaraVideoMetadata metadata) {
+        this.metadata = metadata;
+    }
 
     public AmaraSubtitles() {
     }
@@ -78,22 +88,26 @@ public class AmaraSubtitles {
         this.action = action;
     }
 
-    public String getSubtitleFilepath() {
+    public String getSubtitleFilepath(String filename) {
         String basePath = Config.getRequiredConfig("subtitle.basepath");
-        String filename = Config.getRequiredConfig("subtitle.target.filename");
 
-        basePath += "/" + language + "/" + filename;
+        basePath += language.getCode() + "/" + filename;
 
         return basePath;
     }
 
-    public void writeSubtitlesToFiles() {
-        try( PrintWriter out = new PrintWriter(getSubtitleFilepath())){
+    public int writeSubtitlesToFiles(String pomsMid) {
+        int returnValue = Config.NO_ERROR;
+
+        try( PrintWriter out = new PrintWriter(getSubtitleFilepath(pomsMid))){
             out.println(subtitles);
         } catch (FileNotFoundException e) {
-            logger.error("Error writing subtitles to file " + getSubtitleFilepath());
+            logger.error("Error writing subtitles to file " + getSubtitleFilepath(pomsMid));
             logger.error(e.toString());
+            returnValue = Config.ERROR_WRITING_SUBTITLES_TO_FILE;
         }
+
+        return returnValue;
     }
 
     public static AmaraSubtitles post(AmaraSubtitles amaraSubtitlesIn, String video_id, String language_code) {

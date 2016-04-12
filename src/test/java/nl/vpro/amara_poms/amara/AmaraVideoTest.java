@@ -3,6 +3,7 @@ package nl.vpro.amara_poms.amara;
 import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.amara.video.AmaraVideo;
+import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,21 +21,23 @@ public class AmaraVideoTest extends TestCase {
         Config.init();
     }
 
-    public void testPost() {
-
-        String team = Config.getRequiredConfig("amara.api.team");
-        AmaraVideo amaraVideo = new AmaraVideo("http://download.omroep.nl/vpro/netinnederland/NPO_bb4.m4v", "nl",
-                                    "Joost test (to be deleted)", "gebruikt for testing purposes", team);
-        AmaraVideo newAmaraVideo = amaraVideo.post(amaraVideo);
-
-        assertNotNull(newAmaraVideo);
-    }
+//    public void testPost() {
+//
+//        String team = Config.getRequiredConfig("amara.api.team");
+//        AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata("test speaker", "test location");
+//        AmaraVideo amaraVideo = new AmaraVideo("http://download.omroep.nl/vpro/netinnederland/NPO_bb4.m4v", "nl",
+//                                    "Joost test (to be deleted)", "gebruikt for testing purposes", team, amaraVideoMetadata);
+//        AmaraVideo newAmaraVideo = amaraVideo.post(amaraVideo);
+//
+//        assertNotNull(newAmaraVideo);
+//    }
 
     public void testPostAsString() {
 
         String team = Config.getRequiredConfig("amara.api.team");
+        AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata("test speaker", "test location");
         AmaraVideo amaraVideo = new AmaraVideo("http://download.omroep.nl/vpro/netinnederland/NPO_bb.m4v",
-                "nl", "Joost test (to be deleted)", "gebruikt for testing purposes", team);
+                "nl", "Joost test (to be deleted)", "gebruikt for testing purposes", team, amaraVideoMetadata);
         String response = amaraVideo.postAsString(amaraVideo);
     }
 
@@ -47,11 +50,11 @@ public class AmaraVideoTest extends TestCase {
     }
 
 
-    public void testGetAsString() {
-        String response = AmaraVideo.getAsString("F8i3LbQkBbeG");
-
-        logger.info(response);
-    }
+//    public void testGetAsString() {
+//        String response = AmaraVideo.getAsString("F8i3LbQkBbeG");
+//
+//        logger.info(response);
+//    }
 
 
 }

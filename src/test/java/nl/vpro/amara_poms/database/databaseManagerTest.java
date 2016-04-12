@@ -3,7 +3,6 @@ package nl.vpro.amara_poms.database;
 
 import nl.vpro.amara_poms.Config;
 
-import nl.vpro.amara_poms.database.activity.Activity;
 import nl.vpro.amara_poms.database.task.Task;
 import org.junit.Test;
 
@@ -25,7 +24,6 @@ public class databaseManagerTest {
 
     final static Logger logger = LoggerFactory.getLogger(databaseManagerTest.class);
     final static String dbTestFilenameTasks = "./testdb-tasks.csv";
-    final static String dbTestFilenameActivities = "./testdb-activities.csv";
 
 
     Task task1;
@@ -33,8 +31,6 @@ public class databaseManagerTest {
     String testVideoLanguage;
     int countBefore;
     String testActivityId;
-
-    Activity activity;
 
     /**
      * setup method for writing
@@ -45,7 +41,6 @@ public class databaseManagerTest {
 
         Manager dbManager = Manager.getInstance();
         dbManager.setFilenameTasks(dbTestFilenameTasks);
-        dbManager.setFilenameActivities(dbTestFilenameActivities);
         dbManager.clear();
 
         // first test writing
@@ -60,12 +55,6 @@ public class databaseManagerTest {
 
         countBefore = dbManager.getTasks().size();
         assertEquals(3, countBefore);
-
-        // test activity
-        testActivityId = "testId";
-        activity = new Activity(testActivityId);
-        dbManager.addOrUpdateActivity(activity);
-        assertEquals(1, dbManager.getActivities().size());
 
         dbManager.writeFile();
 
@@ -96,10 +85,8 @@ public class databaseManagerTest {
         }
 
         Path pathTasksdb = Paths.get(dbTestFilenameTasks);
-        Path pathActivitydb = Paths.get(dbTestFilenameActivities);
         try {
             Files.delete(pathTasksdb);
-            Files.delete(pathActivitydb);
         } catch (IOException e) {
             e.printStackTrace();
             assert(true);
@@ -132,52 +119,14 @@ public class databaseManagerTest {
         assertNull(task2);
 
         Path pathTasksdb = Paths.get(dbTestFilenameTasks);
-        Path pathActivitydb = Paths.get(dbTestFilenameActivities);
         try {
             Files.delete(pathTasksdb);
-            Files.delete(pathActivitydb);
         } catch (IOException e) {
             e.printStackTrace();
             assert(true);
         }
 
     }
-
-    /**
-     * test reading to db
-     */
-    @Test
-    public void testSearchActivity()
-    {
-        Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(dbTestFilenameActivities);
-
-        setupWriting();
-        dbManager.readFile();
-
-        // test searching - found
-        Activity activity = dbManager.findActivityById(testActivityId);
-
-        assertNotNull(activity);
-        assertEquals(testActivityId, activity.getId());
-
-        // test searching - not found
-        Activity activity1 = dbManager.findActivityById("897yuhjklj");
-
-        assertNull(activity1);
-
-        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
-        Path pathActivitydb = Paths.get(dbTestFilenameActivities);
-        try {
-            Files.delete(pathTasksdb);
-            Files.delete(pathActivitydb);
-        } catch (IOException e) {
-            e.printStackTrace();
-            assert(true);
-        }
-
-    }
-
 
     /**
      * test add multiple to db
@@ -203,10 +152,8 @@ public class databaseManagerTest {
         assertEquals(testVideoId, task.getVideoId());
 
         Path pathTasksdb = Paths.get(dbTestFilenameTasks);
-        Path pathActivitydb = Paths.get(dbTestFilenameActivities);
         try {
             Files.delete(pathTasksdb);
-            Files.delete(pathActivitydb);
         } catch (IOException e) {
             e.printStackTrace();
             assert(true);
@@ -234,15 +181,31 @@ public class databaseManagerTest {
             logger.info(task3.toString());
         }
 
-//        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
-//        Path pathActivitydb = Paths.get(dbTestFilenameActivities);
-//        try {
-//            Files.delete(pathTasksdb);
-//            Files.delete(pathActivitydb);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            assert(true);
-//        }
+        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
+        try {
+            Files.delete(pathTasksdb);
+        } catch (IOException e) {
+            e.printStackTrace();
+            assert(true);
+        }
+    }
+
+    @Test
+    public void gt()
+    {
+        Task task = new Task();
+
+        assertTrue(task.isNewer(null));
+        assertTrue(task.isNewer(""));
+        assertTrue(task.isNewer("0"));
+        assertTrue(task.isNewer("1"));
+        assertTrue(task.isNewer("1123"));
+
+        task.setSubtitlesVersionNo("1");
+        assertFalse(task.isNewer("0"));
+        assertFalse(task.isNewer("1"));
+        assertTrue(task.isNewer("1123"));
+        assertTrue(task.isNewer("2"));
 
     }
 

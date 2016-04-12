@@ -2,6 +2,7 @@ package nl.vpro.amara_poms.amara.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import nl.vpro.amara_poms.amara.language.AmaraLanguage;
 import nl.vpro.amara_poms.amara.Utils;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
  * Created by joost on 05/04/16.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AmaraVideo {
 
     final static Logger logger = LoggerFactory.getLogger(AmaraVideo.class);
@@ -21,30 +23,34 @@ public class AmaraVideo {
 
     private String id;
     private String video_url;
-    private String primary_audio_language_code;
     private String title;
     private String description;
+//    private String duration;
+    private String primary_audio_language_code;
+    private String thumbnail;
+    private AmaraVideoMetadata metadata;
     private String team;
     private String project;
+
     private AmaraLanguage amaraLanguage;
+
 
     // constructor with no parameter
     public AmaraVideo() {}
 
-    public AmaraVideo(String video_url, String primary_audio_language_code, String title, String description, String team) {
+    public AmaraVideo(String video_url, String primary_audio_language_code, String title, String description, String team, AmaraVideoMetadata metadata) {
         this.video_url = video_url;
         this.primary_audio_language_code = primary_audio_language_code;
         this.title = title;
         this.description = description;
         this.team = team;
+        this.metadata = metadata;
     }
 
-    //
-    // Getter and setters
-    //
     public String getId() {
         return id;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -52,20 +58,15 @@ public class AmaraVideo {
     public String getVideo_url() {
         return video_url;
     }
+
     public void setVideo_url(String video_url) {
         this.video_url = video_url;
-    }
-
-    public String getPrimary_audio_language_code() {
-        return primary_audio_language_code;
-    }
-    public void setPrimary_audio_language_code(String primary_audio_language_code) {
-        this.primary_audio_language_code = primary_audio_language_code;
     }
 
     public String getTitle() {
         return title;
     }
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -73,20 +74,47 @@ public class AmaraVideo {
     public String getDescription() {
         return description;
     }
+
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public AmaraLanguage getAmaraLanguage() {
-        return amaraLanguage;
+//    public String getDuration() {
+//        return duration;
+//    }
+//
+//    public void setDuration(String duration) {
+//        this.duration = duration;
+//    }
+
+    public String getPrimary_audio_language_code() {
+        return primary_audio_language_code;
     }
-    public void setAmaraLanguage(AmaraLanguage amaraLanguage) {
-        this.amaraLanguage = amaraLanguage;
+
+    public void setPrimary_audio_language_code(String primary_audio_language_code) {
+        this.primary_audio_language_code = primary_audio_language_code;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+    public void setThumbnail(String thumbnail) {
+        this.thumbnail = thumbnail;
+    }
+
+    public AmaraVideoMetadata getMetadata() {
+        return metadata;
+    }
+
+    public void setMetadata(AmaraVideoMetadata metadata) {
+        this.metadata = metadata;
     }
 
     public String getTeam() {
         return team;
     }
+
     public void setTeam(String team) {
         this.team = team;
     }
@@ -94,8 +122,17 @@ public class AmaraVideo {
     public String getProject() {
         return project;
     }
+
     public void setProject(String project) {
         this.project = project;
+    }
+
+    public AmaraLanguage getAmaraLanguage() {
+        return amaraLanguage;
+    }
+
+    public void setAmaraLanguage(AmaraLanguage amaraLanguage) {
+        this.amaraLanguage = amaraLanguage;
     }
 
     @Override
@@ -160,7 +197,7 @@ public class AmaraVideo {
         ResponseEntity<AmaraVideo> response = restTemplate.exchange(Utils.getUriForGetVideoWithId(videoId), HttpMethod.GET, request, AmaraVideo.class);
         AmaraVideo amaraVideo = response.getBody();
 
-        logger.info(String.valueOf(response));
+//        logger.info(String.valueOf(response));
 
         return  amaraVideo;
     }

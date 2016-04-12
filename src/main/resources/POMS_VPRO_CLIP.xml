@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<program xmlns:media="urn:vpro:media:2009" xmlns:shared="urn:vpro:shared:2009" xmlns="urn:vpro:media:update:2009" type="CLIP" avType="AUDIO" embeddable="true">
+  <broadcaster>VPRO</broadcaster>
+  <title type="MAIN">dummy</title>
+  <description type="MAIN">dummy</description>
+  <duration>P0DT0H56M0.000S</duration>
+  <locations/>
+  <images/>
+  <segments/>
+</program>

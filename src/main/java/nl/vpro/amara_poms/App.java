@@ -68,8 +68,8 @@ public class App
         }
 
         // run Amara publisher
-//        AmaraPublisher amaraPublisher = new AmaraPublisher();
-//        amaraPublisher.processPomsCollection();
+        AmaraPublisher amaraPublisher = new AmaraPublisher();
+        amaraPublisher.processPomsCollection();
 
         // run Poms publisher
         PomsPublisher pomsPublisher = new PomsPublisher();
