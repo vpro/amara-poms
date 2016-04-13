@@ -82,5 +82,7 @@ public class App
         } catch (Exception e) {
             logger.error("Error removing lockfiles");
         }
+
+        System.exit(0);
     }
 }
