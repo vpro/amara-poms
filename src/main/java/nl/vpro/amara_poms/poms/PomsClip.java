@@ -2,8 +2,6 @@ package nl.vpro.amara_poms.poms;
 
 import java.util.SortedSet;
 
-import javax.xml.bind.JAXB;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,12 +33,11 @@ public class PomsClip {
         //  full program
         //ProgramUpdate sourceProgram = client.getProgram(sourcePomsMid);
 
-        JAXB.marshal(sourceProgram, System.out);
+        //JAXB.marshal(sourceProgram, System.out);
         // todo - error handling
 
         // construct new CLIP
-        ProgramUpdate update = ProgramUpdate.create();
-        update.setType(ProgramType.CLIP);
+        ProgramUpdate update = ProgramUpdate.create(ProgramType.CLIP);
 
         // copy fields from source
         update.setTitles(sourceProgram.getTitles());
