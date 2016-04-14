@@ -1,13 +1,12 @@
 package nl.vpro.amara_poms;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by joost on 05/04/16.
@@ -38,9 +37,16 @@ public class Config {
         properties = new Properties();
         InputStream inputStream;
         try {
-            inputStream = new FileInputStream(fileName);
-            properties.load(inputStream);
-            logger.info(fileName + " loaded");
+            File[] files = new File[] {new File(fileName), new File(System.getProperty("user.home") + File.separator + "conf" + File.separator + "amaraimport.properties")};
+            for (File f : files) {
+                if (f.canRead()) {
+                    inputStream = new FileInputStream(f);
+                    properties.load(inputStream);
+                    logger.info(f + " loaded");
+                } else {
+                    logger.info("Could not read {}", f);
+                }
+            }
         } catch (Exception e) {
             logger.error("Error opening properties file: " + e.getMessage());
             System.exit(ERROR_APP_CONFIG_NOT_FOUND);

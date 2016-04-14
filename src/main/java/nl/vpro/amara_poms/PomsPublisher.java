@@ -9,6 +9,8 @@ import nl.vpro.amara_poms.amara.video.AmaraVideo;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.Task;
 import nl.vpro.amara_poms.poms.PomsClip;
+import nl.vpro.amara_poms.poms.Utils;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +115,7 @@ public class PomsPublisher {
                 if (task.getPomsTargetId() == null) {
                     // no poms target id, so create new Poms Clip
 
-                    String newPomsTargetId = PomsClip.create(pomsMid, amaraTask.language);
+                    String newPomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language);
                     task.setPomsTargetId(newPomsTargetId);
                     task.setStatus(Task.STATUS_UPLOADED_TO_POMS);
                     dbManager.addOrUpdateTask(task);
