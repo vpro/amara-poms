@@ -1,24 +1,18 @@
 package nl.vpro.amara_poms.poms;
 
-import junit.framework.Assert;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.poms.PomsCollection;
-import nl.vpro.amara_poms.poms.PomsBroadcast;
-import nl.vpro.domain.media.update.GroupUpdate;
-import nl.vpro.rs.media.MediaRestClient;
+
+import java.util.Properties;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.validation.constraints.AssertTrue;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.Properties;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.rs.media.MediaRestClient;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.assertNotEquals;
 
 /**
  * Created by joost on 04/04/16.
@@ -68,5 +62,7 @@ public class PomsCollectionTest extends TestCase {
         PomsCollection pomsCollection = new PomsCollection("ABC");
         assertNotEquals(0, pomsCollection.getBroadcastsFromPOMS());
     }
+
+
 
 }
