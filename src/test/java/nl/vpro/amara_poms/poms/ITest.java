@@ -19,7 +19,7 @@ public class ITest {
         Config.init();
         MediaRestClient client = new MediaRestClient().configured();
 
-        String result = PomsClip.create(client, "WO_VPRO_043085", "en");
+        String result = PomsClip.create(client, "EO_101205912", "en");
         System.out.println(result);
 
     }
