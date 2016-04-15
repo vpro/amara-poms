@@ -1,23 +1,22 @@
 package nl.vpro.amara_poms.poms;
 
-import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.AVType;
-import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.ProgramType;
-import nl.vpro.domain.media.exceptions.ModificationException;
-import nl.vpro.domain.media.update.*;
-import nl.vpro.rs.media.MediaRestClient;
-import org.junit.After;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.SortedSet;
+
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.bind.JAXB;
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedSet;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.domain.media.AVType;
+import nl.vpro.domain.media.ProgramType;
+import nl.vpro.domain.media.exceptions.ModificationException;
+import nl.vpro.domain.media.update.MemberRefUpdate;
+import nl.vpro.domain.media.update.ProgramUpdate;
+import nl.vpro.domain.media.update.RelationUpdate;
+import nl.vpro.rs.media.MediaRestClient;
 
 import static junit.framework.TestCase.assertNotNull;
-import static org.fest.assertions.api.Assertions.assertThat;
 
 /**
  * Created by joost on 10/04/16.
@@ -27,11 +26,9 @@ public class PomsTest {
     private MediaRestClient client;
 
     @Before
-    public void setUp() {
-        client = new MediaRestClient();
+    public void setUp() throws IOException {
+        client = new MediaRestClient().configured();
         client.setTrustAll(true);
-        client.setUserName("vpro-mediatools");
-        client.setPassword("Id7shuu7");
         //client.setUrl("http://localhost:8071/rs/");
         client.setUrl("https://api-test.poms.omroep.nl/");
 //        client.setUrl("https://api-dev.poms.omroep.nl/");
