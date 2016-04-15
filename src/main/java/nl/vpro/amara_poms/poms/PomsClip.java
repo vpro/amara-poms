@@ -67,8 +67,9 @@ public class PomsClip {
         memberRefUpdates.add(memberRefUpdate);
         update.setMemberOf(memberRefUpdates);
 
-        update.getPortals().add(PORTAL);
-        update.getPortalRestrictions().add(PortalRestrictionUpdate.of(PORTAL));
+        // todo enable when available
+//        update.getPortals().add(PORTAL);
+//        update.getPortalRestrictions().add(PortalRestrictionUpdate.of(PORTAL));
 
 
         update.setImages(sourceProgram.getImages());

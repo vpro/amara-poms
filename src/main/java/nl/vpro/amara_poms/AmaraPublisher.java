@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms;
 
+import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitleAction;
 import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
 import nl.vpro.amara_poms.amara.task.AmaraTask;
 import nl.vpro.amara_poms.amara.video.AmaraVideo;
@@ -115,6 +116,20 @@ public class AmaraPublisher {
                             Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                             Task.STATUS_UPLOADED_SUBTITLE_TO_AMARA, pomsMidBroadcast));
                     logger.info("Subtitle uploaded to Amara with id " + uploadedAmaraVideo.getId());
+
+                    // nl subtitles status is now complete, has to be aproved (can only be done in 2 steps)
+                    AmaraSubtitleAction amaraSubtitleAction = new AmaraSubtitleAction(AmaraSubtitleAction.ACTION_APPROVE);
+
+                    AmaraSubtitleAction amaraSubtitleActionOut = AmaraSubtitleAction.post(amaraSubtitleAction,
+                            uploadedAmaraVideo.getId(),
+                            Config.getRequiredConfig("amara.api.primary_audio_language_code"));
+
+                    if (amaraSubtitleActionOut != null) {
+                        dbManager.addOrUpdateTask(new Task(uploadedAmaraVideo.getId(),
+                                Config.getRequiredConfig("amara.api.primary_audio_language_code"),
+                                Task.STATUS_APPROVED_SUBTITLE_IN_AMARA, pomsMidBroadcast));
+                        logger.info("Subtitle nl approved in Amara with id " + uploadedAmaraVideo.getId());
+                    }
                 }
             }
 

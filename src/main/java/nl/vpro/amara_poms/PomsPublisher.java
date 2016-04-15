@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class PomsPublisher {
 
-    final Logger logger = LoggerFactory.getLogger(AmaraPublisher.class);
+    final Logger logger = LoggerFactory.getLogger(PomsPublisher.class);
 
     public void processAmaraTasks() {
 
@@ -40,8 +40,8 @@ public class PomsPublisher {
         for (AmaraTask amaraTask : amaraTasks) {
             logger.info("Start processing video_id " + amaraTask.video_id + " for language " + amaraTask.language);
 
-            logger.info("Approved:" + amaraTask.getApproved());
-            logger.info("Type:" + amaraTask.type);
+//            logger.info("Approved:" + amaraTask.getApproved());
+//            logger.info("Type:" + amaraTask.type);
 
             // only approved tasks
             if (amaraTask.getApproved() == null || !amaraTask.getApproved().equals(AmaraTask.TASK_APPROVED)) {
@@ -90,8 +90,15 @@ public class PomsPublisher {
                 if (originTask != null) {
                     pomsMid = originTask.getPomsSourceMid();
                 }
-                if (pomsMid == null) {
-                    logger.error("No original Poms broadcast found in local db for video_id " + amaraTask.video_id + " so no Poms id found -> skip");
+                if (pomsMid == null || pomsMid.equals("")) {
+                    logger.info("No original Poms broadcast found in local db for video_id " + amaraTask.video_id);
+                    pomsMid = amaraVideo.getPomsMidFromVideoUrl();
+                    if (pomsMid == null) {
+                        logger.error(("Also no Poms id found in video url(" + amaraVideo.getVideoUrlFromAllUrls() + ") for video id" + amaraTask.video_id + " -> skip record"));
+                        continue;
+                    } else {
+                        logger.info("Poms mid " + pomsMid + " found in video url"+ amaraVideo.getVideoUrlFromAllUrls() + ")");
+                    }
                     continue;
                 } else {
                     logger.info("Poms mid found in local db:" + pomsMid);
@@ -102,26 +109,25 @@ public class PomsPublisher {
             if (task.getSubtitlesVersionNo() == null || task.isNewer(amaraSubtitles.version_no)) {
                 logger.info("New subtitle version detected:" + amaraSubtitles.version_no);
 
-                // first write subtitles to file
-                if (amaraSubtitles.writeSubtitlesToFiles(pomsMid) != Config.NO_ERROR) {
-                    continue;
-                }
-
-                // update version no in local db
-                task = new Task(amaraTask.video_id, amaraTask.language, Task.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
-                task.setSubtitlesVersionNo(amaraSubtitles.version_no);
-                dbManager.addOrUpdateTask(task);
-
-                if (task.getPomsTargetId() == null) {
+                String pomsTargetId = task.getPomsTargetId();
+                if (pomsTargetId == null || pomsTargetId.equals("")) {
                     // no poms target id, so create new Poms Clip
 
-                    String newPomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language);
-                    task.setPomsTargetId(newPomsTargetId);
+                    pomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language);
+                    task.setPomsTargetId(pomsTargetId);
                     task.setStatus(Task.STATUS_UPLOADED_TO_POMS);
                     dbManager.addOrUpdateTask(task);
                 } else {
                     // Poms clip already exists, do nothing
                     logger.info("Poms clip already exists -> do nothing " + task.toString());
+                }
+
+                // write subtitles to file
+                if (amaraSubtitles.writeSubtitlesToFiles(pomsTargetId) == Config.NO_ERROR) {
+                    // update version no in local db
+                    task.setSubtitlesVersionNo(amaraSubtitles.version_no);
+                    task.setStatus(Task.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
+                    dbManager.addOrUpdateTask(task);
                 }
             } else {
                 logger.info("Subtitle version " + amaraSubtitles.version_no + " already exists in Poms for video_id " + amaraSubtitles.video);

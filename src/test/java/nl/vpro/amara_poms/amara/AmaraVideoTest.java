@@ -7,7 +7,9 @@ import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by joost on 06/04/16.
@@ -49,12 +51,35 @@ public class AmaraVideoTest extends TestCase {
         logger.info(amaraVideo.toString());
     }
 
+    public void testPomsMidFromOmroepUrl() {
+        AmaraVideo amaraVideo = new AmaraVideo();
 
-//    public void testGetAsString() {
-//        String response = AmaraVideo.getAsString("F8i3LbQkBbeG");
-//
-//        logger.info(response);
-//    }
+        String[] urls = {"http://download.omroep.nl/vpro/netinnederland/h264/VPWON_1166750.m4v"};
+        amaraVideo.setAll_urls(urls);
+
+        String foundMid = amaraVideo.getPomsMidFromVideoUrl();
+
+        assertEquals(foundMid, "VPWON_1166750");
+    }
+
+    public void testPomsMidFromYoutube() {
+        AmaraVideo amaraVideo = new AmaraVideo();
+
+        String[] urls = {"http://www.youtube.com/watch?v=ZXajCrcQ6sw"};
+        amaraVideo.setAll_urls(urls);
+
+        String foundMid = amaraVideo.getPomsMidFromVideoUrl();
+
+        assertNull(foundMid);
+    }
+
+    public void testPomsMidFromEmpty() {
+        AmaraVideo amaraVideo = new AmaraVideo();
+
+        String foundMid = amaraVideo.getPomsMidFromVideoUrl();
+
+        assertNull(foundMid);
+    }
 
 
 }

@@ -6,6 +6,7 @@ import nl.vpro.domain.media.MemberRef;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.update.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,14 +111,14 @@ public class PomsBroadcast {
         SortedSet<MemberRefUpdate> memberUpdate = programUpdate.getMemberOf();
 
         // remove collection
-        memberUpdate.removeIf(member -> member.getMediaRef() == midCollectionFrom);
+        memberUpdate.removeIf(member -> member.getMediaRef().equals(midCollectionFrom));
 
         // add collection
         MemberRefUpdate memberRefUpdate = new MemberRefUpdate(0, midCollectionTo);
         memberUpdate.add(memberRefUpdate);
 
         // update
-        programUpdate.setMemberOf(memberUpdate);
+//        programUpdate.setMemberOf(memberUpdate);
         String pomsMid = Utils.getClient().set(programUpdate);
     }
 
@@ -179,6 +180,7 @@ public class PomsBroadcast {
                 // check against 'WEBVTT'
                 if (content.startsWith("WEBVTT")) {
                     logger.info("Subtitle downloadeded from " + urlName);
+                    logger.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 50));
                     subtitles = content;
                 } else {
                     returnValue = Config.ERROR_POM_SUBTITLES_NOT_FOUND;

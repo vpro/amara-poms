@@ -11,6 +11,8 @@ import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.regex.Pattern;
+
 /**
  * Created by joost on 05/04/16.
  */
@@ -31,6 +33,7 @@ public class AmaraVideo {
     private AmaraVideoMetadata metadata;
     private String team;
     private String project;
+    private String[] all_urls;
 
     private AmaraLanguage amaraLanguage;
 
@@ -135,6 +138,14 @@ public class AmaraVideo {
         this.amaraLanguage = amaraLanguage;
     }
 
+    public String[] getAll_urls() {
+        return all_urls;
+    }
+
+    public void setAll_urls(String[] all_urls) {
+        this.all_urls = all_urls;
+    }
+
     @Override
     public String toString() {
         return "AmaraVideo{" +
@@ -202,7 +213,7 @@ public class AmaraVideo {
         return  amaraVideo;
     }
 
-    public  static String getAsString(String videoId) {
+    public static String getAsString(String videoId) {
 
         HttpEntity<AmaraVideo> request = new HttpEntity<>(Utils.getGetHeaders());
 
@@ -213,6 +224,43 @@ public class AmaraVideo {
         return response.getBody();
     }
 
+    /**
+     * Get videoUrl from all_urls
+     * @return null if not found
+     */
+    public String getVideoUrlFromAllUrls() {
+        String videoUrl = null;
+
+        if (all_urls != null && all_urls.length > 0) {
+            videoUrl = all_urls[0];
+        }
+
+        return  videoUrl;
+    }
+
+    /**
+     * Get Poms MID from url
+     * e.g. http://download.omroep.nl/vpro/netinnederland/h264/VPWON_1166750.m4v where VPWON_1166750 is Poms mid
+     * @return poms mid if found, null otherwise
+     */
+    public String getPomsMidFromVideoUrl() {
+        String pomsMid = null;
+
+        String videoUrl = getVideoUrlFromAllUrls();
+
+        if (videoUrl != null) {
+            String parts[] = videoUrl.split("/");
+            if (videoUrl.startsWith("http") && videoUrl.contains("download.omroep.nl")) {
+                String filename = parts[parts.length - 1];
+                String filenameParts[] = filename.split(Pattern.quote("."));
+                if (filenameParts.length == 2) {
+                    pomsMid = filenameParts[0];
+                }
+            }
+        }
+
+        return pomsMid;
+    }
 
 }
 
