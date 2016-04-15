@@ -36,7 +36,7 @@ public class PomsPublisher {
         long now = System.currentTimeMillis() / 1000;
         List<AmaraTask> amaraTasks = AmaraTaskCollection.getListForType(Config.getRequiredConfig("amara.task.type.out"),
                                                                         now - afterTimestampInSeconds);
-
+        logger.info("Search for tasks...");
         for (AmaraTask amaraTask : amaraTasks) {
             logger.info("Start processing video_id " + amaraTask.video_id + " for language " + amaraTask.language);
 

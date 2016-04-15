@@ -42,6 +42,7 @@ public class AmaraPublisher {
         collectionToBeTranslated.getBroadcastsFromPOMS();
 
         // Iterate over collection
+        logger.info("Search for POMS broadcasts to be translated...");
         Iterator<MemberUpdate> pomsBroadcastIterator = collectionToBeTranslated.getBroadcastsIterator();
         while (pomsBroadcastIterator.hasNext()) {
 

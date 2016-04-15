@@ -41,9 +41,6 @@ public class TaskWriter {
             for (Task task : tasks) {
                 csvFilePrinter.printRecord(task.get());
             }
-
-            System.out.println("CSV file was created successfully !!!");
-
         } catch (Exception e) {
             System.out.println("Error in CsvFileWriter !!!");
             e.printStackTrace();
