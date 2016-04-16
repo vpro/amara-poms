@@ -1,3 +1,9 @@
+# Amara Poms Publisher
+
+![Amara Poms Publisher proces](/doc/NetInNLflow.jpg?raw=true "Amara Poms Publisher proces")
+
+## Omschrijving
+
 1. Redactie plaatst bron-uitzending op collectie in POMS (bijv. "NetInNL - te vertalen")
 2. Deze wordt opgepakt door Amara Publisher
 - mp4 file wordt van de uitzending losgetrokken en op download.omroep.nl geplaatst (vanuit amara is dat
@@ -31,3 +37,33 @@ Clip
 Missend:
 - webvtt nu op download, straks in POMS?
 - hoe gaat de omroepspeler hier uiteindelijk mee om?
+
+## Configuratie
+
+De configuratiefiles zijn:
+~/conf/amaraimport.properties
+./log4j.properties
+
+Kijk voor voorbeeld:
+- amaraimport.properties.dist in deze repo
+- log4j.properties in deze repo
+
+## Deployment/packaging/installation
+
+1. Creeer jar file in target dir
+mvn package -Dmaven.test.skip=true
+
+2. Copy amara_poms_publisher-1.0-SNAPSHOT.jar file naar target omgeving
+
+3. Pas configuratie file aan (zie hiervoor)
+
+4. run app:
+java -cp target/amara_poms_publisher-1.0-SNAPSHOT.jar nl.vpro.amara_poms.App
+
+(Note: java moet minimaal versie 1.8 zijn)
+
+5. Schedule process dmv cronjob, bijv.
+
+*/5 * * * * cd /home/omroep/vpro_admin/netinnederland && /home/omroep/vpro_admin/netinnederland/run
+
+waarbij run.sh script is commando in stap uitvoert
