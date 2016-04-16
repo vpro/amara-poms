@@ -16,8 +16,6 @@ public class Config {
     final static Logger logger = LoggerFactory.getLogger(Config.class);
     private static Properties properties;
 
-    static final String fileName = "app.config";
-
     public static final int NO_ERROR = 0;
     public static final int ERROR_APP_CONFIG_NOT_FOUND = 1;
     public static final int ERROR_CONFIG_ERROR = 2;
@@ -37,7 +35,7 @@ public class Config {
         properties = new Properties();
         InputStream inputStream;
         try {
-            File[] files = new File[] {new File(fileName), new File(System.getProperty("user.home") + File.separator + "conf" + File.separator + "amaraimport.properties")};
+            File[] files = new File[] {new File(System.getProperty("user.home") + File.separator + "conf" + File.separator + "amaraimport.properties")};
             for (File f : files) {
                 if (f.canRead()) {
                     inputStream = new FileInputStream(f);
