@@ -60,10 +60,10 @@ mvn package -Dmaven.test.skip=true
 4. run app:
 java -cp target/amara_poms_publisher-1.0-SNAPSHOT.jar nl.vpro.amara_poms.App
 
-(Note: java moet minimaal versie 1.8 zijn)
+(Note: java moet minimaal versie 1.8 zijn: op upload-sites.omroep.nl en upload-test.omroep.nl is /usr/local/bin/java versie 1.6 en /usr/bin/java is 1.8)
 
 5. Schedule process dmv cronjob, bijv.
 
 */5 * * * * cd /home/omroep/vpro_admin/netinnederland && /home/omroep/vpro_admin/netinnederland/run
 
-waarbij run.sh script is commando in stap uitvoert
+waarbij run.sh script commando is in stap 4
