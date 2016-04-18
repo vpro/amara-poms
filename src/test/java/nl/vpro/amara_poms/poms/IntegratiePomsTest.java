@@ -3,12 +3,12 @@ package nl.vpro.amara_poms.poms;
 import java.io.IOException;
 import java.util.SortedSet;
 
-import nl.vpro.domain.media.update.MemberRefUpdate;
-import nl.vpro.domain.media.update.ProgramUpdate;
 import org.junit.Ignore;
 import org.junit.Test;
 
 import nl.vpro.amara_poms.Config;
+import nl.vpro.domain.media.update.MemberRefUpdate;
+import nl.vpro.domain.media.update.ProgramUpdate;
 import nl.vpro.rs.media.MediaRestClient;
 
 import static junit.framework.TestCase.assertNotNull;
@@ -17,7 +17,7 @@ import static junit.framework.TestCase.assertNotNull;
  * @author Michiel Meeuwissen
  * @since 1.0
  */
-@Ignore("This is an integration test connection to an actual server")
+@Ignore("This is an integration test connecting to an actual server")
 public class IntegratiePomsTest {
 
     String pomsMidBroadcast = "NPS_1207292";

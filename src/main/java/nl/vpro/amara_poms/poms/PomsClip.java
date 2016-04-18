@@ -10,7 +10,6 @@ import nl.vpro.domain.media.ProgramType;
 import nl.vpro.domain.media.RelationDefinition;
 import nl.vpro.domain.media.exceptions.ModificationException;
 import nl.vpro.domain.media.update.MemberRefUpdate;
-import nl.vpro.domain.media.update.PortalRestrictionUpdate;
 import nl.vpro.domain.media.update.ProgramUpdate;
 import nl.vpro.domain.media.update.RelationUpdate;
 import nl.vpro.rs.media.MediaRestClient;
@@ -23,7 +22,7 @@ public class PomsClip {
     private static final Logger LOG = LoggerFactory.getLogger(PomsClip.class);
 
 
-    public static final RelationDefinition ORIGINAL = RelationDefinition.of("ARTIST", "VPRO"); // "ORIGINAL" was requested
+    public static final RelationDefinition ORIGINAL = RelationDefinition.of("TRANSLATION_SOURCE", "VPRO");
     public static final String PORTAL = "WOORD"; // "NETINNL" was requested
 
 
