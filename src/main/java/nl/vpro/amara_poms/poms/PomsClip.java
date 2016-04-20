@@ -23,7 +23,7 @@ public class PomsClip {
     private static final Logger LOG = LoggerFactory.getLogger(PomsClip.class);
 
 
-    public static final RelationDefinition ORIGINAL = RelationDefinition.of("ARTIST", "VPRO"); // "ORIGINAL" was requested
+    public static final RelationDefinition ORIGINAL = RelationDefinition.of("TRANSLATION_SOURCE", "VPRO");
     public static final String PORTAL = "NETINNL";
 
     /**
@@ -36,6 +36,7 @@ public class PomsClip {
      * @return
      */
     public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description) {
+
         // get source broadcast
         ProgramUpdate sourceProgram = ProgramUpdate.forAllOwners(client.getFullProgram(sourcePomsMid));
         //  full program
