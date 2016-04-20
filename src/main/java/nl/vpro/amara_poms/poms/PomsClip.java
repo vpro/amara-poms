@@ -24,7 +24,7 @@ public class PomsClip {
 
 
     public static final RelationDefinition ORIGINAL = RelationDefinition.of("ARTIST", "VPRO"); // "ORIGINAL" was requested
-    public static final String PORTAL = "WOORD"; // "NETINNL" was requested
+    public static final String PORTAL = "NETINNL";
 
 
     public static String create(MediaRestClient client, String sourcePomsMid, String language) {
@@ -68,8 +68,8 @@ public class PomsClip {
         update.setMemberOf(memberRefUpdates);
 
         // todo enable when available
-//        update.getPortals().add(PORTAL);
-//        update.getPortalRestrictions().add(PortalRestrictionUpdate.of(PORTAL));
+        update.getPortals().add(PORTAL);
+        update.getPortalRestrictions().add(PortalRestrictionUpdate.of(PORTAL));
 
 
         update.setImages(sourceProgram.getImages());
