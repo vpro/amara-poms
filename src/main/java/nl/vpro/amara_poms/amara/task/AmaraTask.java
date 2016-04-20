@@ -2,6 +2,7 @@ package nl.vpro.amara_poms.amara.task;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.amara.Utils;
 
@@ -41,14 +42,15 @@ public class AmaraTask {
 
     public int priority;
     public DateTime completed;
-    private String approved;
     public String resource_uri;
 
-    @JsonIgnore
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String approved;
+
     public String getApproved() {
         return approved;
     }
-
     public void setApproved(String approved) {
         this.approved = approved;
     }
