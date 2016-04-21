@@ -50,9 +50,7 @@ public class PomsClip {
         // construct new CLIP
         ProgramUpdate update = ProgramUpdate.create(ProgramType.CLIP);
 
-        SortedSet<TitleUpdate> titleUpdate2 = sourceProgram.getTitles();
-
-        // sub title (extract series name if there)
+        // Parse title/subtitle from amara (extract series name if there)
         String[] splitTitle = title.split("//");
         String newTitle = "";
         String newSubTitle = "";
@@ -63,9 +61,12 @@ public class PomsClip {
             newTitle = splitTitle[0];
         }
 
+        // set it
         TreeSet<TitleUpdate> titleUpdate = new TreeSet<>();
         titleUpdate.add(new TitleUpdate(newTitle, TextualType.MAIN));
-        titleUpdate.add(new TitleUpdate(newSubTitle, TextualType.SUB));
+        if (!newSubTitle.equals("")) {
+            titleUpdate.add(new TitleUpdate(newSubTitle, TextualType.SUB));
+        }
         update.setTitles(titleUpdate);
 
         // take translated description
