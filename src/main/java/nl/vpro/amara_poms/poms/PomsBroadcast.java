@@ -2,12 +2,10 @@ package nl.vpro.amara_poms.poms;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.MemberRef;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.update.*;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,17 +13,10 @@ import java.net.MalformedURLException;
 import java.util.List;
 import java.util.SortedSet;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 /**
  * Created by joost on 04/04/16.
@@ -105,17 +96,13 @@ public class PomsBroadcast {
         subtitleUrlBackup = Config.getConfig("subtitle.url.backup"); // optional
     }
 
-    public void moveFromCollectionToCollection(String midCollectionFrom, String midCollectionTo) {
-        logger.info("Move from collection " + midCollectionFrom + " to collection " + midCollectionTo);
+    public void removeFromCollection(String midCollectionFrom) {
+        logger.info("Remove from collection " + midCollectionFrom);
 
         SortedSet<MemberRefUpdate> memberUpdate = programUpdate.getMemberOf();
 
         // remove collection
         memberUpdate.removeIf(member -> member.getMediaRef().equals(midCollectionFrom));
-
-        // add collection
-        MemberRefUpdate memberRefUpdate = new MemberRefUpdate(0, midCollectionTo);
-        memberUpdate.add(memberRefUpdate);
 
         // update
 //        programUpdate.setMemberOf(memberUpdate);

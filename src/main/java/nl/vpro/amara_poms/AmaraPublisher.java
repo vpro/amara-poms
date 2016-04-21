@@ -37,7 +37,6 @@ public class AmaraPublisher {
 
         // Get collection from POMS
         String inputCollectionName = Config.getRequiredConfig("poms.input.collections_mid");
-        String outputCollectionName = Config.getRequiredConfig("poms.output.collections_mid");
         PomsCollection collectionToBeTranslated = new PomsCollection(inputCollectionName);
         collectionToBeTranslated.getBroadcastsFromPOMS();
 
@@ -155,8 +154,8 @@ public class AmaraPublisher {
             //
             // verwijder uit POMS collectie 'Net in Nederland' en plaats in POMS collectie 'Net in Nederland'
             //
-            pomsBroadcast.moveFromCollectionToCollection(inputCollectionName, outputCollectionName);
-            logger.info("Moved Poms broadcast from collection " + inputCollectionName + " to " + outputCollectionName);
+            pomsBroadcast.removeFromCollection(inputCollectionName);
+            logger.info("Remove Poms broadcast from collection " + inputCollectionName);
         }
 
         dbManager.writeFile();

@@ -3,6 +3,9 @@ package nl.vpro.amara_poms.poms;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import nl.vpro.domain.media.AVFileFormat;
+import nl.vpro.domain.media.Location;
+import nl.vpro.domain.media.support.Duration;
 import nl.vpro.domain.media.support.TextualType;
 import nl.vpro.domain.media.support.Title;
 import nl.vpro.domain.media.update.*;
@@ -20,7 +23,7 @@ import nl.vpro.rs.media.MediaRestClient;
  */
 public class PomsClip {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PomsClip.class);
+    private static final Logger logger = LoggerFactory.getLogger(PomsClip.class);
 
 
     public static final RelationDefinition ORIGINAL = RelationDefinition.of("TRANSLATION_SOURCE", "VPRO");
@@ -67,16 +70,25 @@ public class PomsClip {
         update.setTitles(titleUpdate);
 
         // take translated description
-        DescriptionUpdate descriptionUpdate = new DescriptionUpdate(description, TextualType.MAIN);
-        update.setDescriptions(descriptionUpdate);
+        if (description != null && !description.equals("")) {
+            DescriptionUpdate descriptionUpdate = new DescriptionUpdate(description, TextualType.MAIN);
+            update.setDescriptions(descriptionUpdate);
+        }
         try {
             update.setDuration(sourceProgram.getDuration());
         } catch (ModificationException e) {
             // ignore
+            logger.error("Error setting duration for source POM Mid " + sourcePomsMid);
+
         }
         update.setBroadcasters(sourceProgram.getBroadcasters());
         update.setAVType(sourceProgram.getAVType());
-        update.setLocations(client.cloneLocations(sourcePomsMid)); // source
+
+        // set location
+        LocationUpdate locationUpdate = new LocationUpdate();
+        locationUpdate.setProgramUrl("mid://netinnederland.nl/" + sourcePomsMid);
+        locationUpdate.setAvAttributes(new AVAttributesUpdate(AVFileFormat.UNKNOWN, 10000));
+        update.setLocations(locationUpdate); // source
 
         // create relation with source program
         RelationUpdate relationUpdate = RelationUpdate.text(ORIGINAL, sourceProgram.getMid());
