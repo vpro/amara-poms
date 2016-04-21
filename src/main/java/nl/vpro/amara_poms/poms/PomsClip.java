@@ -4,10 +4,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import nl.vpro.domain.media.AVFileFormat;
-import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.support.Duration;
 import nl.vpro.domain.media.support.TextualType;
-import nl.vpro.domain.media.support.Title;
 import nl.vpro.domain.media.update.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +13,8 @@ import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.ProgramType;
 import nl.vpro.domain.media.RelationDefinition;
 import nl.vpro.domain.media.exceptions.ModificationException;
+import nl.vpro.domain.media.support.TextualType;
+import nl.vpro.domain.media.update.*;
 import nl.vpro.rs.media.MediaRestClient;
 
 /**
@@ -113,6 +112,10 @@ public class PomsClip {
         // set genres
         update.setGenres(sourceProgram.getGenres());
 
+        for (ImageUpdate u : sourceProgram.getImages()) {
+            // work around bug.
+            u.setOffset(null);
+        }
         update.setImages(sourceProgram.getImages());
 
         //JAXB.marshal(update, System.out);
