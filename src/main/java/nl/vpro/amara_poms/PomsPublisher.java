@@ -97,9 +97,8 @@ public class PomsPublisher {
                         logger.error(("Also no Poms id found in video url(" + amaraVideo.getVideoUrlFromAllUrls() + ") for video id" + amaraTask.video_id + " -> skip record"));
                         continue;
                     } else {
-                        logger.info("Poms mid " + pomsMid + " found in video url"+ amaraVideo.getVideoUrlFromAllUrls() + ")");
+                        logger.info("Poms mid " + pomsMid + " found in video url "+ amaraVideo.getVideoUrlFromAllUrls());
                     }
-                    continue;
                 } else {
                     logger.info("Poms mid found in local db:" + pomsMid);
                 }
@@ -113,10 +112,11 @@ public class PomsPublisher {
                 if (pomsTargetId == null || pomsTargetId.equals("")) {
                     // no poms target id, so create new Poms Clip
 
-                    pomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language);
+                    pomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language, amaraSubtitles.title, amaraSubtitles.description);
                     task.setPomsTargetId(pomsTargetId);
                     task.setStatus(Task.STATUS_UPLOADED_TO_POMS);
                     dbManager.addOrUpdateTask(task);
+                    logger.info("Poms clip created with poms id " + pomsTargetId);
                 } else {
                     // Poms clip already exists, do nothing
                     logger.info("Poms clip already exists -> do nothing " + task.toString());

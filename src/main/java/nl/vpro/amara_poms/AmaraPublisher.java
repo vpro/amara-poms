@@ -64,7 +64,7 @@ public class AmaraPublisher {
                 videoTitel = afleveringsTitel;
             } else {
                 serienaam = pomsBroadcast.getTitle();
-                afleveringsTitel = pomsBroadcast.getSubtitles();
+                afleveringsTitel = pomsBroadcast.getSubTitle();
                 videoTitel = serienaam + "//" + afleveringsTitel;
             }
 

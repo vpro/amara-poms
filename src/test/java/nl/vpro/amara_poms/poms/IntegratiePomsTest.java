@@ -20,7 +20,7 @@ import static junit.framework.TestCase.assertNotNull;
 @Ignore("This is an integration test connecting to an actual server")
 public class IntegratiePomsTest {
 
-    String pomsMidBroadcast = "NPS_1207292";
+    String pomsMidBroadcast = "VPWON_1165341";
     String midCollectionFrom = "POMS_S_VPRO_1416538"; // NetInNederland - te vertalen;
     String midCollectionTo = "POMS_S_VPRO_1414788"; // NetInNederland
 
@@ -29,7 +29,7 @@ public class IntegratiePomsTest {
         Config.init();
         MediaRestClient client = Utils.getClient();
 
-        String result = PomsClip.create(client, "VPWON_1227733", "en");
+        String result = PomsClip.create(client, "VPWON_1152047", "en", "serie//test vertaalde titel", "test vertaalde description");
         System.out.println(result);
     }
 
