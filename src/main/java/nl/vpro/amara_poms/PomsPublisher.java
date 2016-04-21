@@ -15,6 +15,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,19 +41,24 @@ public class PomsPublisher {
         for (AmaraTask amaraTask : amaraTasks) {
             logger.info("Start processing video_id " + amaraTask.video_id + " for language " + amaraTask.language);
 
-//            logger.info("Approved:" + amaraTask.getApproved());
-//            logger.info("Type:" + amaraTask.type);
-
             // only approved tasks
             if (amaraTask.getApproved() == null || !amaraTask.getApproved().equals(AmaraTask.TASK_APPROVED)) {
                 logger.info("Task (" + amaraTask.resource_uri + ") not approved yet -> skip");
                 continue;
             }
 
-            // skip nl tasks
-            if (amaraTask.language == null || amaraTask.language.equals(Config.getRequiredConfig("amara.api.primary_audio_language_code"))) {
-                logger.info("Task (" + amaraTask.resource_uri + ") is base language " +
-                            Config.getRequiredConfig("amara.api.primary_audio_language_code") + " -> skip");
+            // skip tasks without language
+            if (amaraTask.language == null) {
+                logger.info("Task (" + amaraTask.resource_uri + ") has no language set -> skip");
+                continue;
+            }
+
+            // only target languages or primary language
+            List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
+            if (!targetLanguages.contains(amaraTask.language) &&
+                !amaraTask.language.equals(Config.getRequiredConfig("amara.api.primary_audio_language_code"))) {
+                logger.info("Task (" + amaraTask.resource_uri + ") has not target language and is not primary language " +
+                        amaraTask.language + " -> skip");
                 continue;
             }
 

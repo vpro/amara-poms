@@ -20,16 +20,15 @@ import static junit.framework.TestCase.assertNotNull;
 @Ignore("This is an integration test connecting to an actual server")
 public class IntegratiePomsTest {
 
-    String pomsMidBroadcast = "VPWON_1165341";
+    String pomsMidBroadcast = "VPWON_1244706";
     String midCollectionFrom = "POMS_S_VPRO_1416538"; // NetInNederland - te vertalen;
-    String midCollectionTo = "POMS_S_VPRO_1414788"; // NetInNederland
 
     @Test
     public void testPomsClipCreate() throws IOException {
         Config.init();
         MediaRestClient client = Utils.getClient();
 
-        String result = PomsClip.create(client, "VPWON_1152047", "en", "serie//test vertaalde titel", "test vertaalde description");
+        String result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description");
         System.out.println(result);
     }
 
@@ -53,30 +52,15 @@ public class IntegratiePomsTest {
     }
 
     @Test
-    public void moveFromTeVertalenToNetInNL() {
+    public void removeFromTeVertalenToNetInNL() {
         Config.init();
         MediaRestClient client = Utils.getClient();
 
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMidBroadcast);
         pomsBroadcast.programUpdate = client.getProgram(pomsMidBroadcast);
 
-        pomsBroadcast.moveFromCollectionToCollection(midCollectionFrom, midCollectionTo);
+        pomsBroadcast.removeFromCollection(midCollectionFrom);
 
-    }
-
-    @Test
-    public void removeFromNetInNL() {
-        Config.init();
-        MediaRestClient client = Utils.getClient();
-
-        ProgramUpdate update = client.getProgram(pomsMidBroadcast); // test with this one
-
-        SortedSet<MemberRefUpdate> memberUpdate = update.getMemberOf();
-        memberUpdate.removeIf(member -> member.getMediaRef().equals(midCollectionTo));
-
-        // update
-        String result = client.set(update);
-        System.out.println(result);
     }
 
     @Test
