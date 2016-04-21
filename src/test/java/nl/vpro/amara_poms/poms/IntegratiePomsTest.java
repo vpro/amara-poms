@@ -11,6 +11,7 @@ import nl.vpro.domain.media.update.MemberRefUpdate;
 import nl.vpro.domain.media.update.ProgramUpdate;
 import nl.vpro.rs.media.MediaRestClient;
 
+import static junit.framework.Assert.assertTrue;
 import static junit.framework.TestCase.assertNotNull;
 
 /**
@@ -28,7 +29,13 @@ public class IntegratiePomsTest {
         Config.init();
         MediaRestClient client = Utils.getClient();
 
-        String result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description");
+        String result = "";
+        try {
+            result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description");
+        } catch (Exception exception) {
+            assertTrue(exception.toString(), false);
+        }
+
         System.out.println(result);
     }
 

@@ -117,8 +117,13 @@ public class PomsPublisher {
                 String pomsTargetId = task.getPomsTargetId();
                 if (pomsTargetId == null || pomsTargetId.equals("")) {
                     // no poms target id, so create new Poms Clip
-
-                    pomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language, amaraSubtitles.title, amaraSubtitles.description);
+                    try {
+                        pomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language, amaraSubtitles.title, amaraSubtitles.description);
+                    } catch (Exception exception) {
+                        logger.error("Error creating clip for poms mid " + pomsMid + ", language " + amaraTask.language);
+                        logger.error(exception.toString());
+                        continue;
+                    }
                     task.setPomsTargetId(pomsTargetId);
                     task.setStatus(Task.STATUS_UPLOADED_TO_POMS);
                     dbManager.addOrUpdateTask(task);
