@@ -13,7 +13,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <api.client.version>4.3.0</api.client.version>
+    <api.client.version>4.3.1</api.client.version>
   </properties>
 
   <parent>

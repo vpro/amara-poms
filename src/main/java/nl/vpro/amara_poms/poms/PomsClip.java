@@ -113,10 +113,12 @@ public class PomsClip {
         // set genres
         update.setGenres(sourceProgram.getGenres());
 
+        // Work around https://jira.vpro.nl/browse/MSE-3247
+        // Can be removed for 4.3.2
         for (ImageUpdate u : sourceProgram.getImages()) {
-            // work around bug.
             u.setOffset(null);
         }
+
         update.setImages(sourceProgram.getImages());
 
         //JAXB.marshal(update, System.out);
