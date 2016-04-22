@@ -18,28 +18,29 @@ public class Utils {
 
     final Logger logger = LoggerFactory.getLogger(Utils.class);
 
+    private static MediaRestClient client = null;
+
     public static MediaRestClient getClient() {
-        MediaRestClient client = new MediaRestClient();
+        if (client == null) {
+            client = new MediaRestClient();
 
-        // get config
-        String username = Config.getRequiredConfig("poms.username");
-        String password = Config.getRequiredConfig("poms.password");
-        String url = Config.getRequiredConfig("poms.url");
-        String errors = Config.getRequiredConfig("poms.errors");
+            // get config
+            String username = Config.getRequiredConfig("poms.username");
+            String password = Config.getRequiredConfig("poms.password");
+            String url = Config.getRequiredConfig("poms.url");
+            String errors = Config.getRequiredConfig("poms.errors");
 
-        // get client
-        client.setTrustAll(true);
-        client.setUserName(username);
-        client.setPassword(password);
-        client.setErrors(errors);
-        client.setUrl(url);
-        client.setThrottleRate(50);
-        client.setWaitForRetry(true);
+            // get client
+            client.setTrustAll(true);
+            client.setUserName(username);
+            client.setPassword(password);
+            client.setErrors(errors);
+            client.setUrl(url);
+            client.setThrottleRate(50);
+            client.setWaitForRetry(true);
+        }
 
         return client;
     }
-
-
-
 
 }

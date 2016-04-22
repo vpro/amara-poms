@@ -3,6 +3,9 @@ package nl.vpro.amara_poms.poms;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.support.Image;
+import nl.vpro.domain.media.support.TextualType;
+import nl.vpro.domain.media.support.Title;
 import nl.vpro.domain.media.update.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -10,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.net.MalformedURLException;
+import java.util.Iterator;
 import java.util.List;
 import java.util.SortedSet;
 import java.io.IOException;
@@ -26,9 +30,10 @@ public class PomsBroadcast {
     final Logger logger = LoggerFactory.getLogger(PomsBroadcast.class);
     private static final int BUFFER_SIZE = 4096;
 
-    MediaUpdate programUpdate;
+    ProgramUpdate programUpdate;
     MemberUpdate memberUpdate;
-    SortedSet<Location> locationSortedSet;
+
+    SortedSet<LocationUpdate> locationSortedSet;
 
     String mid;
     String externalUrl;
@@ -39,8 +44,6 @@ public class PomsBroadcast {
 
     String subtitles = "";
 
-    Program program;
-
     public MediaUpdate getProgramUpdate() {
         return programUpdate;
     }
@@ -49,18 +52,51 @@ public class PomsBroadcast {
 
         String basePath = Config.getRequiredConfig("download.url.base");
         String extension = Config.getRequiredConfig("download.url.ext");
-        externalUrl = basePath  + mid + "." + extension;
+        externalUrl = basePath + mid + "." + extension;
         return externalUrl;
     }
 
     public String getTitle() {
-        return program.getMainTitle();
+        String title = "";
+
+        Iterator<TitleUpdate> iterator = programUpdate.getTitles().iterator();
+        while (iterator.hasNext() && title.equals("")) {
+            TitleUpdate titleUpdate = iterator.next();
+            if (titleUpdate.getType() == TextualType.MAIN) {
+                title = titleUpdate.getTitle();
+            }
+        }
+
+        return title;
     }
 
-    public String getSubTitle() { return program.getSubTitle(); }
+    public String getSubTitle() {
+        String subTitle = "";
+
+        Iterator<TitleUpdate> iterator = programUpdate.getTitles().iterator();
+        while (iterator.hasNext() && subTitle.equals("")) {
+            TitleUpdate titleUpdate = iterator.next();
+            if (titleUpdate.getType() == TextualType.SUB) {
+                subTitle = titleUpdate.getTitle();
+            }
+        }
+
+        return subTitle;
+    }
 
     public String getDescription() {
-        return program.getShortDescription();
+
+        String shortDescription = "";
+
+        Iterator<DescriptionUpdate> iterator = programUpdate.getDescriptions().iterator();
+        while (iterator.hasNext() && shortDescription.equals("")) {
+            DescriptionUpdate descriptionUpdate = iterator.next();
+            if (descriptionUpdate.getType() == TextualType.SHORT) {
+                shortDescription = descriptionUpdate.getDescription();
+            }
+        }
+
+        return shortDescription;
     }
 
     public String getSubtitles() {
@@ -80,12 +116,12 @@ public class PomsBroadcast {
 
     public  PomsBroadcast(MemberUpdate memberUpdate) {
         this.memberUpdate = memberUpdate;
-        programUpdate = memberUpdate.getMediaUpdate();
+        mid = memberUpdate.getMediaUpdate().getMid();
 
-        mid = programUpdate.getMid();
+        // get more info through program update
+        programUpdate = ProgramUpdate.forAllOwners(Utils.getClient().getFullProgram(mid));
 
-        program = Utils.getClient().getFullProgram(mid);
-        locationSortedSet = program.getLocations();
+        locationSortedSet = programUpdate.getLocations();
 
         getConfig();
     }

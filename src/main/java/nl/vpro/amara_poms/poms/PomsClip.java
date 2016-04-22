@@ -69,15 +69,15 @@ public class PomsClip {
         }
         update.setTitles(titleUpdate);
 
-        // take translated description (unless nl)
-        if (language.equals("nl")) {
-            update.setDescriptions(sourceProgram.getDescriptions());
+        // take translated description (if set, othterwise take from source broadcast)
+        if (description != null && !description.equals("")) {
+            DescriptionUpdate descriptionUpdate = new DescriptionUpdate(description, TextualType.MAIN);
+            update.setDescriptions(descriptionUpdate);
         } else {
-            if (description != null && !description.equals("")) {
-                DescriptionUpdate descriptionUpdate = new DescriptionUpdate(description, TextualType.MAIN);
-                update.setDescriptions(descriptionUpdate);
-            }
+            update.setDescriptions(sourceProgram.getDescriptions());
         }
+
+        // set duration
         try {
             update.setDuration(sourceProgram.getDuration());
         } catch (ModificationException e) {

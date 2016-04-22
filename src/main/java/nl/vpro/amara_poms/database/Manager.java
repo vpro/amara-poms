@@ -119,6 +119,28 @@ public class Manager {
     }
 
     /**
+     * Find task by source mid
+     * @param pomsMid
+     * @return
+     */
+    public Task findTaskByPomsSourceId(String pomsMid) {
+        Task foundTask = null;
+
+        List<Task> foundTasks = tasks.stream().filter((task) -> task.getPomsSourceMid().equals(pomsMid)).collect(Collectors.toList());
+
+        if (foundTasks.size() == 0) {
+            logger.info(pomsMid + " not found (yet) in db");
+        } else if (foundTasks.size() > 1) {
+            logger.error(pomsMid + " found more than 1 time in db");
+            foundTask = foundTasks.get(0);
+        } else {
+            foundTask = foundTasks.get(0);
+        }
+
+        return  foundTask;
+    }
+
+    /**
      * Remove task by videoId
      * @param videoId
      */

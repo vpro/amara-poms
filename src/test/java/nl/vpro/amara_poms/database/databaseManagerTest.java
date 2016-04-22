@@ -29,6 +29,7 @@ public class databaseManagerTest {
     Task task1;
     String testVideoId;
     String testVideoLanguage;
+    String testPomsMid;
     int countBefore;
     String testActivityId;
 
@@ -46,7 +47,9 @@ public class databaseManagerTest {
         // first test writing
         testVideoId = "testid";
         testVideoLanguage = "nl";
+        testPomsMid = "VPWON_1250959";
         task1 = new Task(testVideoId, testVideoLanguage, Task.STATUS_UPLOADED_VIDEO_TO_AMARA);
+        task1.setPomsSourceMid(testPomsMid);
         dbManager.addOrUpdateTask(task1);
         Task task2 = new Task("testid2", "nl", Task.STATUS_UPLOADED_VIDEO_TO_AMARA);
         dbManager.addOrUpdateTask(task2);
@@ -109,14 +112,22 @@ public class databaseManagerTest {
 
         // test searching - found
         Task task = dbManager.findTask(testVideoId, testVideoLanguage);
-
         assertNotNull(task);
         assertEquals(testVideoId, task.getVideoId());
 
         // test searching - not found
         Task task2 = dbManager.findTask("897yuhjklj", testVideoLanguage);
-
         assertNull(task2);
+
+        // test search - pomsmid - found
+        Task task3 = dbManager.findTaskByPomsSourceId(testPomsMid);
+        assertNotNull(task3);
+        assertEquals(testPomsMid, task.getPomsSourceMid());
+
+        // test search - pomsmid - not found
+        Task task4 = dbManager.findTaskByPomsSourceId("dsfgdfg");
+        assertNull(task4);
+
 
         Path pathTasksdb = Paths.get(dbTestFilenameTasks);
         try {

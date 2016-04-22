@@ -50,21 +50,24 @@ public class AmaraPublisher {
             String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
             logger.info("Start processing broadcast with Mid:" + pomsMidBroadcast);
 
+            // check if broadcast has already been sent to Amara
+            Task task = dbManager.findTaskByPomsSourceId(pomsMidBroadcast);
+            if (task != null) {
+                // task exists, so at least video is uploaded
+                logger.info("Poms broadcast with poms mid " + pomsMidBroadcast + " already sent to Amara -> skip");
+                continue;
+            }
+
             //
             // Publish to Amara
             //
 
             // construct title, etc.
-            String serienaam = "";
-            String afleveringsTitel;
-            String videoTitel;
+            String videoTitel = "";
             if (pomsBroadcast.getSubTitle() == null || pomsBroadcast.getSubTitle().equals("")) {
-                afleveringsTitel = pomsBroadcast.getTitle();
-                videoTitel = afleveringsTitel;
+                videoTitel = pomsBroadcast.getTitle();
             } else {
-                serienaam = pomsBroadcast.getTitle();
-                afleveringsTitel = pomsBroadcast.getSubTitle();
-                videoTitel = serienaam + "//" + afleveringsTitel;
+                videoTitel = pomsBroadcast.getTitle() + "//" + pomsBroadcast.getSubTitle();
             }
 
             // construct image thumbnail
@@ -75,7 +78,7 @@ public class AmaraPublisher {
             }
 
             // really send
-            AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata(serienaam, pomsMidBroadcast);
+            AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata(videoTitel, pomsMidBroadcast);
             AmaraVideo amaraVideo = new AmaraVideo(pomsBroadcast.getExternalUrl(),
                                                    Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                                                    videoTitel,
@@ -102,10 +105,10 @@ public class AmaraPublisher {
                 //
                 // Upload subtitles to Amara
                 //
-                AmaraSubtitles amaraSubtitles = new AmaraSubtitles(Config.getRequiredConfig("amara.subtitles.title.default"),
+                AmaraSubtitles amaraSubtitles = new AmaraSubtitles(videoTitel,
                         Config.getRequiredConfig("amara.subtitles.format"),
                         pomsBroadcast.getSubtitles(),
-                        Config.getRequiredConfig("amara.subtitles.description.default"),
+                        pomsBroadcast.getDescription(),
                         Config.getRequiredConfig("amara.subtitles.action.default"));
 
                 AmaraSubtitles uploadedAmaraSubtitles = AmaraSubtitles.post(amaraSubtitles, uploadedAmaraVideo.getId(),
@@ -153,9 +156,11 @@ public class AmaraPublisher {
 
             //
             // verwijder uit POMS collectie 'Net in Nederland' en plaats in POMS collectie 'Net in Nederland'
+            // (todo werkt niet voor niet vpro uitzendingen -> wacht op feature van apiclient)
+            // https://jira.vpro.nl/browse/MSE-3250
             //
-            pomsBroadcast.removeFromCollection(inputCollectionName);
-            logger.info("Remove Poms broadcast from collection " + inputCollectionName);
+//            pomsBroadcast.removeFromCollection(inputCollectionName);
+//            logger.info("Remove Poms broadcast from collection " + inputCollectionName);
         }
 
         dbManager.writeFile();

@@ -21,7 +21,7 @@ import static junit.framework.TestCase.assertNotNull;
 @Ignore("This is an integration test connecting to an actual server")
 public class IntegratiePomsTest {
 
-    String pomsMidBroadcast = "VPWON_1244706";
+    String pomsMidBroadcast = "VPWON_1250959";
     String midCollectionFrom = "POMS_S_VPRO_1416538"; // NetInNederland - te vertalen;
 
     @Test
@@ -75,15 +75,19 @@ public class IntegratiePomsTest {
         Config.init();
         MediaRestClient client = Utils.getClient();
 
-        String pomsMid = "VPRO_1122474";
+        String pomsMid = "VPWON_1242843";
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid);
-        pomsBroadcast.programUpdate = client.get(pomsMid); // not so nice way to test this function
+        pomsBroadcast.programUpdate = ProgramUpdate.forAllOwners(client.getFullProgram(pomsMid)); // not so nice way to test this function
 
         String imageId = pomsBroadcast.getImageId();
         long duration = pomsBroadcast.getProgramUpdate().getDuration().getSeconds();
 
         System.out.println("Duration:" + Long.toString(duration));
         System.out.println("ImageId:" + imageId);
+
+        System.out.println("Title:" + pomsBroadcast.getTitle());
+        System.out.println("Subtitle:" + pomsBroadcast.getSubTitle());
+        System.out.println("Description:" + pomsBroadcast.getDescription());
 
         assertNotNull(imageId);
     }
