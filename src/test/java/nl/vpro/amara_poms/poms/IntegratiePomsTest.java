@@ -75,7 +75,7 @@ public class IntegratiePomsTest {
         Config.init();
         MediaRestClient client = Utils.getClient();
 
-        String pomsMid = "VPWON_1242843";
+        String pomsMid = "VPWON_1249693";
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid);
         pomsBroadcast.programUpdate = ProgramUpdate.forAllOwners(client.getFullProgram(pomsMid)); // not so nice way to test this function
 

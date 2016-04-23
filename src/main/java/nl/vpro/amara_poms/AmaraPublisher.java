@@ -61,13 +61,18 @@ public class AmaraPublisher {
             //
             // Publish to Amara
             //
+            if (pomsBroadcast.downloadFileToDownloadServer() != Config.NO_ERROR) {
+                continue;
+            }
 
             // construct title, etc.
             String videoTitel = "";
+            String speakerName = "";
             if (pomsBroadcast.getSubTitle() == null || pomsBroadcast.getSubTitle().equals("")) {
                 videoTitel = pomsBroadcast.getTitle();
             } else {
-                videoTitel = pomsBroadcast.getTitle() + "//" + pomsBroadcast.getSubTitle();
+                videoTitel = pomsBroadcast.getTitle() + " // " + pomsBroadcast.getSubTitle();
+                speakerName = pomsBroadcast.getTitle();
             }
 
             // construct image thumbnail
@@ -78,7 +83,7 @@ public class AmaraPublisher {
             }
 
             // really send
-            AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata(videoTitel, pomsMidBroadcast);
+            AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata(speakerName, pomsMidBroadcast);
             AmaraVideo amaraVideo = new AmaraVideo(pomsBroadcast.getExternalUrl(),
                                                    Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                                                    videoTitel,
