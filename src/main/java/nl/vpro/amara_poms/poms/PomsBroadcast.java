@@ -22,6 +22,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.SortedSet;
 import java.io.IOException;
 
@@ -50,16 +51,6 @@ public class PomsBroadcast {
     // config
     String subtitleUrl;
     String subtitleUrlBackup;
-
-    String downloadSourcepathBase;
-    String downloadSourcepathVariable;
-    String downloadSourcefilePattern;
-    String downloadSourcepathFull;
-
-    String downloadTargetpathBase;
-    String downloadTargetpathExtended;
-    String downloadTargetpathFull;
-    String downloadTargetpathFullInclFile;
 
     String subtitles = "";
 
@@ -149,17 +140,6 @@ public class PomsBroadcast {
         // config
         subtitleUrl = Config.getRequiredConfig("subtitle.url");
         subtitleUrlBackup = Config.getConfig("subtitle.url.backup"); // optional
-
-        // get config
-        downloadSourcepathBase = Config.getRequiredConfig("download.source.path.base");
-        downloadSourcepathVariable = Config.getRequiredConfig("download.source.path.variable");
-        downloadSourcefilePattern = Config.getRequiredConfig("download.source.file.pattern");
-        downloadSourcepathFull = downloadSourcepathVariable + mid + "/" + downloadSourcefilePattern;
-
-        downloadTargetpathBase = Config.getRequiredConfig("download.target.path.base");
-        downloadTargetpathExtended = Config.getRequiredConfig("download.target.path.extended");
-        downloadTargetpathFull = downloadTargetpathBase + downloadTargetpathExtended;
-        downloadTargetpathFullInclFile = downloadTargetpathFull + mid + "." + Config.getRequiredConfig("download.url.ext");
     }
 
     public void removeFromCollection(String midCollectionFrom) {
@@ -184,48 +164,22 @@ public class PomsBroadcast {
 
         int returnValue = Config.NO_ERROR;
 
-        // find input file
-        DirectoryScanner scanner = new DirectoryScanner();
-        scanner.setIncludes(new String[]{downloadSourcepathFull});
-        scanner.setBasedir(downloadSourcepathBase);
-        scanner.setCaseSensitive(false);
-        scanner.scan();
-        String[] files = scanner.getIncludedFiles();
-        if (files.length == 0) {
-            logger.error("Input file not found in " + downloadSourcepathBase + downloadSourcepathFull);
-            returnValue = Config.ERROR_INPUT_FILE_NOT_FOUND;
-        } else {
+        ProcessBuilder pb = new ProcessBuilder(Config.getRequiredConfig("fetch.script"), mid);
+        Map<String, String> env = pb.environment();
+        pb.directory(new File("."));
+        try {
+            Process p = pb.start();
+        } catch (IOException e) {
+            logger.error(e.toString());
+            returnValue = Config.ERROR_COPY_INPUTFILE;
+        }
 
-            // input file found
-            String inputPathInclFile = downloadSourcepathBase + files[0];
-            logger.info("Found input file:" + inputPathInclFile);
-            Path source = Paths.get(inputPathInclFile);
-            Path targetDir = Paths.get(downloadTargetpathFull);
-            Path targetDirInclFile = Paths.get(downloadTargetpathFullInclFile);
-
-            // create output dir if not exists
-            try {
-                Files.createDirectories(targetDir);
-            } catch (IOException e) {
-                logger.error(e.toString());
-                System.exit(Config.ERROR_CREATING_OUTPUTDIR);
-            }
-
-            // copy file
-            logger.info("About to copy file from " + inputPathInclFile + " to " + downloadTargetpathFullInclFile);
-            try {
-                Files.copy(source, targetDirInclFile, REPLACE_EXISTING);
-            } catch (IOException e) {
-                logger.error(e.toString());
-                returnValue = Config.ERROR_COPY_INPUTFILE;
-            }
-//            String basePath = Config.getRequiredConfig("download.url.base");
-//            externalUrl = basePath + downloadTargetpathExtended + mid + File.separator + targetDirInclFile.getFileName();
+        if (returnValue == Config.NO_ERROR) {
+            logger.info("Copied video file for mid " + mid);
         }
 
         return returnValue;
     }
-
 
     /**
      * Download subtitle from omroep.nl, otherwise try vpro.nl
