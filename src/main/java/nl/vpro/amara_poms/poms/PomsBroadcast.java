@@ -8,12 +8,14 @@ import nl.vpro.domain.media.support.TextualType;
 import nl.vpro.domain.media.support.Title;
 import nl.vpro.domain.media.update.*;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tools.ant.DirectoryScanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.StringWriter;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -270,19 +272,16 @@ public class PomsBroadcast {
                 // opens input stream from the HTTP connection
                 InputStream inputStream = httpConn.getInputStream();
 
-                String content = "";
-                int bytesRead = -1;
-                byte[] buffer = new byte[BUFFER_SIZE];
-                while ((bytesRead = inputStream.read(buffer)) != -1) {
-                    content += new String(buffer);
-                }
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(inputStream, writer, "UTF-8");
+                String content = writer.toString();
 
                 inputStream.close();
 
                 // check against 'WEBVTT'
                 if (content.startsWith("WEBVTT")) {
                     logger.info("Subtitle downloadeded from " + urlName);
-                    logger.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 50));
+                    logger.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 100));
                     subtitles = content;
                 } else {
                     returnValue = Config.ERROR_POM_SUBTITLES_NOT_FOUND;
