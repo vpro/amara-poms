@@ -3,6 +3,7 @@ package nl.vpro.amara_poms.database.task;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -17,7 +18,7 @@ public class TaskWriter {
     private static final String NEW_LINE_SEPARATOR = "\n";
 
 
-    public static void writeCsvFile(String fileName, ArrayList<Task> tasks) {
+    public static void writeCsvFile(String fileName, List<Task> tasks) {
 
         FileWriter fileWriter = null;
 

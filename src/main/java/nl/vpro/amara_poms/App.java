@@ -15,10 +15,8 @@ import org.slf4j.LoggerFactory;
  *  Main app
  */
 public class App  {
-    /**
-     *
-     * @param args
-     */
+    
+    
     public static void main( String[] args ) throws IOException {
         Logger logger = LoggerFactory.getLogger(App.class);
         logger.info("Started...");
@@ -49,6 +47,7 @@ public class App  {
             }
 
             Files.createFile(path);
+            logger.info("Wrote lock file {}", path);
 
             // run Amara publisher
             AmaraPublisher amaraPublisher = new AmaraPublisher();

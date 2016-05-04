@@ -17,13 +17,13 @@ import java.util.stream.Collectors;
 /**
  * Manager for csv file database
  */
-public class Manager {
+public class Manager implements Iterable<Task> {
 
-    final static Logger logger = LoggerFactory.getLogger(TaskReader.class);
+    private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
-    String filenameTasks;
-    String filenameActivities;
-    ArrayList<Task> tasks;
+    private String filenameTasks;
+    private String filenameActivities;
+    private final List<Task> tasks = new ArrayList<>();
 
     public void setFilenameTasks(String filenameTasks) {
         this.filenameTasks = filenameTasks;
@@ -32,22 +32,17 @@ public class Manager {
         this.filenameActivities = filenameActivities;
     }
 
-    public ArrayList<Task> getTasks() {
+    public List<Task> getTasks() {
         return tasks;
     }
 
     /**
      * singleton manager
      */
-    private static Manager instance = null;
-    protected Manager() {
-        tasks = new ArrayList<Task>();
-    }
+    private static final Manager INSTANCE = new Manager();
+
     public static Manager getInstance() {
-        if(instance == null) {
-            instance = new Manager();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     /**
@@ -58,9 +53,10 @@ public class Manager {
     }
     public void readFile() {
         if (Files.exists((Paths.get(filenameTasks)))) {
-            tasks = TaskReader.readCsvFile(filenameTasks);
+            tasks.clear();
+            tasks.addAll(TaskReader.readCsvFile(filenameTasks));
         } else {
-            tasks =  new ArrayList<Task>();
+            tasks.clear();
         }
     }
 
@@ -107,9 +103,9 @@ public class Manager {
                                                                 task.getLanguage().equals(language)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
-            logger.info(videoId + " not found (yet) in db");
+            LOG.info(videoId + " not found (yet) in db");
         } else if (foundTasks.size() > 1) {
-            logger.error(videoId + " found more than 1 time in db");
+            LOG.error(videoId + " found more than 1 time in db");
             foundTask = foundTasks.get(0);
         } else {
             foundTask = foundTasks.get(0);
@@ -129,9 +125,9 @@ public class Manager {
         List<Task> foundTasks = tasks.stream().filter((task) -> task.getPomsSourceMid().equals(pomsMid)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
-            logger.info(pomsMid + " not found (yet) in db");
+            LOG.info(pomsMid + " not found (yet) in db");
         } else if (foundTasks.size() > 1) {
-            logger.error(pomsMid + " found more than 1 time in db");
+            LOG.error(pomsMid + " found more than 1 time in db");
             foundTask = foundTasks.get(0);
         } else {
             foundTask = foundTasks.get(0);
@@ -145,15 +141,13 @@ public class Manager {
      * @param videoId
      */
     public void removeTaskByVideoId(String videoId, String language) {
-        logger.info("Task with videoId " + videoId + " has been removed");
+        LOG.info("Task with videoId " + videoId + " has been removed");
         tasks.removeIf((task) -> task.getVideoId().equals(videoId) && task.getLanguage() == language);
     }
 
-    /**
-     * Get iterator
-     * @return
-     */
-    public Iterator<Task> getTaskIterator() {
-        return  tasks.iterator();
+
+    @Override
+    public Iterator<Task> iterator() {
+        return tasks.iterator();
     }
 }
