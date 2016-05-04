@@ -22,14 +22,13 @@ import java.util.Iterator;
  */
 public class AmaraPublisher {
 
-    final Logger logger = LoggerFactory.getLogger(AmaraPublisher.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AmaraPublisher.class);
 
     /**
      * Get collection 'Net in Nederland - te vertalen
      * and loop through all broadcasts
      */
-    public void processPomsCollection()
-    {
+    public void processPomsCollection() {
         // init db
         Manager dbManager = Manager.getInstance();
         dbManager.setFilenameTasks(Config.getRequiredConfig("db.filepath"));
@@ -41,20 +40,20 @@ public class AmaraPublisher {
         collectionToBeTranslated.getBroadcastsFromPOMS();
 
         // Iterate over collection
-        logger.info("Search for POMS broadcasts to be translated...");
+        LOG.info("Search for POMS broadcasts to be translated...");
         Iterator<MemberUpdate> pomsBroadcastIterator = collectionToBeTranslated.getBroadcastsIterator();
         while (pomsBroadcastIterator.hasNext()) {
 
             PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsBroadcastIterator.next());
 
             String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
-            logger.info("Start processing broadcast with Mid:" + pomsMidBroadcast);
+            LOG.info("Start processing broadcast with Mid:" + pomsMidBroadcast);
 
             // check if broadcast has already been sent to Amara
             Task task = dbManager.findTaskByPomsSourceId(pomsMidBroadcast);
             if (task != null) {
                 // task exists, so at least video is uploaded
-                logger.info("Poms broadcast with poms mid " + pomsMidBroadcast + " already sent to Amara -> skip");
+                LOG.info("Poms broadcast with poms mid " + pomsMidBroadcast + " already sent to Amara -> skip");
                 continue;
             }
 
@@ -66,10 +65,11 @@ public class AmaraPublisher {
             }
 
             // construct title, etc.
-            String videoTitel = "";
-            String speakerName = "";
+            final String videoTitel;
+            final String speakerName;
             if (pomsBroadcast.getSubTitle() == null || pomsBroadcast.getSubTitle().equals("")) {
                 videoTitel = pomsBroadcast.getTitle();
+                speakerName = "";
             } else {
                 videoTitel = pomsBroadcast.getTitle() + " // " + pomsBroadcast.getSubTitle();
                 speakerName = pomsBroadcast.getTitle();
@@ -96,7 +96,7 @@ public class AmaraPublisher {
             if (uploadedAmaraVideo == null) {
                 continue;
             } else {
-                logger.info("Video uploaded to Amara with id " + uploadedAmaraVideo.getId());
+                LOG.info("Video uploaded to Amara with id " + uploadedAmaraVideo.getId());
                 dbManager.addOrUpdateTask(new Task(uploadedAmaraVideo.getId(),
                                                    Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                                                    Task.STATUS_UPLOADED_VIDEO_TO_AMARA,
@@ -123,7 +123,7 @@ public class AmaraPublisher {
                     dbManager.addOrUpdateTask(new Task(uploadedAmaraVideo.getId(),
                             Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                             Task.STATUS_UPLOADED_SUBTITLE_TO_AMARA, pomsMidBroadcast));
-                    logger.info("Subtitle uploaded to Amara with id " + uploadedAmaraVideo.getId());
+                    LOG.info("Subtitle uploaded to Amara with id " + uploadedAmaraVideo.getId());
 
                     // nl subtitles status is now complete, has to be aproved (can only be done in 2 steps)
                     AmaraSubtitleAction amaraSubtitleAction = new AmaraSubtitleAction(AmaraSubtitleAction.ACTION_APPROVE);
@@ -136,7 +136,7 @@ public class AmaraPublisher {
                         dbManager.addOrUpdateTask(new Task(uploadedAmaraVideo.getId(),
                                 Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                                 Task.STATUS_APPROVED_SUBTITLE_IN_AMARA, pomsMidBroadcast));
-                        logger.info("Subtitle nl approved in Amara with id " + uploadedAmaraVideo.getId());
+                        LOG.info("Subtitle nl approved in Amara with id " + uploadedAmaraVideo.getId());
                     }
                 }
             }
@@ -152,7 +152,7 @@ public class AmaraPublisher {
                 AmaraTask uploadedAmaraTask = AmaraTask.post(amaraTask);
 
                 if (uploadedAmaraTask != null) {
-                    logger.info("Task (" + uploadedAmaraTask.resource_uri + ") created for language " + targetLanguage + " to Amara with video id " + uploadedAmaraVideo.getId());
+                    LOG.info("Task (" + uploadedAmaraTask.resource_uri + ") created for language " + targetLanguage + " to Amara with video id " + uploadedAmaraVideo.getId());
                     dbManager.addOrUpdateTask(new Task(uploadedAmaraVideo.getId(),
                             targetLanguage,
                             Task.STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION, pomsMidBroadcast));
