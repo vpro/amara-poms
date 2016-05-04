@@ -13,17 +13,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
 /**
  * Created by joost on 07/04/16.
  */
-public class databaseManagerTest {
+public class DatabaseManagerTest {
 
-    final static Logger logger = LoggerFactory.getLogger(databaseManagerTest.class);
-    final static String dbTestFilenameTasks = "./testdb-tasks.csv";
+    final static private Logger LOG = LoggerFactory.getLogger(DatabaseManagerTest.class);
+    final static private String DB_TEST_FILENAME_TASKS = "./testdb-tasks.csv";
 
 
     Task task1;
@@ -31,7 +30,6 @@ public class databaseManagerTest {
     String testVideoLanguage;
     String testPomsMid;
     int countBefore;
-    String testActivityId;
 
     /**
      * setup method for writing
@@ -41,7 +39,7 @@ public class databaseManagerTest {
         Config.init();
 
         Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(dbTestFilenameTasks);
+        dbManager.setFilenameTasks(DB_TEST_FILENAME_TASKS);
         dbManager.clear();
 
         // first test writing
@@ -71,7 +69,7 @@ public class databaseManagerTest {
     public void testReading()
     {
         Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(dbTestFilenameTasks);
+        dbManager.setFilenameTasks(DB_TEST_FILENAME_TASKS);
 
         setupWriting();
 
@@ -81,13 +79,11 @@ public class databaseManagerTest {
         Task task = dbManager.findTask(testVideoId, testVideoLanguage);
         assertEquals(countBefore, dbManager.getTasks().size());
 
-        Iterator<Task> taskIterator = dbManager.getTaskIterator();
-        while (taskIterator.hasNext()) {
-            Task task3 = taskIterator.next();
-            logger.info(task3.toString());
+        for (Task task3 : dbManager) {
+            LOG.info(task3.toString());
         }
 
-        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
+        Path pathTasksdb = Paths.get(DB_TEST_FILENAME_TASKS);
         try {
             Files.delete(pathTasksdb);
         } catch (IOException e) {
@@ -105,7 +101,7 @@ public class databaseManagerTest {
     public void testSearchTask()
     {
         Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(dbTestFilenameTasks);
+        dbManager.setFilenameTasks(DB_TEST_FILENAME_TASKS);
 
         setupWriting();
         dbManager.readFile();
@@ -129,7 +125,7 @@ public class databaseManagerTest {
         assertNull(task4);
 
 
-        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
+        Path pathTasksdb = Paths.get(DB_TEST_FILENAME_TASKS);
         try {
             Files.delete(pathTasksdb);
         } catch (IOException e) {
@@ -146,7 +142,7 @@ public class databaseManagerTest {
     public void testAddMultiple()
     {
         Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(dbTestFilenameTasks);
+        dbManager.setFilenameTasks(DB_TEST_FILENAME_TASKS);
 
         setupWriting();
         dbManager.readFile();
@@ -162,7 +158,7 @@ public class databaseManagerTest {
         assertNotNull(task);
         assertEquals(testVideoId, task.getVideoId());
 
-        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
+        Path pathTasksdb = Paths.get(DB_TEST_FILENAME_TASKS);
         try {
             Files.delete(pathTasksdb);
         } catch (IOException e) {
@@ -181,18 +177,16 @@ public class databaseManagerTest {
     {
         // setup
         Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(dbTestFilenameTasks);
+        dbManager.setFilenameTasks(DB_TEST_FILENAME_TASKS);
         setupWriting();
         dbManager.readFile();
 
         // actual test
-        Iterator<Task> taskIterator = dbManager.getTaskIterator();
-        while (taskIterator.hasNext()) {
-            Task task3 = taskIterator.next();
-            logger.info(task3.toString());
+        for (Task task3 : dbManager) {
+            LOG.info(task3.toString());
         }
 
-        Path pathTasksdb = Paths.get(dbTestFilenameTasks);
+        Path pathTasksdb = Paths.get(DB_TEST_FILENAME_TASKS);
         try {
             Files.delete(pathTasksdb);
         } catch (IOException e) {

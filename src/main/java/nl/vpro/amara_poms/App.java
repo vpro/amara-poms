@@ -18,52 +18,28 @@ public class App  {
     
     
     public static void main( String[] args ) throws IOException {
-        Logger logger = LoggerFactory.getLogger(App.class);
+        final Logger logger = LoggerFactory.getLogger(App.class);
         logger.info("Started...");
 
         Config.init();
 
-        // check logfile
+        // check lock file
         Path path = Paths.get(Config.getRequiredConfig("process.lock.filepath"));
         try {
-            if (Files.exists(path)) {
-                final FileTime lockfileTime = Files.getLastModifiedTime(path);
-                long lockfileTimeInSeconds = lockfileTime.to(TimeUnit.SECONDS);
-                logger.info("timestamp lockfile: " + lockfileTime.toString());
-                
-                int locktime = Config.getRequiredConfigAsInt("process.lock.expire.seconds");
-                long nowInSeconds = System.currentTimeMillis() / 1000;
-                long diffInSeconds = nowInSeconds - lockfileTimeInSeconds;
-                // calculate difference in seconds
-                if (diffInSeconds < locktime) {
-                    logger.error("Another AmaraPomsPublisher process is running -> will quit");
-                    System.exit(Config.ERROR_LOCKFILE_EXISTS);
-                } else {
-                    logger.warn("Another AmaraPomsPublisher process is running but expired -> continue");
-                    Files.delete(path);
-                }
+            if (Files.exists(path)) {                 
+                logger.error("Another AmaraPomsPublisher process is running -> will quit");
+                System.exit(Config.ERROR_LOCKFILE_EXISTS);
             } else {
-                logger.debug("No such file {}", path);
+                Files.createFile(path);
+                logger.info("Wrote lock file {}", path);
             }
 
-            Files.createFile(path);
-            logger.info("Wrote lock file {}", path);
-
-            // run Amara publisher
-            AmaraPublisher amaraPublisher = new AmaraPublisher();
-            amaraPublisher.processPomsCollection();
-
-            // run Poms publisher
-            PomsPublisher pomsPublisher = new PomsPublisher();
-            pomsPublisher.processAmaraTasks();
+            new AmaraPublisher().processPomsCollection();
+            new PomsPublisher().processAmaraTasks();
 
         } finally {
-            logger.debug("remove lockfile {}", path);
-            try {
-                Files.delete(path);
-            } catch (Exception e) {
-                logger.error("Error removing lockfiles: {}", e.getMessage());
-            }
+            logger.debug("removing lockfile {}", path);
+            Files.delete(path);
         }
 
         System.exit(0);
