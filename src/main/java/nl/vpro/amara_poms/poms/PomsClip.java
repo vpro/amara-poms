@@ -3,6 +3,7 @@ package nl.vpro.amara_poms.poms;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ import nl.vpro.rs.media.MediaRestClient;
  */
 public class PomsClip {
 
-    private static final Logger logger = LoggerFactory.getLogger(PomsClip.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PomsClip.class);
 
 
     public static final RelationDefinition ORIGINAL = RelationDefinition.of("TRANSLATION_SOURCE", "VPRO");
@@ -49,26 +50,35 @@ public class PomsClip {
         ProgramUpdate update = ProgramUpdate.create(ProgramType.CLIP);
 
         // Parse title/subtitle from amara (extract series name if there)
-        String[] splitTitle = title.split("//");
-        String newTitle = "";
-        String newSubTitle = "";
+        final String[] splitTitle = title.split("//");
+        final String newTitle;
+        final String newSubTitle;
         if (splitTitle.length > 1) {
             newTitle = splitTitle[0];
             newSubTitle = splitTitle[1];
         } else {
             newTitle = splitTitle[0];
+            newSubTitle = null;
         }
 
-        // set it
+        // take translated title (if set, otherwise take from source broadcast)
         TreeSet<TitleUpdate> titleUpdate = new TreeSet<>();
-        titleUpdate.add(new TitleUpdate(newTitle, TextualType.MAIN));
-        if (!newSubTitle.equals("")) {
+
+        if (StringUtils.isBlank(newTitle)) {
+            LOG.debug("No title find in translation, using the title of the original broadcast");
+            titleUpdate.add(sourceProgram.getTitles().first());
+        } else {
+            titleUpdate.add(new TitleUpdate(newTitle, TextualType.MAIN));
+        }
+
+        if (StringUtils.isNotBlank(newSubTitle)) {
             titleUpdate.add(new TitleUpdate(newSubTitle, TextualType.SUB));
         }
+
         update.setTitles(titleUpdate);
 
-        // take translated description (if set, othterwise take from source broadcast)
-        if (description != null && !description.equals("")) {
+        // take translated description (if set, otherwise take from source broadcast)
+        if (StringUtils.isNotBlank(description)) {
             DescriptionUpdate descriptionUpdate = new DescriptionUpdate(description, TextualType.MAIN);
             update.setDescriptions(descriptionUpdate);
         } else {
@@ -80,7 +90,7 @@ public class PomsClip {
             update.setDuration(sourceProgram.getDuration());
         } catch (ModificationException e) {
             // ignore
-            logger.error("Error setting duration for source POM Mid " + sourcePomsMid);
+            LOG.error("Error setting duration for source POM Mid " + sourcePomsMid);
 
         }
         update.setBroadcasters(sourceProgram.getBroadcasters());
@@ -114,18 +124,13 @@ public class PomsClip {
 
         // set genres
         update.setGenres(sourceProgram.getGenres());
-
-        // Work around https://jira.vpro.nl/browse/MSE-3247
-        // Can be removed for 4.3.2
-        for (ImageUpdate u : sourceProgram.getImages()) {
-            u.setOffset(null);
-        }
-
         update.setImages(sourceProgram.getImages());
 
         //JAXB.marshal(update, System.out);
         // update
         String newPomsMid = client.set(update);
+
+
 
         return newPomsMid;
     }

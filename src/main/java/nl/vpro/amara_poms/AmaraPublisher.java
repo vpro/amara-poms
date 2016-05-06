@@ -1,5 +1,10 @@
 package nl.vpro.amara_poms;
 
+import java.util.Iterator;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitleAction;
 import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
 import nl.vpro.amara_poms.amara.task.AmaraTask;
@@ -10,15 +15,11 @@ import nl.vpro.amara_poms.database.task.Task;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 import nl.vpro.amara_poms.poms.PomsCollection;
 import nl.vpro.domain.media.update.MemberUpdate;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
 
 /**
  * Download broadcasts from Poms and send them to Amara
  *
- * Created by joost on 04/04/16.
+ * @author joost
  */
 public class AmaraPublisher {
 

@@ -4,44 +4,45 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.FileTime;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import nl.vpro.domain.classification.ClassificationServiceLocator;
+import nl.vpro.domain.media.MediaClassificationService;
 
 
 /**
  *  Main app
  */
 public class App  {
-    
-    
+    private final static Logger LOG = LoggerFactory.getLogger(App.class);
+
     public static void main( String[] args ) throws IOException {
-        final Logger logger = LoggerFactory.getLogger(App.class);
-        logger.info("Started...");
 
-        Config.init();
-
+        LOG.info("Started...");
+        ClassificationServiceLocator.setInstance(new MediaClassificationService());
         // check lock file
+        Config.init();
         Path path = Paths.get(Config.getRequiredConfig("process.lock.filepath"));
+        if (Files.exists(path)) {
+            LOG.error("Another AmaraPomsPublisher process is running ({} exist) -> will quit", path);
+            System.exit(Config.ERROR_LOCKFILE_EXISTS);
+        }
+        int exitCode = 0;
         try {
-            if (Files.exists(path)) {                 
-                logger.error("Another AmaraPomsPublisher process is running -> will quit");
-                System.exit(Config.ERROR_LOCKFILE_EXISTS);
-            } else {
-                Files.createFile(path);
-                logger.info("Wrote lock file {}", path);
-            }
-
+            Files.createFile(path);
+            LOG.info("Wrote lock file {}", path);
             new AmaraPublisher().processPomsCollection();
             new PomsPublisher().processAmaraTasks();
-
+        } catch (Config.Error e) {
+            LOG.error(e.getMessage(), e);
+            exitCode = e.getErrorCode();
         } finally {
-            logger.debug("removing lockfile {}", path);
+            LOG.info("removing lockfile {}", path);
             Files.delete(path);
         }
 
-        System.exit(0);
+        System.exit(exitCode);
     }
 }
