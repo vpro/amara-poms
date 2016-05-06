@@ -11,6 +11,15 @@
   <name>amara_publisher</name>
   <url>http://maven.apache.org</url>
 
+
+  <scm>
+    <connection>scm:git:git://git@github.com/vpro/amara-poms.git</connection>
+    <developerConnection>scm:git:git@github.com:vpro/amara-poms.git</developerConnection>
+    <url>https://github.com/vpro/amara-poms</url>
+    <tag>HEAD</tag>
+  </scm>
+
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <api.client.version>4.3.5</api.client.version>
