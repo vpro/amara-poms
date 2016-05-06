@@ -29,12 +29,9 @@ public class PomsClip {
 
     /**
      * Create clip in poms
-     * @param client
      * @param sourcePomsMid - source broadcast
-     * @param language
      * @param title - title from Amara (serie // translated titel or translated title)
      * @param description - translated description from Amara
-     * @return
      */
     public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description) {
 
@@ -130,7 +127,7 @@ public class PomsClip {
         // update
         String newPomsMid = client.set(update);
 
-
+        LOG.debug("Found new poms mid {}", newPomsMid);
 
         return newPomsMid;
     }

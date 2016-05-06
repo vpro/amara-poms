@@ -148,7 +148,7 @@ public class PomsBroadcast {
      * Copy source video file to download.omroep.nl to make it accessable for Amara
      *
      * @return NO_ERROR if successfull, otherwise errorcode
-     * @TODO The fetch script contains:
+     * TODO The fetch script contains:
      * <pre>
     DIR=/e/download/pages/vpro/netinnederland/h264
     for i in $*; do

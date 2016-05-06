@@ -54,8 +54,6 @@ public class Config {
     /**
      * Get required config and exit if not found
      *
-     * @param propertyName
-     * @return
      */
     public static String getRequiredConfig(String propertyName) {
         String returnValue = PROPERTIES.getProperty(propertyName);
@@ -68,8 +66,6 @@ public class Config {
     /**
      * Get required config and exit if not found
      *
-     * @param propertyName
-     * @return
      */
     public static int getRequiredConfigAsInt(String propertyName) {
         String propertyValue = PROPERTIES.getProperty(propertyName);
@@ -85,9 +81,6 @@ public class Config {
 
     /**
      * Get required config and exit if not found
-     *
-     * @param propertyName
-     * @return
      */
     public static long getRequiredConfigAsLong(String propertyName) {
         String propertyValue = PROPERTIES.getProperty(propertyName);
@@ -105,7 +98,6 @@ public class Config {
     /**
      * Get required config as array and exit if not found
      *
-     * @param propertyName
      * @return array of values
      */
     public static String[] getRequiredConfigAsArray(String propertyName) {
@@ -119,9 +111,6 @@ public class Config {
 
     /**
      * Get config and log error if not found
-     *
-     * @param propertyName
-     * @return
      */
     public static String getConfig(String propertyName) {
         String returnValue = PROPERTIES.getProperty(propertyName);

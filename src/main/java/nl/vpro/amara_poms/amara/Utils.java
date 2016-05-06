@@ -1,12 +1,12 @@
 package nl.vpro.amara_poms.amara;
 
-import nl.vpro.amara_poms.Config;
-import org.springframework.http.HttpEntity;
+import java.net.URI;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import nl.vpro.amara_poms.Config;
 
 /**
  * Created by joost on 06/04/16.
@@ -37,7 +37,6 @@ public class Utils {
 
     /**
      * Uri for Get and Post videos
-     * @return
      */
     public  static URI getUriForGetAndPostVideos() {
         String url = Config.getRequiredConfig("amara.api.url") + "api/videos/";
@@ -53,7 +52,6 @@ public class Utils {
 
     /**
      * Uri for Get videos
-     * @return
      */
     public  static URI getUriForGetVideoWithId(String videoId) {
         String url = Config.getRequiredConfig("amara.api.url") + "api/videos/" + videoId;
@@ -66,7 +64,6 @@ public class Utils {
 
     /**
      * Uri for url
-     * @return
      */
     public  static URI getUriForUri(String url) {
 
@@ -77,7 +74,6 @@ public class Utils {
 
     /**
      * Uri for url with team
-     * @return
      */
     public  static URI getUriForUriWithTeam(String url) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
@@ -88,7 +84,6 @@ public class Utils {
 
     /**
      * Uri for path
-     * @return
      */
     public  static URI getUriForPath(String path) {
         String url = Config.getRequiredConfig("amara.api.url") + path;

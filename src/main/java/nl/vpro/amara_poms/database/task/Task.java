@@ -1,11 +1,12 @@
 package nl.vpro.amara_poms.database.task;
 
+import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.csv.CSVRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
 
 /**
  * Created by joost on 07/04/16.
@@ -63,8 +64,6 @@ public class Task {
 
     /**
      * Return true if input version is newer
-     * @param subtitleVersionToCompareWith
-     * @return
      */
     public boolean isNewer(String subtitleVersionToCompareWith) {
         boolean isNewer = false;
@@ -165,8 +164,8 @@ public class Task {
                 '}';
     }
 
-    public ArrayList get() {
-        ArrayList list = new ArrayList();
+    public List<Object> get() {
+        List<Object> list = new ArrayList<>();
         list.add(videoId);
         list.add(language);
         list.add(status);

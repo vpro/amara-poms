@@ -1,11 +1,5 @@
 package nl.vpro.amara_poms.database;
 
-import nl.vpro.amara_poms.database.task.TaskReader;
-import nl.vpro.amara_poms.database.task.Task;
-import nl.vpro.amara_poms.database.task.TaskWriter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
@@ -13,6 +7,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import nl.vpro.amara_poms.database.task.Task;
+import nl.vpro.amara_poms.database.task.TaskReader;
+import nl.vpro.amara_poms.database.task.TaskWriter;
 
 /**
  * Manager for csv file database
@@ -69,7 +70,6 @@ public class Manager implements Iterable<Task> {
 
     /**
      * Add or update task
-     * @param task
      */
     public void addOrUpdateTask(Task task) {
 
@@ -92,9 +92,6 @@ public class Manager implements Iterable<Task> {
 
     /**
      * Find task by videoId and language
-     * @param videoId
-     * @param language
-     * @return
      */
     public Task findTask(String videoId, String language) {
         Task foundTask = null;
@@ -116,8 +113,6 @@ public class Manager implements Iterable<Task> {
 
     /**
      * Find task by source mid
-     * @param pomsMid
-     * @return
      */
     public Task findTaskByPomsSourceId(String pomsMid) {
         Task foundTask = null;
@@ -138,7 +133,6 @@ public class Manager implements Iterable<Task> {
 
     /**
      * Remove task by videoId
-     * @param videoId
      */
     public void removeTaskByVideoId(String videoId, String language) {
         LOG.info("Task with videoId " + videoId + " has been removed");
