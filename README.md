@@ -67,3 +67,8 @@ java -cp target/amara_poms_publisher-1.0-SNAPSHOT.jar nl.vpro.amara_poms.App
 */5 * * * * cd /home/omroep/vpro_admin/netinnederland && /home/omroep/vpro_admin/netinnederland/run
 
 waarbij run.sh script commando is in stap 4
+
+6. Release
+Een release maakt men via
+mvn release:prepare release:perform
+Er komt een release in de 'releases' directory
