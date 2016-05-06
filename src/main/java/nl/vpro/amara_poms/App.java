@@ -26,7 +26,7 @@ public class App  {
         Config.init();
         Path path = Paths.get(Config.getRequiredConfig("process.lock.filepath"));
         if (Files.exists(path)) {
-            LOG.error("Another AmaraPomsPublisher process is running ({} exist) -> will quit", path);
+            LOG.error("Another AmaraPomsPublisher process is running ({} exists since {}) -> will quit", path, Files.getLastModifiedTime(path).toInstant());
             System.exit(Config.ERROR_LOCKFILE_EXISTS);
         }
         int exitCode = 0;
