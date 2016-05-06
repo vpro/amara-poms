@@ -1,11 +1,8 @@
 package nl.vpro.amara_poms.amara.activity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.AmaraMeta;
-import nl.vpro.amara_poms.amara.Utils;
+import java.net.URI;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -15,16 +12,21 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.AmaraMeta;
+import nl.vpro.amara_poms.amara.Utils;
 
 /**
- * Created by joost on 09/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AmaraActivityCollection {
-    final static Logger logger = LoggerFactory.getLogger(AmaraActivityCollection.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraActivityCollection.class);
 
     public AmaraMeta meta;
 
@@ -40,7 +42,7 @@ public class AmaraActivityCollection {
 
         HttpStatus httpStatus = response.getStatusCode();
 
-        logger.info(String.valueOf(response));
+        LOG.info(String.valueOf(response));
 
         return  amaryActivityCollection.amaraActivities;
     }
@@ -62,7 +64,7 @@ public class AmaraActivityCollection {
         AmaraActivityCollection amaryActivityCollection = response.getBody();
 
         HttpStatus httpStatus = response.getStatusCode();
-        logger.info(String.valueOf(response));
+        LOG.info(String.valueOf(response));
 
         return  amaryActivityCollection.amaraActivities;
     }

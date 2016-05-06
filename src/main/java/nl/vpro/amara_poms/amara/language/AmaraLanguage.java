@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 
 /**
- * Created by joost on 05/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmaraLanguage {

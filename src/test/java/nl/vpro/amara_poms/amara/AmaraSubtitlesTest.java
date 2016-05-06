@@ -1,25 +1,27 @@
 package nl.vpro.amara_poms.amara;
 
-import junit.framework.TestCase;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
-import org.apache.commons.lang3.StringUtils;
-import org.jsoup.helper.StringUtil;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara_poms.Config;
+
+import static org.junit.Assert.assertTrue;
+
 /**
- * Created by joost on 06/04/16.
+ * @author joost
  */
-public class AmaraSubtitlesTest extends TestCase {
+public class AmaraSubtitlesTest  {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraSubtitlesTest.class);
+    final static Logger LOG = LoggerFactory.getLogger(AmaraSubtitlesTest.class);
 
-    protected void setUp() {
-
+    @Before
+    public void setUp() {
         Config.init();
     }
 
+    @Test
     public void testDummy() {
         assertTrue(true);
     }

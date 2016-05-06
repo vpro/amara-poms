@@ -1,5 +1,12 @@
 package nl.vpro.amara_poms;
 
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
 import nl.vpro.amara_poms.amara.task.AmaraTask;
 import nl.vpro.amara_poms.amara.task.AmaraTaskCollection;
@@ -9,15 +16,8 @@ import nl.vpro.amara_poms.database.task.Task;
 import nl.vpro.amara_poms.poms.PomsClip;
 import nl.vpro.amara_poms.poms.Utils;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * Created by joost on 04/04/16.
+ * @author joost
  */
 public class PomsPublisher {
 

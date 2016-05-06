@@ -1,17 +1,19 @@
 package nl.vpro.amara_poms.amara.video;
 
-import nl.vpro.amara_poms.amara.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
+import nl.vpro.amara_poms.amara.Utils;
+
 /**
- * Created by joost on 05/04/16.
+ * @author joost
  */
 public class AmaraVideoCollection {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraVideoCollection.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraVideoCollection.class);
 
     public static void getAllVideos() {
 
@@ -19,7 +21,7 @@ public class AmaraVideoCollection {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> response = restTemplate.exchange(Utils.getUriForGetAndPostVideos(), HttpMethod.GET, request, String.class);
-        logger.info(String.valueOf(response));
+        LOG.info(String.valueOf(response));
 
 //        RestTemplate restTemplate = new RestTemplate();
 //        HttpEntity<String> request = new HttpEntity<String>(headers);

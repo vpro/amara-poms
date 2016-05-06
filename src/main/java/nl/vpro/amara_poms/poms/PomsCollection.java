@@ -1,23 +1,17 @@
 package nl.vpro.amara_poms.poms;
 
-import com.google.common.collect.Lists;
-import nl.vpro.domain.media.update.GroupUpdate;
-import nl.vpro.domain.media.update.MediaUpdate;
-import nl.vpro.domain.media.update.MemberUpdate;
-import nl.vpro.domain.media.update.ProgramUpdate;
-import nl.vpro.rs.media.MediaRestClient;
+import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
+import nl.vpro.domain.media.update.GroupUpdate;
+import nl.vpro.domain.media.update.MemberUpdate;
+import nl.vpro.rs.media.MediaRestClient;
 
 
 /**
- * Created by joost on 04/04/16.
+ * @author joost
  */
 public class PomsCollection {
 
@@ -35,10 +29,6 @@ public class PomsCollection {
         return memberUpdateArrayList.iterator();
     }
 
-    /**
-     *
-     * @return
-     */
     public GroupUpdate getGroup() {
         return group;
     }

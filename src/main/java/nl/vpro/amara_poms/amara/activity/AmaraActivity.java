@@ -1,12 +1,7 @@
 package nl.vpro.amara_poms.amara.activity;
 
-import com.fasterxml.jackson.annotation.*;
+import java.net.URI;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +11,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.Utils;
 
 
 /**
- * Created by joost on 08/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)

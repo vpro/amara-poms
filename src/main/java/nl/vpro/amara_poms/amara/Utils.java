@@ -9,7 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import nl.vpro.amara_poms.Config;
 
 /**
- * Created by joost on 06/04/16.
+ * @author joost
  */
 public class Utils {
 

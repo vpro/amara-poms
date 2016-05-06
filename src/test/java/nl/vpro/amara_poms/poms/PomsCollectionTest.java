@@ -1,63 +1,45 @@
 package nl.vpro.amara_poms.poms;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-
 import java.util.Properties;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.rs.media.MediaRestClient;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
 /**
- * Created by joost on 04/04/16.
+ * @author joost
  */
-public class PomsCollectionTest extends TestCase {
+public class PomsCollectionTest  {
 
-    final Logger logger = LoggerFactory.getLogger(PomsCollectionTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(PomsCollectionTest.class);
 
     MediaRestClient client;
     Properties properties;
 
-    /**
-     * Create the test case
-     *
-     * @param testName PomsCollection
-     */
-    public PomsCollectionTest( String testName )
-    {
-        super( testName );
-    }
-
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( PomsCollectionTest.class );
-    }
-
-    protected void setUp() {
-
+    @Before
+    public void setUp() {
         Config.init();
     }
 
+    @Test
     public void testGetCollectionExists() {
 
         // load collection
         PomsCollection pomsCollection = new PomsCollection("POMS_S_VPRO_1416538");
         assertEquals(0, pomsCollection.getBroadcastsFromPOMS());
 
-        logger.info(pomsCollection.getGroup().toString());
+        LOG.info(pomsCollection.getGroup().toString());
     }
 
+    @Test
     public void testGetCollectionNotExists() {
-
         // load collection
         PomsCollection pomsCollection = new PomsCollection("ABC");
         assertNotEquals(0, pomsCollection.getBroadcastsFromPOMS());

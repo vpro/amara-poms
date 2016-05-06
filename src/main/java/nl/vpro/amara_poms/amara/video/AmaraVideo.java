@@ -1,26 +1,30 @@
 package nl.vpro.amara_poms.amara.video;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.regex.Pattern;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import nl.vpro.amara_poms.amara.language.AmaraLanguage;
-import nl.vpro.amara_poms.amara.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import nl.vpro.amara_poms.amara.Utils;
+import nl.vpro.amara_poms.amara.language.AmaraLanguage;
 
 /**
- * Created by joost on 05/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class AmaraVideo {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraVideo.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraVideo.class);
 
 
     private String id;
@@ -172,9 +176,9 @@ public class AmaraVideo {
                 amaraVideoOut = response.getBody();
             }
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
-            String responseBody = new String(e.getResponseBodyAsString());
-            logger.info(responseBody);
+            LOG.info("For " + amaraVideoIn + ":"  + e.getMessage());
+            String responseBody = e.getResponseBodyAsString();
+            LOG.info(responseBody);
         }
 
         return  amaraVideoOut;
@@ -190,11 +194,11 @@ public class AmaraVideo {
             HttpEntity<String> response = restTemplate.exchange(Utils.getUriForGetAndPostVideos(), HttpMethod.POST, request, String.class);
 
             stringResponse = response.getBody();
-            logger.info(stringResponse);
+            LOG.info(stringResponse);
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
-            String responseBody = new String(e.getResponseBodyAsString());
-            logger.info(responseBody);
+            LOG.info("For " + amaraVideoIn + " " + e.toString());
+            String responseBody = e.getResponseBodyAsString();
+            LOG.info(responseBody);
         }
 
         return stringResponse;
@@ -219,7 +223,7 @@ public class AmaraVideo {
 
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity<String> response = restTemplate.exchange(Utils.getUriForGetVideoWithId(videoId), HttpMethod.GET, request, String.class);
-        logger.info(response.getBody());
+        LOG.info(response.getBody());
 
         return response.getBody();
     }

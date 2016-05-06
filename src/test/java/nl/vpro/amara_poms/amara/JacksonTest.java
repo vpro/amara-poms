@@ -1,7 +1,7 @@
 package nl.vpro.amara_poms.amara;
 
 /**
- * Created by joost on 09/04/16.
+ * @author joost
  */
 import java.io.IOException;
 

@@ -1,26 +1,27 @@
 package nl.vpro.amara_poms.amara;
 
-import junit.framework.TestCase;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.video.AmaraVideoCollection;
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.video.AmaraVideoCollection;
+
 /**
- * Created by joost on 05/04/16.
+ * @author joost
  */
-public class AmaraVideoCollectionTest extends TestCase{
+public class AmaraVideoCollectionTest {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraVideoCollectionTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraVideoCollectionTest.class);
 
-    protected void setUp() {
-
+    @Before
+    public void setUp() {
         Config.init();
     }
 
+    @Test
     public void testGetAllVideos(){
-
-
         AmaraVideoCollection.getAllVideos();
     }
 }

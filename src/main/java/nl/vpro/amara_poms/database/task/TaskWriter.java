@@ -2,17 +2,20 @@ package nl.vpro.amara_poms.database.task;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
-* Created by joost on 07/04/16.
+* @author joost
 */
 public class TaskWriter {
+
+    private final static Logger LOG = LoggerFactory.getLogger(TaskWriter.class);
 
     //Delimiter used in CSV file
     private static final String NEW_LINE_SEPARATOR = "\n";
@@ -43,8 +46,7 @@ public class TaskWriter {
                 csvFilePrinter.printRecord(task.get());
             }
         } catch (Exception e) {
-            System.out.println("Error in CsvFileWriter !!!");
-            e.printStackTrace();
+            LOG.error("Error in CsvFileWriter !!! " + e.getMessage(), e);
         } finally {
             try {
                 fileWriter.flush();

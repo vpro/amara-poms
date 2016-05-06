@@ -1,20 +1,21 @@
 package nl.vpro.amara_poms.amara;
 
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.activity.AmaraActivity;
-import nl.vpro.amara_poms.amara.activity.AmaraActivityCollection;
+import java.util.List;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.activity.AmaraActivity;
+import nl.vpro.amara_poms.amara.activity.AmaraActivityCollection;
 
 /**
- * Created by joost on 08/04/16.
+ * @author joost
  */
 public class AmaraActivityTest {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraActivityTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraActivityTest.class);
 
 
     @Test
@@ -23,9 +24,9 @@ public class AmaraActivityTest {
 
         AmaraActivity amaraActivity = AmaraActivity.get("https://staging.amara.org/api/activity/5036197/");
 
-        logger.info(amaraActivity.toString());
+        LOG.info(amaraActivity.toString());
         if (amaraActivity.getCreated() != null) {
-            logger.info((amaraActivity.getCreated()).toString());
+            LOG.info((amaraActivity.getCreated()).toString());
         }
     }
 
@@ -35,11 +36,11 @@ public class AmaraActivityTest {
 
         List<AmaraActivity> amaraActivities = AmaraActivityCollection.getList();
 
-        logger.info("Count:" + amaraActivities.size());
+        LOG.info("Count:" + amaraActivities.size());
         if (amaraActivities.size() > 0) {
-            logger.info(amaraActivities.get(0).toString());
+            LOG.info(amaraActivities.get(0).toString());
         }
-        logger.info(amaraActivities.toString());
+        LOG.info(amaraActivities.toString());
     }
 
     @Test
@@ -52,11 +53,11 @@ public class AmaraActivityTest {
 
         List<AmaraActivity> amaraActivities = AmaraActivityCollection.getListForType(AmaraActivity.TYPE_APPROVE_VERSION, now - afterTimestampInSeconds);
 
-        logger.info("Count:" + amaraActivities.size());
+        LOG.info("Count:" + amaraActivities.size());
         if (amaraActivities.size() > 0) {
-            logger.info(amaraActivities.get(0).toString());
+            LOG.info(amaraActivities.get(0).toString());
         }
-        logger.info(amaraActivities.toString());
+        LOG.info(amaraActivities.toString());
     }
 
 

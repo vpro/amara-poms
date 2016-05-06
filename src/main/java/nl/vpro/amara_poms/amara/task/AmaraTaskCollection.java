@@ -1,12 +1,8 @@
 package nl.vpro.amara_poms.amara.task;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.AmaraMeta;
-import nl.vpro.amara_poms.amara.Utils;
-import nl.vpro.amara_poms.amara.task.AmaraTask;
+import java.net.URI;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -16,17 +12,22 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.AmaraMeta;
+import nl.vpro.amara_poms.amara.Utils;
 
 /**
- * Created by joost on 09/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AmaraTaskCollection {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraTaskCollection.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraTaskCollection.class);
 
     public AmaraMeta meta;
 
@@ -42,7 +43,7 @@ public class AmaraTaskCollection {
 
         HttpStatus httpStatus = response.getStatusCode();
 
-        logger.info(String.valueOf(response));
+        LOG.info(String.valueOf(response));
 
         return  amaryActivityCollection.amaraTasks;
     }

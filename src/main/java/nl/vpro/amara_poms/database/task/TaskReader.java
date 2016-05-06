@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -12,15 +13,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by joost on 07/04/16.
+ * @author joost
  */
 public class TaskReader {
 
-    final static Logger logger = LoggerFactory.getLogger(TaskReader.class);
+    private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
-    public static ArrayList<Task> readCsvFile(String fileName) {
+    public static List<Task> readCsvFile(String fileName) {
 
-        ArrayList<Task> tasks = new ArrayList<Task>();
+        List<Task> tasks = new ArrayList<>();
 
         FileReader fileReader = null;
 

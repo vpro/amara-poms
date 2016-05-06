@@ -1,16 +1,14 @@
 package nl.vpro.amara_poms.poms;
 
-import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.update.MemberRefUpdate;
-import nl.vpro.domain.media.update.ProgramUpdate;
 import org.junit.Test;
 
-import java.util.SortedSet;
+import nl.vpro.amara_poms.Config;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 /**
- * Created by joost on 05/04/16.
+ * @author joost
  */
 public class PomsBroadcastTest {
 

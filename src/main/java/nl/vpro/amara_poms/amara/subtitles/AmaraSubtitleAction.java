@@ -1,21 +1,21 @@
 package nl.vpro.amara_poms.amara.subtitles;
 
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.Utils;
 
 /**
- * Created by joost on 15/04/16.
+ * @author joost
  */
 public class AmaraSubtitleAction {
     final static Logger logger = LoggerFactory.getLogger(AmaraSubtitleAction.class);

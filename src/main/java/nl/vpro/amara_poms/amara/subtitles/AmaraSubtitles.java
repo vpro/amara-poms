@@ -1,13 +1,9 @@
 package nl.vpro.amara_poms.amara.subtitles;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
-import nl.vpro.amara_poms.amara.language.AmaraLanguage;
-import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
-import org.apache.commons.lang3.StringUtils;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -18,18 +14,20 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.net.URI;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import static com.sun.xml.bind.v2.util.XmlFactory.logger;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.Utils;
+import nl.vpro.amara_poms.amara.language.AmaraLanguage;
+import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
 
 /**
- * Created by joost on 06/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmaraSubtitles {
-    final static Logger logger = LoggerFactory.getLogger(AmaraSubtitles.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraSubtitles.class);
 
     public String action; // only used for post, possible values: complete
 
@@ -102,8 +100,8 @@ public class AmaraSubtitles {
         try( PrintWriter out = new PrintWriter(getSubtitleFilepath(pomsMid))){
             out.println(subtitles);
         } catch (FileNotFoundException e) {
-            logger.error("Error writing subtitles to file " + getSubtitleFilepath(pomsMid));
-            logger.error(e.toString());
+            LOG.error("Error writing subtitles to file " + getSubtitleFilepath(pomsMid));
+            LOG.error(e.toString());
             returnValue = Config.ERROR_WRITING_SUBTITLES_TO_FILE;
         }
 
@@ -131,9 +129,9 @@ public class AmaraSubtitles {
                 amaraSubtitlesOut = response.getBody();
             }
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
+            LOG.info(e.toString());
             String responseBody = new String(e.getResponseBodyAsString());
-            logger.info(responseBody);
+            LOG.info(responseBody);
         }
 
         return  amaraSubtitlesOut;
@@ -162,9 +160,9 @@ public class AmaraSubtitles {
                 amaraSubtitlesOut = response.getBody();
             }
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
+            LOG.info(e.toString());
             String responseBody = new String(e.getResponseBodyAsString());
-            logger.info(responseBody);
+            LOG.info(responseBody);
         }
 
         return  amaraSubtitlesOut;
@@ -188,17 +186,17 @@ public class AmaraSubtitles {
             RestTemplate restTemplate = new RestTemplate();
             HttpEntity<AmaraSubtitles> request = new HttpEntity<>(Utils.getGetHeaders());
             HttpEntity<String> response = restTemplate.exchange(uri, HttpMethod.GET, request, String.class);
-            logger.info(response.getBody());
+            LOG.info(response.getBody());
 
-            // // TODO: 09/04/16 fix 
+            // // TODO: 09/04/16 fix
 //            if (response.statusCode = HttpStatus.OK) {
                 amaraSubtitles = response.getBody();
 //            }
 
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
+            LOG.info(e.toString());
             String responseBody = new String(e.getResponseBodyAsString());
-            logger.info(responseBody);
+            LOG.info(responseBody);
         }
 
         return  amaraSubtitles;

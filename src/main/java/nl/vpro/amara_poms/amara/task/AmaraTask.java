@@ -1,13 +1,8 @@
 package nl.vpro.amara_poms.amara.task;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
+import java.net.URI;
 
 import org.joda.time.DateTime;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -18,12 +13,14 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.net.URI;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-import static com.sun.xml.bind.v2.util.XmlFactory.logger;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.Utils;
 
 /**
- * Created by joost on 06/04/16.
+ * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AmaraTask {

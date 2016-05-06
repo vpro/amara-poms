@@ -1,23 +1,22 @@
 package nl.vpro.amara_poms.database;
 
 
-import nl.vpro.amara_poms.Config;
-
-import nl.vpro.amara_poms.database.task.Task;
-import org.junit.Test;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.database.task.Task;
+
 import static org.junit.Assert.*;
 
 /**
- * Created by joost on 07/04/16.
+ * @author joost
  */
 public class DatabaseManagerTest {
 

@@ -1,22 +1,18 @@
 package nl.vpro.amara_poms.poms;
 
-import nl.vpro.amara_poms.Config;
-import nl.vpro.rs.media.MediaRestClient;
-
-import java.util.Properties;
-
-import org.apache.commons.logging.Log;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara_poms.Config;
+import nl.vpro.rs.media.MediaRestClient;
+
 
 /**
- * Created by joost on 05/04/16.
+ * @author joost
  */
 public class Utils {
 
-    final Logger logger = LoggerFactory.getLogger(Utils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(Utils.class);
 
     private static MediaRestClient client = null;
 

@@ -1,23 +1,25 @@
 package nl.vpro.amara_poms.amara;
 
-import junit.framework.TestCase;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.task.AmaraTask;
-import nl.vpro.amara_poms.amara.task.AmaraTaskCollection;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
+import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.amara.task.AmaraTask;
+import nl.vpro.amara_poms.amara.task.AmaraTaskCollection;
 
 /**
- * Created by joost on 06/04/16.
+ * @author joost
  */
-public class AmaraTaskTest extends TestCase {
+public class AmaraTaskTest  {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraSubtitlesTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraSubtitlesTest.class);
 
-    protected void setUp() {
-
+    @Before
+    public void setUp() {
         Config.init();
     }
 
@@ -30,6 +32,7 @@ public class AmaraTaskTest extends TestCase {
 //        assertNotNull(newAmaraTask);
 //    }
 
+    @Test
     public void testGet() {
         long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");
 
@@ -37,11 +40,11 @@ public class AmaraTaskTest extends TestCase {
 
         List<AmaraTask> amaraTasks = AmaraTaskCollection.getListForType(AmaraTask.TYPE_TRANSLATE, now - afterTimestampInSeconds);
 
-        logger.info("Count:" + amaraTasks.size());
+        LOG.info("Count:" + amaraTasks.size());
         if (amaraTasks.size() > 0) {
-            logger.info(amaraTasks.get(0).toString());
+            LOG.info(amaraTasks.get(0).toString());
         }
-        logger.info(amaraTasks.toString());
+        LOG.info(amaraTasks.toString());
 
     }
 

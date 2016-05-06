@@ -9,10 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Created by joost on 07/04/16.
+ * @author joost
  */
 public class Task {
-    final static Logger logger = LoggerFactory.getLogger(Task.class);
+    private final static Logger LOG = LoggerFactory.getLogger(Task.class);
 
     public static final String STATUS_UPLOADED_VIDEO_TO_AMARA = "0";
     public static final String STATUS_UPLOADED_SUBTITLE_TO_AMARA = "1";
@@ -79,7 +79,7 @@ public class Task {
                     isNewer = true;
                 }
             } catch (Exception e) {
-                logger.error("Error converting subtitle version number to int (" + subtitleVersionToCompareWith + "/" + subtitlesVersionNo + ")");
+                LOG.error("Error converting subtitle version number to int (" + subtitleVersionToCompareWith + "/" + subtitlesVersionNo + ")");
             }
         }
 
