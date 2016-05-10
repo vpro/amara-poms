@@ -47,7 +47,7 @@ public class Task {
         this.pomsSourceMid = pomsSourceMid;
     }
 
-    static public Task Factory(CSVRecord csvRecord) {
+    static public Task from(CSVRecord csvRecord) {
         Task task = new Task();
 
         task.videoId = csvRecord.get("videoId");
