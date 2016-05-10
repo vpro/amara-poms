@@ -23,9 +23,6 @@ public class Manager implements Iterable<Task> {
 
     private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
-    /**
-     * singleton manager
-     */
     private static final Manager INSTANCE = new Manager();
 
     public static Manager getInstance() {
@@ -33,7 +30,7 @@ public class Manager implements Iterable<Task> {
     }
 
     private String filenameTasks;
-       private final List<Task> tasks = new ArrayList<>();
+    private final List<Task> tasks = new ArrayList<>();
 
     public void setFilenameTasks(String filenameTasks) {
         this.filenameTasks = filenameTasks;
@@ -42,7 +39,6 @@ public class Manager implements Iterable<Task> {
     public List<Task> getTasks() {
         return tasks;
     }
-
 
     /**
      * writing and reading
@@ -127,8 +123,8 @@ public class Manager implements Iterable<Task> {
      * Remove task by videoId
      */
     public void removeTaskByVideoId(String videoId, String language) {
-        LOG.info("Task with videoId " + videoId + " has been removed");
-        tasks.removeIf((task) -> task.getVideoId().equals(videoId) && task.getLanguage() == language);
+        LOG.info("Task with videoId {}/{} has been removed", videoId, language);
+        tasks.removeIf((task) -> task.getVideoId().equals(videoId) && task.getLanguage().equals(language));
     }
 
 
