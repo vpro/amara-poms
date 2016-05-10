@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.database.task.Task;
 import nl.vpro.amara_poms.database.task.TaskReader;
 import nl.vpro.amara_poms.database.task.TaskWriter;
@@ -53,11 +54,11 @@ public class Manager implements Iterable<Task> {
         TaskWriter.writeCsvFile(filenameTasks, tasks);
     }
     public void readFile() {
-        if (Files.exists((Paths.get(filenameTasks)))) {
+        if (Files.isReadable((Paths.get(filenameTasks)))) {
             tasks.clear();
             tasks.addAll(TaskReader.readCsvFile(filenameTasks));
         } else {
-            tasks.clear();
+            throw new Config.Error("The database file " + filenameTasks + " cannot be opened", Config.ERROR_DB_NOT_READABLE);
         }
     }
 
