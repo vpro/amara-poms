@@ -35,7 +35,7 @@ public class TaskReader {
             // skip header row
             if (iterator.hasNext()) {
                 iterator.next();
-            };
+            }
 
             // loop
             while (iterator.hasNext()) {
