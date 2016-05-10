@@ -23,21 +23,6 @@ public class Manager implements Iterable<Task> {
 
     private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
-    private String filenameTasks;
-    private String filenameActivities;
-    private final List<Task> tasks = new ArrayList<>();
-
-    public void setFilenameTasks(String filenameTasks) {
-        this.filenameTasks = filenameTasks;
-    }
-    public void setFilenameActivities(String filenameActivities) {
-        this.filenameActivities = filenameActivities;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
     /**
      * singleton manager
      */
@@ -46,6 +31,18 @@ public class Manager implements Iterable<Task> {
     public static Manager getInstance() {
         return INSTANCE;
     }
+
+    private String filenameTasks;
+       private final List<Task> tasks = new ArrayList<>();
+
+    public void setFilenameTasks(String filenameTasks) {
+        this.filenameTasks = filenameTasks;
+    }
+
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
 
     /**
      * writing and reading
@@ -95,41 +92,35 @@ public class Manager implements Iterable<Task> {
      * Find task by videoId and language
      */
     public Task findTask(String videoId, String language) {
-        Task foundTask = null;
 
         List<Task> foundTasks = tasks.stream().filter((task) -> task.getVideoId().equals(videoId) &&
                                                                 task.getLanguage().equals(language)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
-            LOG.info(videoId + " not found (yet) in db");
+            LOG.info("videoid {}/{} not found (yet) in db", videoId, language);
+            return null;
         } else if (foundTasks.size() > 1) {
-            LOG.error(videoId + " found more than 1 time in db");
-            foundTask = foundTasks.get(0);
-        } else {
-            foundTask = foundTasks.get(0);
+            LOG.error("videoId {}/{} found more than 1 time in db", videoId, language);
         }
 
-        return  foundTask;
+        return  foundTasks.get(0);
     }
 
     /**
      * Find task by source mid
      */
     public Task findTaskByPomsSourceId(String pomsMid) {
-        Task foundTask = null;
 
         List<Task> foundTasks = tasks.stream().filter((task) -> task.getPomsSourceMid().equals(pomsMid)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
-            LOG.info(pomsMid + " not found (yet) in db");
+            LOG.info("MID {} not found (yet) in db", pomsMid);
+            return null;
         } else if (foundTasks.size() > 1) {
-            LOG.error(pomsMid + " found more than 1 time in db");
-            foundTask = foundTasks.get(0);
-        } else {
-            foundTask = foundTasks.get(0);
+            LOG.error("MID {} found more than 1 time in db", pomsMid);
         }
 
-        return  foundTask;
+        return  foundTasks.get(0);
     }
 
     /**
