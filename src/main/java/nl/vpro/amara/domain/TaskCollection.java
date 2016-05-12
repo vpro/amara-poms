@@ -1,4 +1,4 @@
-package nl.vpro.amara.task;
+package nl.vpro.amara.domain;
 
 import java.net.URI;
 import java.util.List;
@@ -17,29 +17,29 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara.AmaraMeta;
 import nl.vpro.amara.Utils;
 
 /**
  * @author joost
+ * @todo static methods should not be in domain
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AmaraTaskCollection {
+public class TaskCollection {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AmaraTaskCollection.class);
+    private final static Logger LOG = LoggerFactory.getLogger(TaskCollection.class);
 
-    public AmaraMeta meta;
+    public Meta meta;
 
     @JsonProperty("objects")
-    List<AmaraTask> amaraTasks;
+    List<Task> amaraTasks;
 
-    public static List<AmaraTask> getList() {
+    public static List<Task> getList() {
 
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<AmaraTaskCollection> request = new HttpEntity<>(Utils.getGetHeaders());
-        ResponseEntity<AmaraTaskCollection> response = restTemplate.exchange(Utils.getUriForPath("api/task"), HttpMethod.GET, request, AmaraTaskCollection.class);
-        AmaraTaskCollection amaryActivityCollection = response.getBody();
+        HttpEntity<TaskCollection> request = new HttpEntity<>(Utils.getGetHeaders());
+        ResponseEntity<TaskCollection> response = restTemplate.exchange(Utils.getUriForPath("api/task"), HttpMethod.GET, request, TaskCollection.class);
+        TaskCollection amaryActivityCollection = response.getBody();
 
         HttpStatus httpStatus = response.getStatusCode();
 
@@ -48,7 +48,7 @@ public class AmaraTaskCollection {
         return  amaryActivityCollection.amaraTasks;
     }
 
-    public static List<AmaraTask> getListForType(String taskType, long afterTimestampInSeconds) {
+    public static List<Task> getListForType(String taskType, long afterTimestampInSeconds) {
 
         // build url
         String url = Config.getRequiredConfig("amara.api.url") + "api/teams/" + Config.getRequiredConfig("amara.api.team") + "/tasks";
@@ -61,9 +61,9 @@ public class AmaraTaskCollection {
 
         // do request
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<AmaraTaskCollection> request = new HttpEntity<>(Utils.getGetHeaders());
-        ResponseEntity<AmaraTaskCollection> response = restTemplate.exchange(uri, HttpMethod.GET, request, AmaraTaskCollection.class);
-        AmaraTaskCollection amaryActivityCollection = response.getBody();
+        HttpEntity<TaskCollection> request = new HttpEntity<>(Utils.getGetHeaders());
+        ResponseEntity<TaskCollection> response = restTemplate.exchange(uri, HttpMethod.GET, request, TaskCollection.class);
+        TaskCollection amaryActivityCollection = response.getBody();
 
         HttpStatus httpStatus = response.getStatusCode();
 //        logger.info(String.valueOf(response));

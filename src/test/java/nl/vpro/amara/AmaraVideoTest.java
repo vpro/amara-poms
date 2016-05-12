@@ -2,8 +2,8 @@ package nl.vpro.amara;
 
 import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara.video.AmaraVideo;
-import nl.vpro.amara.video.AmaraVideoMetadata;
+import nl.vpro.amara.domain.Video;
+import nl.vpro.amara.domain.VideoMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,8 +37,8 @@ public class AmaraVideoTest extends TestCase {
     public void testPostAsString() {
 
         String team = Config.getRequiredConfig("amara.api.team");
-        AmaraVideoMetadata amaraVideoMetadata = new AmaraVideoMetadata("test speaker", "test location");
-        AmaraVideo amaraVideo = new AmaraVideo("http://download.omroep.nl/vpro/netinnederland/NPO_bb.m4v",
+        VideoMetadata amaraVideoMetadata = new VideoMetadata("test speaker", "test location");
+        Video amaraVideo = new Video("http://download.omroep.nl/vpro/netinnederland/NPO_bb.m4v",
                 "nl", "Joost test (to be deleted)", "gebruikt for testing purposes", team, amaraVideoMetadata);
         String response = amaraVideo.postAsString(amaraVideo);
     }
@@ -46,13 +46,13 @@ public class AmaraVideoTest extends TestCase {
 
     public void testGet() {
 //        AmaraVideo amaraVideo = AmaraVideo.get("F8i3LbQkBbeG");
-        AmaraVideo amaraVideo = AmaraVideo.get("FSW0qzp2Enlk"); // test video
+        Video amaraVideo = Video.get("FSW0qzp2Enlk"); // test video
 
         logger.info(amaraVideo.toString());
     }
 
     public void testPomsMidFromOmroepUrl() {
-        AmaraVideo amaraVideo = new AmaraVideo();
+        Video amaraVideo = new Video();
 
         String[] urls = {"http://download.omroep.nl/vpro/netinnederland/h264/VPWON_1166750.m4v"};
         amaraVideo.setAll_urls(urls);
@@ -63,7 +63,7 @@ public class AmaraVideoTest extends TestCase {
     }
 
     public void testPomsMidFromYoutube() {
-        AmaraVideo amaraVideo = new AmaraVideo();
+        Video amaraVideo = new Video();
 
         String[] urls = {"http://www.youtube.com/watch?v=ZXajCrcQ6sw"};
         amaraVideo.setAll_urls(urls);
@@ -74,7 +74,7 @@ public class AmaraVideoTest extends TestCase {
     }
 
     public void testPomsMidFromEmpty() {
-        AmaraVideo amaraVideo = new AmaraVideo();
+        Video amaraVideo = new Video();
 
         String foundMid = amaraVideo.getPomsMidFromVideoUrl();
 

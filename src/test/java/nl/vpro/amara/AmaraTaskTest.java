@@ -8,8 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara.task.AmaraTask;
-import nl.vpro.amara.task.AmaraTaskCollection;
+import nl.vpro.amara.domain.Task;
+import nl.vpro.amara.domain.TaskCollection;
 
 /**
  * @author joost
@@ -38,7 +38,7 @@ public class AmaraTaskTest  {
 
         long now = System.currentTimeMillis() / 1000;
 
-        List<AmaraTask> amaraTasks = AmaraTaskCollection.getListForType(AmaraTask.TYPE_TRANSLATE, now - afterTimestampInSeconds);
+        List<Task> amaraTasks = TaskCollection.getListForType(Task.TYPE_TRANSLATE, now - afterTimestampInSeconds);
 
         LOG.info("Count:" + amaraTasks.size());
         if (amaraTasks.size() > 0) {

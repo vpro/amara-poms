@@ -1,4 +1,4 @@
-package nl.vpro.amara.activity;
+package nl.vpro.amara.domain;
 
 import java.net.URI;
 
@@ -24,9 +24,9 @@ import nl.vpro.amara.Utils;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
-public class AmaraActivity {
+public class Activity {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AmaraActivity.class);
+    private final static Logger LOG = LoggerFactory.getLogger(Activity.class);
 
     public final static int TYPE_ADD_VIDEO = 1;
     public final static int TYPE_CHANGE_TITLE = 2;
@@ -172,12 +172,12 @@ public class AmaraActivity {
         return (builder.build().encode().toUri());
     }
 
-    public static AmaraActivity get(String uri) {
+    public static Activity get(String uri) {
 
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<AmaraActivity> request = new HttpEntity<>(Utils.getGetHeaders());
-        ResponseEntity<AmaraActivity> response = restTemplate.exchange(Utils.getUriForUri(uri), HttpMethod.GET, request, AmaraActivity.class);
-        AmaraActivity amaraActivity = response.getBody();
+        HttpEntity<Activity> request = new HttpEntity<>(Utils.getGetHeaders());
+        ResponseEntity<Activity> response = restTemplate.exchange(Utils.getUriForUri(uri), HttpMethod.GET, request, Activity.class);
+        Activity amaraActivity = response.getBody();
 
         LOG.info(String.valueOf(response));
 

@@ -1,4 +1,4 @@
-package nl.vpro.amara;
+package nl.vpro.amara.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @author joost
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AmaraMeta {
+public class Meta {
 
     public String previous;
     public String next;

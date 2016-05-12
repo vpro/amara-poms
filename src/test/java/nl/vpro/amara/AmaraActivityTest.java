@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara.activity.AmaraActivity;
-import nl.vpro.amara.activity.AmaraActivityCollection;
+import nl.vpro.amara.domain.Activity;
+import nl.vpro.amara.domain.ActivityCollection;
 
 /**
  * @author joost
@@ -22,7 +22,7 @@ public class AmaraActivityTest {
     public void get() throws Exception {
         Config.init();
 
-        AmaraActivity amaraActivity = AmaraActivity.get("https://staging.amara.org/api/activity/5036197/");
+        Activity amaraActivity = Activity.get("https://staging.amara.org/api/activity/5036197/");
 
         LOG.info(amaraActivity.toString());
         if (amaraActivity.getCreated() != null) {
@@ -34,7 +34,7 @@ public class AmaraActivityTest {
     public void getList() throws Exception {
         Config.init();
 
-        List<AmaraActivity> amaraActivities = AmaraActivityCollection.getList();
+        List<Activity> amaraActivities = ActivityCollection.getList();
 
         LOG.info("Count:" + amaraActivities.size());
         if (amaraActivities.size() > 0) {
@@ -51,7 +51,7 @@ public class AmaraActivityTest {
 
         long now = System.currentTimeMillis() / 1000;
 
-        List<AmaraActivity> amaraActivities = AmaraActivityCollection.getListForType(AmaraActivity.TYPE_APPROVE_VERSION, now - afterTimestampInSeconds);
+        List<Activity> amaraActivities = ActivityCollection.getListForType(Activity.TYPE_APPROVE_VERSION, now - afterTimestampInSeconds);
 
         LOG.info("Count:" + amaraActivities.size());
         if (amaraActivities.size() > 0) {
