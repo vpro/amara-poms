@@ -26,7 +26,7 @@ import nl.vpro.amara_poms.amara.Utils;
 @JsonInclude(Include.NON_NULL)
 public class AmaraActivity {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraActivity.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraActivity.class);
 
     public final static int TYPE_ADD_VIDEO = 1;
     public final static int TYPE_CHANGE_TITLE = 2;
@@ -179,7 +179,7 @@ public class AmaraActivity {
         ResponseEntity<AmaraActivity> response = restTemplate.exchange(Utils.getUriForUri(uri), HttpMethod.GET, request, AmaraActivity.class);
         AmaraActivity amaraActivity = response.getBody();
 
-        logger.info(String.valueOf(response));
+        LOG.info(String.valueOf(response));
 
         return  amaraActivity;
     }

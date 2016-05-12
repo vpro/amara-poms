@@ -195,7 +195,7 @@ public class AmaraSubtitles {
 
         } catch (HttpClientErrorException e) {
             LOG.info(e.toString());
-            String responseBody = new String(e.getResponseBodyAsString());
+            String responseBody = e.getResponseBodyAsString();
             LOG.info(responseBody);
         }
 

@@ -54,7 +54,7 @@ public class AmaraSubtitleAction {
 //            }
         } catch (HttpClientErrorException e) {
             logger.info(e.toString());
-            String responseBody = new String(e.getResponseBodyAsString());
+            String responseBody = e.getResponseBodyAsString();
             logger.info(responseBody);
         }
 

@@ -26,7 +26,7 @@ import nl.vpro.amara_poms.amara.Utils;
 public class AmaraTask {
 
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraTask.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraTask.class);
 
     public final static String TYPE_TRANSLATE = "Translate";
 
@@ -99,9 +99,9 @@ public class AmaraTask {
                 amaraTaskOut = response.getBody();
             }
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
+            LOG.info(e.toString());
             String responseBody = new String(e.getResponseBodyAsString());
-            logger.info(responseBody);
+            LOG.info(responseBody);
         }
 
         return amaraTaskOut;
