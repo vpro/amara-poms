@@ -9,6 +9,8 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara.Client;
+
 /**
  * @author joost
  */
@@ -34,6 +36,7 @@ public class Config {
 
     public static final int ERROR_DB_NOT_READABLE = 11;
 
+    private static Client client;
 
     public static void init() {
         // load config
@@ -52,6 +55,18 @@ public class Config {
         } catch (Exception e) {
             throw new Error("Error opening properties file: " + e.getMessage(), ERROR_APP_CONFIG_NOT_FOUND);
         }
+    }
+
+    public static Client getClient() {
+        if (client ==  null) {
+            client = new Client(
+                getRequiredConfig("amara.api.url"),
+                getRequiredConfig("amara.api.username"),
+                getRequiredConfig("amara.api.key"),
+                getRequiredConfig("amara.api.team")
+            );
+        }
+        return client;
     }
 
     /**

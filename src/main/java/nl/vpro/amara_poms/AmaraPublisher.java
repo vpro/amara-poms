@@ -116,7 +116,7 @@ public class AmaraPublisher {
                         pomsBroadcast.getDescription(),
                         Config.getRequiredConfig("amara.subtitles.action.default"));
 
-                Subtitles uploadedAmaraSubtitles = Subtitles.post(amaraSubtitles, uploadedAmaraVideo.getId(),
+                Subtitles uploadedAmaraSubtitles = Config.getClient().post(amaraSubtitles, uploadedAmaraVideo.getId(),
                         Config.getRequiredConfig("amara.api.primary_audio_language_code"));
 
                 if (uploadedAmaraSubtitles != null) {
