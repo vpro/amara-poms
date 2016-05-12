@@ -27,7 +27,7 @@ public class IntegratiePomsTest {
     @Test
     public void testPomsClipCreate() throws IOException {
         Config.init();
-        MediaRestClient client = Utils.getClient();
+        MediaRestClient client = Config.getPomsClient();
 
         String result = "";
         try {
@@ -42,7 +42,7 @@ public class IntegratiePomsTest {
     @Test
     public void testAddProgramToCollection() {
         Config.init();
-        MediaRestClient client = Utils.getClient();
+        MediaRestClient client = Config.getPomsClient();
 
         ProgramUpdate update = client.getProgram(pomsMidBroadcast); // test with this one
 
@@ -61,7 +61,7 @@ public class IntegratiePomsTest {
     @Test
     public void removeFromTeVertalenToNetInNL() {
         Config.init();
-        MediaRestClient client = Utils.getClient();
+        MediaRestClient client = Config.getPomsClient();
 
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMidBroadcast);
         pomsBroadcast.programUpdate = client.getProgram(pomsMidBroadcast);
@@ -73,7 +73,7 @@ public class IntegratiePomsTest {
     @Test
     public void extractImageId() {
         Config.init();
-        MediaRestClient client = Utils.getClient();
+        MediaRestClient client = Config.getPomsClient();
 
         String pomsMid = "VPWON_1249693";
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid);

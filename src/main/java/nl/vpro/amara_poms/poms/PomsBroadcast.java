@@ -118,7 +118,7 @@ public class PomsBroadcast {
         mid = memberUpdate.getMediaUpdate().getMid();
 
         // get more info through program update
-        programUpdate = ProgramUpdate.forAllOwners(Utils.getClient().getFullProgram(mid));
+        programUpdate = ProgramUpdate.forAllOwners(Config.getPomsClient().getFullProgram(mid));
 
         locationSortedSet = programUpdate.getLocations();
 
@@ -134,6 +134,8 @@ public class PomsBroadcast {
     public void removeFromCollection(String midCollectionFrom) {
         LOG.info("Remove from collection " + midCollectionFrom);
 
+
+
         SortedSet<MemberRefUpdate> memberUpdate = programUpdate.getMemberOf();
 
         // remove collection
@@ -141,7 +143,7 @@ public class PomsBroadcast {
 
         // update
 //        programUpdate.setMemberOf(memberUpdate);
-        String pomsMid = Utils.getClient().set(programUpdate);
+        String pomsMid = Config.getPomsClient().set(programUpdate);
     }
 
     /**

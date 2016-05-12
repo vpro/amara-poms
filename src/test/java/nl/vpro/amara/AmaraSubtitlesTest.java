@@ -46,7 +46,7 @@ public class AmaraSubtitlesTest  {
                 "2\n" +
                 "00:00:05.012 --> 00:00:07.018\n" +
                 "TUNE VAN DWDD\n", "test description", "complete");
-        Subtitles newAmaraSubtitles = Config.getClient().post(amaraSubtitles, "gDq7bAA5XFCR", "nl");
+        Subtitles newAmaraSubtitles = Config.getAmaraClient().post(amaraSubtitles, "gDq7bAA5XFCR", "nl");
 
         assertNotNull(newAmaraSubtitles);
     }
@@ -54,7 +54,7 @@ public class AmaraSubtitlesTest  {
     @Test
     public void getActions() {
         String video_id = "Ep1jZa6c2NRt";
-        List<Action> actions = Config.getClient().getActions(video_id, "nl");
+        List<Action> actions = Config.getAmaraClient().getActions(video_id, "nl");
         System.out.println("" + actions);
     }
     @Test
@@ -67,13 +67,13 @@ public class AmaraSubtitlesTest  {
         Subtitles amaraSubtitles = new Subtitles("Blauw Bloed // Een interview met prinses Irene", "vtt",
             pomsBroadcast.getSubtitles(), "Een interview met prinses Irene, we volgen koning Willem-Alexander bij de start van de Giro d'Italia en couturier Paul Schulten vertelt alles over koninklijke bloemetjesjurken.", "save-draft");
 
-        Subtitles newAmaraSubtitles = Config.getClient().post(amaraSubtitles, video_id, "nl");
+        Subtitles newAmaraSubtitles = Config.getAmaraClient().post(amaraSubtitles, video_id, "nl");
 
         assertNotNull(newAmaraSubtitles);
     }
 
     public void testGetVTT() {
-        String amaraSubtitles = Config.getClient().getAsVTT("G3CnVJdMw21Y", "nl");
+        String amaraSubtitles = Config.getAmaraClient().getAsVTT("G3CnVJdMw21Y", "nl");
 
         assertNotNull(amaraSubtitles);
 

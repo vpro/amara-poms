@@ -14,7 +14,6 @@ import nl.vpro.amara.domain.TaskCollection;
 import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.poms.PomsClip;
-import nl.vpro.amara_poms.poms.Utils;
 
 /**
  * @author joost
@@ -61,7 +60,7 @@ public class PomsPublisher {
             }
 
             // fetch subtitles from Amara
-            Subtitles amaraSubtitles = Subtitles.get(amaraTask.video_id, amaraTask.language);
+            Subtitles amaraSubtitles = Config.getAmaraClient().get(amaraTask.video_id, amaraTask.language);
 
             if (amaraSubtitles == null) {
                 LOG.error("Subtitle for language " + amaraTask.language + " and video_id " + amaraTask.video_id + " not found -> skip");
@@ -116,7 +115,7 @@ public class PomsPublisher {
                 if (pomsTargetId == null || pomsTargetId.equals("")) {
                     // no poms target id, so create new Poms Clip
                     try {
-                        pomsTargetId = PomsClip.create(Utils.getClient(), pomsMid, amaraTask.language, amaraSubtitles.title, amaraSubtitles.description);
+                        pomsTargetId = PomsClip.create(Config.getPomsClient(), pomsMid, amaraTask.language, amaraSubtitles.title, amaraSubtitles.description);
                     } catch (Exception exception) {
                         LOG.error("Error creating clip for poms mid " + pomsMid + ", language " + amaraTask.language);
                         LOG.error(exception.toString());

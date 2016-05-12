@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.update.GroupUpdate;
 import nl.vpro.domain.media.update.MemberUpdate;
 import nl.vpro.rs.media.MediaRestClient;
@@ -44,7 +45,7 @@ public class PomsCollection {
      */
     public int getBroadcastsFromPOMS() {
         int returnValue = 0;
-        MediaRestClient client = Utils.getClient();
+        MediaRestClient client = Config.getPomsClient();
 
         group = client.getGroup(collectionName); // get meta info for collection
 

@@ -116,7 +116,7 @@ public class AmaraPublisher {
                         pomsBroadcast.getDescription(),
                         Config.getRequiredConfig("amara.subtitles.action.default"));
 
-                Subtitles uploadedAmaraSubtitles = Config.getClient().post(amaraSubtitles, uploadedAmaraVideo.getId(),
+                Subtitles uploadedAmaraSubtitles = Config.getAmaraClient().post(amaraSubtitles, uploadedAmaraVideo.getId(),
                         Config.getRequiredConfig("amara.api.primary_audio_language_code"));
 
                 if (uploadedAmaraSubtitles != null) {
@@ -161,11 +161,8 @@ public class AmaraPublisher {
 
             //
             // verwijder uit POMS collectie 'Net in Nederland' en plaats in POMS collectie 'Net in Nederland'
-            // (todo werkt niet voor niet vpro uitzendingen -> wacht op feature van apiclient)
-            // https://jira.vpro.nl/browse/MSE-3250
-            //
-//            pomsBroadcast.removeFromCollection(inputCollectionName);
-//            logger.info("Remove Poms broadcast from collection " + inputCollectionName);
+            pomsBroadcast.removeFromCollection(inputCollectionName);
+            LOG.info("Remove Poms broadcast from collection " + inputCollectionName);
         }
 
         dbManager.writeFile();

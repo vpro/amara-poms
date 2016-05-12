@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara.Client;
+import nl.vpro.rs.media.MediaRestClient;
 
 /**
  * @author joost
@@ -36,7 +37,7 @@ public class Config {
 
     public static final int ERROR_DB_NOT_READABLE = 11;
 
-    private static Client client;
+    private static Client amaraClient;
 
     public static void init() {
         // load config
@@ -57,16 +58,42 @@ public class Config {
         }
     }
 
-    public static Client getClient() {
-        if (client ==  null) {
-            client = new Client(
+    public static Client getAmaraClient() {
+        if (amaraClient ==  null) {
+            amaraClient = new Client(
                 getRequiredConfig("amara.api.url"),
                 getRequiredConfig("amara.api.username"),
                 getRequiredConfig("amara.api.key"),
                 getRequiredConfig("amara.api.team")
             );
         }
-        return client;
+        return amaraClient;
+    }
+
+
+    private static MediaRestClient pomsClient = null;
+
+    public static MediaRestClient getPomsClient() {
+        if (pomsClient == null) {
+            pomsClient = new MediaRestClient();
+
+            // get config
+            String username = getRequiredConfig("poms.username");
+            String password = getRequiredConfig("poms.password");
+            String url = getRequiredConfig("poms.url");
+            String errors = getRequiredConfig("poms.errors");
+
+            // get client
+            pomsClient.setTrustAll(true);
+            pomsClient.setUserName(username);
+            pomsClient.setPassword(password);
+            pomsClient.setErrors(errors);
+            pomsClient.setUrl(url);
+            pomsClient.setThrottleRate(50);
+            pomsClient.setWaitForRetry(true);
+        }
+
+        return pomsClient;
     }
 
     /**
