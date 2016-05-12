@@ -1,22 +1,20 @@
 package nl.vpro.amara;
 
 import junit.framework.TestCase;
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara.domain.Video;
-import nl.vpro.amara.domain.VideoMetadata;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import nl.vpro.amara.domain.Video;
+import nl.vpro.amara.domain.VideoMetadata;
+import nl.vpro.amara_poms.Config;
 
 /**
- * Created by joost on 06/04/16.
+ * @author Joost
  */
 public class AmaraVideoTest extends TestCase {
 
-    final static Logger logger = LoggerFactory.getLogger(AmaraVideoTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraVideoTest.class);
 
     protected void setUp() {
 
@@ -46,9 +44,9 @@ public class AmaraVideoTest extends TestCase {
 
     public void testGet() {
 //        AmaraVideo amaraVideo = AmaraVideo.get("F8i3LbQkBbeG");
-        Video amaraVideo = Video.get("FSW0qzp2Enlk"); // test video
+        Video amaraVideo = Config.getAmaraClient().getVideo("FSW0qzp2Enlk"); // test video
 
-        logger.info(amaraVideo.toString());
+        LOG.info(amaraVideo.toString());
     }
 
     public void testPomsMidFromOmroepUrl() {

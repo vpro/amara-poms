@@ -204,29 +204,6 @@ public class Video {
     }
 
 
-    public static Video get(String videoId) {
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Video> request = new HttpEntity<>(Utils.getGetHeaders());
-        ResponseEntity<Video> response = restTemplate.exchange(Utils.getUriForGetVideoWithId(videoId), HttpMethod.GET, request, Video.class);
-        Video amaraVideo = response.getBody();
-
-//        logger.info(String.valueOf(response));
-
-        return  amaraVideo;
-    }
-
-    public static String getAsString(String videoId) {
-
-        HttpEntity<Video> request = new HttpEntity<>(Utils.getGetHeaders());
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> response = restTemplate.exchange(Utils.getUriForGetVideoWithId(videoId), HttpMethod.GET, request, String.class);
-        LOG.info(response.getBody());
-
-        return response.getBody();
-    }
-
     /**
      * Get videoUrl from all_urls
      * @return null if not found

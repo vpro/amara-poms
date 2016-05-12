@@ -81,7 +81,7 @@ public class AmaraSubtitlesTest  {
     }
 
     public  void testGet() {
-        Subtitles amaraSubtitles = Subtitles.get("G3CnVJdMw21Y", "nl");
+        Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles("G3CnVJdMw21Y", "nl");
 
         assertNotNull(amaraSubtitles);
 

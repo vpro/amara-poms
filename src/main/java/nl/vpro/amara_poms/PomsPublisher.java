@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Task;
-import nl.vpro.amara.domain.TaskCollection;
 import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.poms.PomsClip;
@@ -32,8 +31,8 @@ public class PomsPublisher {
         // get tasks for some period
         long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");
         long now = System.currentTimeMillis() / 1000;
-        List<Task> amaraTasks = TaskCollection.getListForType(Config.getRequiredConfig("amara.task.type.out"),
-                                                                        now - afterTimestampInSeconds);
+        List<Task> amaraTasks = Config.getAmaraClient().getTasks(Config.getRequiredConfig("amara.task.type.out"),
+                                                                        now - afterTimestampInSeconds).getTasks();
         LOG.info("Search for Amara tasks...");
         for (Task amaraTask : amaraTasks) {
             LOG.info("Start processing video_id " + amaraTask.video_id + " for language " + amaraTask.language);
@@ -60,7 +59,7 @@ public class PomsPublisher {
             }
 
             // fetch subtitles from Amara
-            Subtitles amaraSubtitles = Config.getAmaraClient().get(amaraTask.video_id, amaraTask.language);
+            Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles(amaraTask.video_id, amaraTask.language);
 
             if (amaraSubtitles == null) {
                 LOG.error("Subtitle for language " + amaraTask.language + " and video_id " + amaraTask.video_id + " not found -> skip");
@@ -82,7 +81,7 @@ public class PomsPublisher {
 
             // find pomsId in local db or from video metadata in Amara
             String pomsMid;
-            Video amaraVideo = Video.get(amaraTask.video_id);
+            Video amaraVideo = Config.getAmaraClient().getVideo(amaraTask.video_id);
             pomsMid = amaraVideo.getMetadata().location;
             if (pomsMid != null) {
                 LOG.info("Poms mid found in video meta data:" + pomsMid);

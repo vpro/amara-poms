@@ -11,8 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import nl.vpro.amara.domain.Action;
-import nl.vpro.amara.domain.Subtitles;
+import nl.vpro.amara.domain.*;
 import nl.vpro.amara_poms.Config;
 
 /**
@@ -42,7 +41,7 @@ public class Client {
         HttpEntity<?> request = new HttpEntity<>(getGetHeaders());
 
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<String> response = restTemplate.exchange(Utils.getUriForGetAndPostVideos(), HttpMethod.GET, request, String.class);
+        HttpEntity<String> response = restTemplate.exchange(getUriForGetAndPostVideos(), HttpMethod.GET, request, String.class);
         LOG.info(String.valueOf(response));
 
 //        RestTemplate restTemplate = new RestTemplate();
@@ -130,7 +129,7 @@ public class Client {
 
 
     // DOESN'T WORK BECAUSE SUBTITLE ARE ALSO IN JSON FORMAT - to get it working a more detailed model is needed
-    public Subtitles get(String video_id, String language_code) {
+    public Subtitles getSubtitles(String video_id, String language_code) {
 
         Subtitles amaraSubtitlesOut = null;
 
@@ -158,6 +157,136 @@ public class Client {
 
         return amaraSubtitlesOut;
     }
+
+    public Activity getActivity(String activity_id) {
+        String url = amaraUrl + "api/activity/" + activity_id + "/";
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Activity> request = new HttpEntity<>(getGetHeaders());
+        ResponseEntity<Activity> response = restTemplate.exchange(getUriForUri(url), HttpMethod.GET, request, Activity.class);
+        Activity amaraActivity = response.getBody();
+
+        //LOG.info(String.valueOf(response));
+
+        return amaraActivity;
+    }
+
+    public ActivityCollection getActivities() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<ActivityCollection> request = new HttpEntity<>(getGetHeaders());
+        ResponseEntity<ActivityCollection> response = restTemplate.exchange(getUriForPath("api/activity"), HttpMethod.GET, request, ActivityCollection.class);
+        ActivityCollection amaryActivityCollection = response.getBody();
+
+        HttpStatus httpStatus = response.getStatusCode();
+
+        //LOG.info(String.valueOf(response));
+
+        return amaryActivityCollection;
+    }
+
+    public ActivityCollection getActivities(int activityType, long afterTimestampInSeconds) {
+
+        // build url
+        String url =  amaraUrl + "api/activity/";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+            .queryParam("team", team)
+            .queryParam("type", activityType)
+            .queryParam("after", afterTimestampInSeconds);
+        URI uri = builder.build().encode().toUri();
+
+        // do request
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<ActivityCollection> request = new HttpEntity<>(getGetHeaders());
+        ResponseEntity<ActivityCollection> response = restTemplate.exchange(uri, HttpMethod.GET, request, ActivityCollection.class);
+        ActivityCollection amaryActivityCollection = response.getBody();
+
+        HttpStatus httpStatus = response.getStatusCode();
+        //LOG.info(String.valueOf(response));
+
+        return amaryActivityCollection;
+    }
+
+
+    public Task post(Task amaraTaskIn) {
+
+        Task amaraTaskOut = null;
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<Task> request = new HttpEntity<>(amaraTaskIn, getPostHeaders());
+            ResponseEntity<Task> response = restTemplate.exchange(getPostUri(),
+                HttpMethod.POST, request, Task.class);
+
+            if (response.getStatusCode() == HttpStatus.CREATED) {
+                amaraTaskOut = response.getBody();
+            }
+        } catch (HttpClientErrorException e) {
+            LOG.info(e.toString());
+            String responseBody = e.getResponseBodyAsString();
+            LOG.info(responseBody);
+        }
+
+        return amaraTaskOut;
+    }
+
+    public TaskCollection getTasks() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<TaskCollection> request = new HttpEntity<>(getGetHeaders());
+        ResponseEntity<TaskCollection> response = restTemplate.exchange(getUriForPath("api/task"), HttpMethod.GET, request, TaskCollection.class);
+        TaskCollection tasks = response.getBody();
+        HttpStatus httpStatus = response.getStatusCode();
+
+        LOG.debug(String.valueOf(response));
+
+        return tasks;
+    }
+
+    public TaskCollection getTasks(String taskType, long afterTimestampInSeconds) {
+
+        // build url
+        String url = amaraUrl + "api/teams/" + team + "/tasks";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+            .queryParam("type", taskType)
+            .queryParam("limit", 300)
+            .queryParam("completed")
+            .queryParam("completed-after", afterTimestampInSeconds);
+        URI uri = builder.build().encode().toUri();
+
+        // do request
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<TaskCollection> request = new HttpEntity<>(getGetHeaders());
+        ResponseEntity<TaskCollection> response = restTemplate.exchange(uri, HttpMethod.GET, request, TaskCollection.class);
+        TaskCollection tasks = response.getBody();
+
+        HttpStatus httpStatus = response.getStatusCode();
+//        logger.info(String.valueOf(response));
+
+        return tasks;
+    }
+
+    public Video getVideo(String videoId) {
+        String url = amaraUrl + "api/videos/" + videoId;
+
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+            .queryParam("team", team);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<Video> request = new HttpEntity<>(getGetHeaders());
+        ResponseEntity<Video> response = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.GET, request, Video.class);
+        Video amaraVideo = response.getBody();
+
+//        logger.info(String.valueOf(response));
+
+        return amaraVideo;
+    }
+
+
+    private URI getPostUri() {
+        String url = amaraUrl + "api/teams/" + team + "/tasks/";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+
+        return builder.build().encode().toUri();
+    }
+
+
 
     protected HttpHeaders getGetHeaders() {
         HttpHeaders headers = new HttpHeaders();

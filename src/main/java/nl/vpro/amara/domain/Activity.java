@@ -1,22 +1,10 @@
 package nl.vpro.amara.domain;
 
-import java.net.URI;
-
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import nl.vpro.amara_poms.Config;
-import nl.vpro.amara.Utils;
 
 
 /**
@@ -25,8 +13,6 @@ import nl.vpro.amara.Utils;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(Include.NON_NULL)
 public class Activity {
-
-    private final static Logger LOG = LoggerFactory.getLogger(Activity.class);
 
     public final static int TYPE_ADD_VIDEO = 1;
     public final static int TYPE_CHANGE_TITLE = 2;
@@ -162,25 +148,5 @@ public class Activity {
                 '}';
     }
 
-    private static URI getGetUri(String video_id, String language_code) {
-        String url = Config.getRequiredConfig("amara.api.url") + "api/videos/" + video_id + "/languages/" +
-                language_code + "/subtitles/";
 
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("team", Config.getRequiredConfig("amara.api.team"));
-
-        return (builder.build().encode().toUri());
-    }
-
-    public static Activity get(String uri) {
-
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity<Activity> request = new HttpEntity<>(Utils.getGetHeaders());
-        ResponseEntity<Activity> response = restTemplate.exchange(Utils.getUriForUri(uri), HttpMethod.GET, request, Activity.class);
-        Activity amaraActivity = response.getBody();
-
-        LOG.info(String.valueOf(response));
-
-        return  amaraActivity;
-    }
 }
