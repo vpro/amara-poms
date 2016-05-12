@@ -59,7 +59,7 @@ public class PomsPublisher {
             }
 
             // fetch subtitles from Amara
-            Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles(amaraTask.video_id, amaraTask.language);
+            Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles(amaraTask.video_id, amaraTask.language, Config.getRequiredConfig("amara.subtitles.format"));
 
             if (amaraSubtitles == null) {
                 LOG.error("Subtitle for language " + amaraTask.language + " and video_id " + amaraTask.video_id + " not found -> skip");

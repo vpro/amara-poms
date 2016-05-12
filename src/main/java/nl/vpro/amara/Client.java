@@ -6,13 +6,14 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+// why spring?
 import org.springframework.http.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import nl.vpro.amara.domain.*;
-import nl.vpro.amara_poms.Config;
 
 /**
  * @author Michiel Meeuwissen
@@ -63,7 +64,7 @@ public class Client {
             String url = amaraUrl + "api/videos/" + video_id + "/languages/" +
                 language_code + "/subtitles/";
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("team", Config.getRequiredConfig("amara.api.team"));
+                .queryParam(team);
             URI uri = builder.build().encode().toUri();
 
             // do request
@@ -96,7 +97,7 @@ public class Client {
         return Arrays.asList(body);
     }
 
-    public String getAsVTT(String video_id, String language_code) {
+    public String getAsVTT(String video_id, String language_code, String format) {
 
         String amaraSubtitles = null;
 
@@ -104,8 +105,8 @@ public class Client {
             // construct uri
             String url = amaraUrl + "api/videos/" + video_id + "/languages/" + language_code + "/subtitles/";
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("team", Config.getRequiredConfig("amara.api.team"))
-                .queryParam("format", Config.getRequiredConfig("amara.subtitles.format"));
+                .queryParam("team", team)
+                .queryParam("format", format);
             URI uri = builder.build().encode().toUri();
 
             RestTemplate restTemplate = new RestTemplate();
@@ -129,7 +130,7 @@ public class Client {
 
 
     // DOESN'T WORK BECAUSE SUBTITLE ARE ALSO IN JSON FORMAT - to get it working a more detailed model is needed
-    public Subtitles getSubtitles(String video_id, String language_code) {
+    public Subtitles getSubtitles(String video_id, String language_code, String format) {
 
         Subtitles amaraSubtitlesOut = null;
 
@@ -138,7 +139,7 @@ public class Client {
             String url = amaraUrl + "api/videos/" + video_id + "/languages/" + language_code + "/subtitles/";
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 //                    .queryParam("team", Config.getRequiredConfig("amara.api.team"))
-                .queryParam("sub_format", Config.getRequiredConfig("amara.subtitles.format"));
+                .queryParam("sub_format", format);
             URI uri = builder.build().encode().toUri();
 
             // do request
@@ -278,6 +279,55 @@ public class Client {
         return amaraVideo;
     }
 
+    public SubtitleAction post(SubtitleAction amaraSubtitleAction, String video_id, String language_code) {
+
+        SubtitleAction amaraSubtitleActionOut = null;
+
+        try {
+            // construct uri
+            String url = amaraUrl + "api/videos/" + video_id + "/languages/" + language_code + "/subtitles/actions/";
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+            URI uri = builder.build().encode().toUri();
+
+            // do request
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<SubtitleAction> request = new HttpEntity<>(amaraSubtitleAction, getPostHeaders());
+            ResponseEntity<SubtitleAction> response = restTemplate.exchange(uri, HttpMethod.POST, request, SubtitleAction.class);
+
+            // status code is not set in this case
+//            if (response.getStatusCode() == HttpStatus.CREATED) {
+//                amaraSubtitleActionOut = response.getBody();
+//            }
+        } catch (HttpClientErrorException e) {
+            LOG.info(e.toString());
+            String responseBody = e.getResponseBodyAsString();
+            LOG.info(responseBody);
+        }
+
+        return amaraSubtitleActionOut;
+    }
+
+
+    public Video post(Video amaraVideoIn) {
+
+        Video amaraVideoOut = null;
+
+        try {
+            RestTemplate restTemplate = new RestTemplate();
+            HttpEntity<Video> request = new HttpEntity<>(amaraVideoIn, getPostHeaders());
+            ResponseEntity<Video> response = restTemplate.exchange(getUriForGetAndPostVideos(), HttpMethod.POST, request, Video.class);
+
+            if (response.getStatusCode() == HttpStatus.CREATED) {
+                amaraVideoOut = response.getBody();
+            }
+        } catch (HttpClientErrorException e) {
+            LOG.info("For " + amaraVideoIn + ":" + e.getMessage());
+            String responseBody = e.getResponseBodyAsString();
+            LOG.info(responseBody);
+        }
+
+        return amaraVideoOut;
+    }
 
     private URI getPostUri() {
         String url = amaraUrl + "api/teams/" + team + "/tasks/";
@@ -347,7 +397,7 @@ public class Client {
      */
     protected URI getUriForUriWithTeam(String url) {
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-            .queryParam("team", Config.getRequiredConfig("amara.api.team"));
+            .queryParam("team", team);
 
         return builder.build().encode().toUri();
     }

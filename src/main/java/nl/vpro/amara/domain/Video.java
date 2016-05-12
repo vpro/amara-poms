@@ -4,17 +4,9 @@ import java.util.regex.Pattern;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-
-import nl.vpro.amara.Utils;
 
 /**
  * @author joost
@@ -160,47 +152,6 @@ public class Video {
                 ", team='" + team + '\'' +
                 ", amaraLanguage=" + amaraLanguage +
                 '}';
-    }
-
-    public static Video post(Video amaraVideoIn) {
-
-        Video amaraVideoOut = null;
-
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<Video> request = new HttpEntity<>(amaraVideoIn, Utils.getPostHeaders());
-            ResponseEntity<Video> response = restTemplate.exchange(Utils.getUriForGetAndPostVideos(), HttpMethod.POST, request, Video.class);
-
-            if (response.getStatusCode() == HttpStatus.CREATED) {
-                amaraVideoOut = response.getBody();
-            }
-        } catch (HttpClientErrorException e) {
-            LOG.info("For " + amaraVideoIn + ":"  + e.getMessage());
-            String responseBody = e.getResponseBodyAsString();
-            LOG.info(responseBody);
-        }
-
-        return  amaraVideoOut;
-    }
-
-    public static String postAsString(Video amaraVideoIn) {
-
-        String stringResponse = "";
-
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-            HttpEntity<Video> request = new HttpEntity<>(amaraVideoIn, Utils.getPostHeaders());
-            HttpEntity<String> response = restTemplate.exchange(Utils.getUriForGetAndPostVideos(), HttpMethod.POST, request, String.class);
-
-            stringResponse = response.getBody();
-            LOG.info(stringResponse);
-        } catch (HttpClientErrorException e) {
-            LOG.info("For " + amaraVideoIn + " " + e.toString());
-            String responseBody = e.getResponseBodyAsString();
-            LOG.info(responseBody);
-        }
-
-        return stringResponse;
     }
 
 

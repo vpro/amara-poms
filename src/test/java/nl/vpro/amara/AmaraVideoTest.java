@@ -38,7 +38,7 @@ public class AmaraVideoTest extends TestCase {
         VideoMetadata amaraVideoMetadata = new VideoMetadata("test speaker", "test location");
         Video amaraVideo = new Video("http://download.omroep.nl/vpro/netinnederland/NPO_bb.m4v",
                 "nl", "Joost test (to be deleted)", "gebruikt for testing purposes", team, amaraVideoMetadata);
-        String response = amaraVideo.postAsString(amaraVideo);
+        //String response = amaraVideo.postAsString(amaraVideo);
     }
 
 

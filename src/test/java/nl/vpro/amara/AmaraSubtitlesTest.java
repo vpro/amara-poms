@@ -73,7 +73,7 @@ public class AmaraSubtitlesTest  {
     }
 
     public void testGetVTT() {
-        String amaraSubtitles = Config.getAmaraClient().getAsVTT("G3CnVJdMw21Y", "nl");
+        String amaraSubtitles = Config.getAmaraClient().getAsVTT("G3CnVJdMw21Y", "nl", Config.getRequiredConfig("amara.subtitles.format"));
 
         assertNotNull(amaraSubtitles);
 
@@ -81,7 +81,7 @@ public class AmaraSubtitlesTest  {
     }
 
     public  void testGet() {
-        Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles("G3CnVJdMw21Y", "nl");
+        Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles("G3CnVJdMw21Y", "nl", Config.getRequiredConfig("amara.subtitles.format"));
 
         assertNotNull(amaraSubtitles);
 

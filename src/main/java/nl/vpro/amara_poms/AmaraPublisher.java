@@ -5,7 +5,7 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.vpro.amara.subtitles.AmaraSubtitleAction;
+import nl.vpro.amara.domain.SubtitleAction;
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Task;
 import nl.vpro.amara.domain.Video;
@@ -92,7 +92,7 @@ public class AmaraPublisher {
                                                    amaraVideoMetadata);
             amaraVideo.setThumbnail(thumbnailUrl);
             amaraVideo.setProject(Config.getRequiredConfig("amara.api.video.default.project"));
-            Video uploadedAmaraVideo = Video.post(amaraVideo);
+            Video uploadedAmaraVideo = Config.getAmaraClient().post(amaraVideo);
             if (uploadedAmaraVideo == null) {
                 continue;
             } else {
@@ -126,9 +126,9 @@ public class AmaraPublisher {
                     LOG.info("Subtitle uploaded to Amara with id " + uploadedAmaraVideo.getId());
 
                     // nl subtitles status is now complete, has to be aproved (can only be done in 2 steps)
-                    AmaraSubtitleAction amaraSubtitleAction = new AmaraSubtitleAction(AmaraSubtitleAction.ACTION_APPROVE);
+                    SubtitleAction amaraSubtitleAction = new SubtitleAction(SubtitleAction.ACTION_APPROVE);
 
-                    AmaraSubtitleAction amaraSubtitleActionOut = AmaraSubtitleAction.post(amaraSubtitleAction,
+                    SubtitleAction amaraSubtitleActionOut = Config.getAmaraClient().post(amaraSubtitleAction,
                             uploadedAmaraVideo.getId(),
                             Config.getRequiredConfig("amara.api.primary_audio_language_code"));
 
