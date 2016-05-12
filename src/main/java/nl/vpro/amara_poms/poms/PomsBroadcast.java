@@ -132,18 +132,8 @@ public class PomsBroadcast {
     }
 
     public void removeFromCollection(String midCollectionFrom) {
-        LOG.info("Remove from collection " + midCollectionFrom);
-
-
-
-        SortedSet<MemberRefUpdate> memberUpdate = programUpdate.getMemberOf();
-
-        // remove collection
-        memberUpdate.removeIf(member -> member.getMediaRef().equals(midCollectionFrom));
-
-        // update
-//        programUpdate.setMemberOf(memberUpdate);
-        String pomsMid = Config.getPomsClient().set(programUpdate);
+        LOG.info("Remove {} from collection {}", mid, midCollectionFrom);
+        Config.getPomsClient().removeMember(midCollectionFrom, mid, null);
     }
 
     /**

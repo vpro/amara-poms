@@ -162,7 +162,6 @@ public class AmaraPublisher {
             //
             // verwijder uit POMS collectie 'Net in Nederland' en plaats in POMS collectie 'Net in Nederland'
             pomsBroadcast.removeFromCollection(inputCollectionName);
-            LOG.info("Remove Poms broadcast from collection " + inputCollectionName);
         }
 
         dbManager.writeFile();
