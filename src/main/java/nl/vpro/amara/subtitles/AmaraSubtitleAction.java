@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.subtitles;
+package nl.vpro.amara.subtitles;
 
 import java.net.URI;
 
@@ -12,13 +12,13 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
+import nl.vpro.amara.Utils;
 
 /**
  * @author joost
  */
 public class AmaraSubtitleAction {
-    final static Logger logger = LoggerFactory.getLogger(AmaraSubtitleAction.class);
+    private final static Logger LOG = LoggerFactory.getLogger(AmaraSubtitleAction.class);
 
     final public static String ACTION_COMPLETE = "complete";
     final public static String ACTION_APPROVE = "approve";
@@ -53,9 +53,9 @@ public class AmaraSubtitleAction {
 //                amaraSubtitleActionOut = response.getBody();
 //            }
         } catch (HttpClientErrorException e) {
-            logger.info(e.toString());
+            LOG.info(e.toString());
             String responseBody = e.getResponseBodyAsString();
-            logger.info(responseBody);
+            LOG.info(responseBody);
         }
 
         return  amaraSubtitleActionOut;

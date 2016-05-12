@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara;
 
 import java.util.List;
 
@@ -7,8 +7,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.activity.AmaraActivity;
-import nl.vpro.amara_poms.amara.activity.AmaraActivityCollection;
+import nl.vpro.amara.activity.AmaraActivity;
+import nl.vpro.amara.activity.AmaraActivityCollection;
 
 /**
  * @author joost

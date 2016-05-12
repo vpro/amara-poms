@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.language;
+package nl.vpro.amara.language;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

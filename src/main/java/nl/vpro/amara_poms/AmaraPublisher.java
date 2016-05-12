@@ -5,11 +5,11 @@ import java.util.Iterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitleAction;
-import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
-import nl.vpro.amara_poms.amara.task.AmaraTask;
-import nl.vpro.amara_poms.amara.video.AmaraVideo;
-import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
+import nl.vpro.amara.subtitles.AmaraSubtitleAction;
+import nl.vpro.amara.subtitles.AmaraSubtitles;
+import nl.vpro.amara.task.AmaraTask;
+import nl.vpro.amara.video.AmaraVideo;
+import nl.vpro.amara.video.AmaraVideoMetadata;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.Task;
 import nl.vpro.amara_poms.poms.PomsBroadcast;

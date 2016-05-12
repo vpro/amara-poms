@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.video;
+package nl.vpro.amara.video;
 
 import java.util.regex.Pattern;
 
@@ -14,8 +14,8 @@ import org.springframework.web.client.RestTemplate;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-import nl.vpro.amara_poms.amara.Utils;
-import nl.vpro.amara_poms.amara.language.AmaraLanguage;
+import nl.vpro.amara.Utils;
+import nl.vpro.amara.language.AmaraLanguage;
 
 /**
  * @author joost

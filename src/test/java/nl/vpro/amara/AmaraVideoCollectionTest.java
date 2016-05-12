@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.video.AmaraVideoCollection;
+import nl.vpro.amara.video.AmaraVideoCollection;
 
 /**
  * @author joost

@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms;
 
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,10 +8,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.vpro.amara_poms.amara.subtitles.AmaraSubtitles;
-import nl.vpro.amara_poms.amara.task.AmaraTask;
-import nl.vpro.amara_poms.amara.task.AmaraTaskCollection;
-import nl.vpro.amara_poms.amara.video.AmaraVideo;
+import nl.vpro.amara.subtitles.AmaraSubtitles;
+import nl.vpro.amara.task.AmaraTask;
+import nl.vpro.amara.task.AmaraTaskCollection;
+import nl.vpro.amara.video.AmaraVideo;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.Task;
 import nl.vpro.amara_poms.poms.PomsClip;
@@ -132,11 +133,14 @@ public class PomsPublisher {
                 }
 
                 // write subtitles to file
-                if (amaraSubtitles.writeSubtitlesToFiles(pomsTargetId) == Config.NO_ERROR) {
+                try {
+                    amaraSubtitles.writeSubtitlesToFiles(pomsTargetId);
                     // update version no in local db
                     task.setSubtitlesVersionNo(amaraSubtitles.version_no);
                     task.setStatus(Task.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
                     dbManager.addOrUpdateTask(task);
+                } catch (FileNotFoundException e) {
+                    LOG.error(e.getMessage(), e);
                 }
             } else {
                 LOG.info("Subtitle version " + amaraSubtitles.version_no + " already exists in Poms for video_id " + amaraSubtitles.video);

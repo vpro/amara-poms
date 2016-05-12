@@ -1,8 +1,10 @@
-package nl.vpro.amara_poms.amara.subtitles;
+package nl.vpro.amara.subtitles;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +19,11 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import nl.vpro.amara.domain.Action;
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
-import nl.vpro.amara_poms.amara.language.AmaraLanguage;
-import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
+import nl.vpro.amara.Utils;
+import nl.vpro.amara.language.AmaraLanguage;
+import nl.vpro.amara.video.AmaraVideoMetadata;
 
 /**
  * @author joost
@@ -94,18 +97,10 @@ public class AmaraSubtitles {
         return basePath;
     }
 
-    public int writeSubtitlesToFiles(String pomsMid) {
-        int returnValue = Config.NO_ERROR;
-
-        try( PrintWriter out = new PrintWriter(getSubtitleFilepath(pomsMid))){
+    public void writeSubtitlesToFiles(String pomsMid) throws FileNotFoundException {
+        try(PrintWriter out = new PrintWriter(getSubtitleFilepath(pomsMid))){
             out.println(subtitles);
-        } catch (FileNotFoundException e) {
-            LOG.error("Error writing subtitles to file " + getSubtitleFilepath(pomsMid));
-            LOG.error(e.toString());
-            returnValue = Config.ERROR_WRITING_SUBTITLES_TO_FILE;
         }
-
-        return returnValue;
     }
 
     public static AmaraSubtitles post(AmaraSubtitles amaraSubtitlesIn, String video_id, String language_code) {
@@ -129,9 +124,7 @@ public class AmaraSubtitles {
                 amaraSubtitlesOut = response.getBody();
             }
         } catch (HttpClientErrorException e) {
-            LOG.info(e.toString());
-            String responseBody = new String(e.getResponseBodyAsString());
-            LOG.info(responseBody);
+            LOG.error("{}:{}",  e.getMessage(), e.getResponseBodyAsString());
         }
 
         return  amaraSubtitlesOut;
@@ -161,11 +154,26 @@ public class AmaraSubtitles {
             }
         } catch (HttpClientErrorException e) {
             LOG.info(e.toString());
-            String responseBody = new String(e.getResponseBodyAsString());
+            String responseBody = e.getResponseBodyAsString();
             LOG.info(responseBody);
         }
 
         return  amaraSubtitlesOut;
+    }
+
+    public static List<Action> getActions(String video_id, String language_code) {
+        String url = Config.getRequiredConfig("amara.api.url") + "api/videos/" + video_id + "/languages/" +
+            language_code + "/subtitles/actions";
+        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+        URI uri = builder.build().encode().toUri();
+
+        // do request
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity<AmaraSubtitles> request = new HttpEntity<>(Utils.getGetHeaders());
+        ResponseEntity<Action[]> response = restTemplate.exchange(uri, HttpMethod.GET, request, Action[].class);
+
+        Action[] body = response.getBody();
+        return Arrays.asList(body);
     }
 
 

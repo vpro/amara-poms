@@ -1,9 +1,9 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara;
 
 import junit.framework.TestCase;
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.video.AmaraVideo;
-import nl.vpro.amara_poms.amara.video.AmaraVideoMetadata;
+import nl.vpro.amara.video.AmaraVideo;
+import nl.vpro.amara.video.AmaraVideoMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

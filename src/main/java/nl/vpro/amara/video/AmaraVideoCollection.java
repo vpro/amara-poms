@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.video;
+package nl.vpro.amara.video;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
-import nl.vpro.amara_poms.amara.Utils;
+import nl.vpro.amara.Utils;
 
 /**
  * @author joost

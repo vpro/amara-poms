@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.task;
+package nl.vpro.amara.task;
 
 import java.net.URI;
 
@@ -17,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.Utils;
+import nl.vpro.amara.Utils;
 
 /**
  * @author joost

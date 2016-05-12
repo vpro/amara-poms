@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara;
+package nl.vpro.amara;
 
 import java.net.URI;
 

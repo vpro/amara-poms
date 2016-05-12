@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.activity;
+package nl.vpro.amara.activity;
 
 import java.net.URI;
 import java.util.List;
@@ -17,8 +17,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.amara.AmaraMeta;
-import nl.vpro.amara_poms.amara.Utils;
+import nl.vpro.amara.AmaraMeta;
+import nl.vpro.amara.Utils;
 
 /**
  * @author joost

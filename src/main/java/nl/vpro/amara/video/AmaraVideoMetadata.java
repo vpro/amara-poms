@@ -1,4 +1,4 @@
-package nl.vpro.amara_poms.amara.video;
+package nl.vpro.amara.video;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
