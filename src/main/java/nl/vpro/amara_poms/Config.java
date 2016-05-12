@@ -60,12 +60,12 @@ public class Config {
 
     public static Client getAmaraClient() {
         if (amaraClient ==  null) {
-            amaraClient = new Client(
-                getRequiredConfig("amara.api.url"),
-                getRequiredConfig("amara.api.username"),
-                getRequiredConfig("amara.api.key"),
-                getRequiredConfig("amara.api.team")
-            );
+            amaraClient = new Client.Builder()
+                .url(getRequiredConfig("amara.api.url"))
+                .user(getRequiredConfig("amara.api.username"))
+                .apiKey(getRequiredConfig("amara.api.key"))
+                .team(getRequiredConfig("amara.api.team"))
+                .build();
         }
         return amaraClient;
     }

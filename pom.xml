@@ -21,7 +21,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <api.client.version>4.3.5</api.client.version>
+    <api.client.version>4.4-SNAPSHOT</api.client.version>
   </properties>
 
   <parent>
@@ -126,7 +126,7 @@
       <url>file://${project.basedir}/releases</url>
     </repository>
   </distributionManagement>
-  
+
   <build>
     <defaultGoal>install</defaultGoal>
     <plugins>
