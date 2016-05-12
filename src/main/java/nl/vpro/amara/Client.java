@@ -16,6 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import nl.vpro.amara.domain.*;
 
 /**
+ * A java-client for AMARA (See http://www.amara.org).
+ *
  * @author Michiel Meeuwissen
  * @since 1.2
  */
@@ -413,5 +415,35 @@ public class Client {
         return builder.build().encode().toUri();
     }
 
+
+    public static class Builder  {
+        private String amaraUrl;
+        private String username;
+        private String apiKey;
+        private String team;
+
+        public Builder url(String amaraUrl) {
+            this.amaraUrl = amaraUrl;
+            return this;
+        }
+
+        public Builder user(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder apiKey(String apiKey) {
+            this.apiKey = apiKey;
+            return this;
+        }
+
+        public Builder team(String team) {
+            this.team = team;
+            return this;
+        }
+        public Client build() {
+            return new Client(amaraUrl, username, apiKey, team);
+        }
+    }
 
 }
