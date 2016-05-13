@@ -12,9 +12,9 @@ import nl.vpro.amara_poms.Config;
 /**
  * @author Joost
  */
-public class AmaraVideoTest extends TestCase {
+public class VideoTest extends TestCase {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AmaraVideoTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(VideoTest.class);
 
     protected void setUp() {
 

@@ -1,6 +1,6 @@
 package nl.vpro.amara.domain;
 
-import org.joda.time.DateTime;
+import java.time.Instant;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -32,7 +32,7 @@ public class Activity {
 
     String id;
     int type;
-    DateTime created;
+    Instant created;
 
     String video;
     String video_uri;
@@ -59,11 +59,11 @@ public class Activity {
         this.type = type;
     }
 
-    public DateTime getCreated() {
+    public Instant getCreated() {
         return created;
     }
 
-    public void setCreated(DateTime created) {
+    public void setCreated(Instant created) {
         this.created = created;
     }
 

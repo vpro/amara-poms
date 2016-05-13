@@ -12,9 +12,9 @@ import nl.vpro.amara_poms.Config;
 /**
  * @author joost
  */
-public class AmaraActivityTest {
+public class ActivityTest {
 
-    private final static Logger LOG = LoggerFactory.getLogger(AmaraActivityTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(ActivityTest.class);
 
 
     @Test

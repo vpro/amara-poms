@@ -1,6 +1,7 @@
 package nl.vpro.amara.domain;
 
-import org.joda.time.DateTime;
+import java.time.Instant;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,7 +10,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author joost
- * @todo static methods should not be in domain
 
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -28,7 +28,7 @@ public class Task {
     public String assignee;
 
     public int priority;
-    public DateTime completed;
+    public Instant completed;
     public String resource_uri;
 
 

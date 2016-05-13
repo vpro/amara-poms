@@ -19,9 +19,9 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author joost
  */
-public class AmaraSubtitlesTest  {
+public class SubtitlesTest {
 
-    final static Logger LOG = LoggerFactory.getLogger(AmaraSubtitlesTest.class);
+    final static Logger LOG = LoggerFactory.getLogger(SubtitlesTest.class);
 
     @Before
     public void setUp() {
