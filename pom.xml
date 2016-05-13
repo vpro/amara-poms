@@ -98,12 +98,14 @@
       <artifactId>commons-csv</artifactId>
       <version>1.2</version>
     </dependency>
+
     <dependency>
-      <groupId>org.easytesting</groupId>
-      <artifactId>fest-assert-core</artifactId>
-      <version>2.0M10</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>3.4.0</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <repositories>
@@ -121,7 +123,7 @@
 
   <distributionManagement>
     <repository>
-      <id>local</id>
+      <id>localfilesmv</id>
       <url>file://${project.basedir}/releases</url>
     </repository>
   </distributionManagement>
