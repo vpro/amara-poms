@@ -153,7 +153,7 @@ public class AmaraPublisher {
                 Task uploadedAmaraTask = Config.getAmaraClient().post(amaraTask);
 
                 if (uploadedAmaraTask != null) {
-                    LOG.info("Task (" + uploadedAmaraTask.resource_uri + ") created for language " + targetLanguage + " to Amara with video id " + uploadedAmaraVideo.getId());
+                    LOG.info("Task (" + uploadedAmaraTask.getResource_uri() + ") created for language " + targetLanguage + " to Amara with video id " + uploadedAmaraVideo.getId());
                     dbManager.addOrUpdateTask(new nl.vpro.amara_poms.database.task.Task(uploadedAmaraVideo.getId(),
                             targetLanguage,
                             nl.vpro.amara_poms.database.task.Task.STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION, pomsMidBroadcast));
