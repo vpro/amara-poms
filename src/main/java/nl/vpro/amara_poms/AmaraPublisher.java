@@ -93,7 +93,7 @@ public class AmaraPublisher {
                                                    amaraVideoMetadata);
             amaraVideo.setThumbnail(thumbnailUrl);
             amaraVideo.setProject(Config.getRequiredConfig("amara.api.video.default.project"));
-            Video uploadedAmaraVideo = Config.getAmaraClient().post(amaraVideo);
+            Video uploadedAmaraVideo = Config.getAmaraClient().videos().post(amaraVideo);
             if (uploadedAmaraVideo == null) {
                 continue;
             } else {
@@ -117,7 +117,7 @@ public class AmaraPublisher {
                         pomsBroadcast.getDescription(),
                         Config.getRequiredConfig("amara.subtitles.action.default"));
 
-                Subtitles uploadedAmaraSubtitles = Config.getAmaraClient().post(amaraSubtitles, uploadedAmaraVideo.getId(),
+                Subtitles uploadedAmaraSubtitles = Config.getAmaraClient().videos().post(amaraSubtitles, uploadedAmaraVideo.getId(),
                         Config.getRequiredConfig("amara.api.primary_audio_language_code"));
 
                 if (uploadedAmaraSubtitles != null) {
@@ -129,7 +129,7 @@ public class AmaraPublisher {
                     // nl subtitles status is now complete, has to be aproved (can only be done in 2 steps)
                     SubtitleAction amaraSubtitleAction = new SubtitleAction(SubtitleAction.ACTION_APPROVE);
 
-                    SubtitleAction amaraSubtitleActionOut = Config.getAmaraClient().post(amaraSubtitleAction,
+                    SubtitleAction amaraSubtitleActionOut = Config.getAmaraClient().videos().post(amaraSubtitleAction,
                             uploadedAmaraVideo.getId(),
                             Config.getRequiredConfig("amara.api.primary_audio_language_code"));
 
@@ -150,7 +150,7 @@ public class AmaraPublisher {
                 Task amaraTask = new Task(uploadedAmaraVideo.getId(), targetLanguage,
                         Config.getRequiredConfig("amara.task.type.in"),
                         Config.getRequiredConfig("amara.task.user.default"));
-                Task uploadedAmaraTask = Config.getAmaraClient().post(amaraTask);
+                Task uploadedAmaraTask = Config.getAmaraClient().teams().post(amaraTask);
 
                 if (uploadedAmaraTask != null) {
                     LOG.info("Task (" + uploadedAmaraTask.getResource_uri() + ") created for language " + targetLanguage + " to Amara with video id " + uploadedAmaraVideo.getId());

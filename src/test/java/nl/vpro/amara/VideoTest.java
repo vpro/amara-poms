@@ -2,6 +2,8 @@ package nl.vpro.amara;
 
 import junit.framework.TestCase;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,13 +11,17 @@ import nl.vpro.amara.domain.Video;
 import nl.vpro.amara.domain.VideoMetadata;
 import nl.vpro.amara_poms.Config;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
  * @author Joost
  */
-public class VideoTest extends TestCase {
+public class VideoTest {
 
     private final static Logger LOG = LoggerFactory.getLogger(VideoTest.class);
 
+    @Before
     protected void setUp() {
 
         Config.init();
@@ -32,6 +38,7 @@ public class VideoTest extends TestCase {
 //        assertNotNull(newAmaraVideo);
 //    }
 
+    @Test
     public void testPostAsString() {
 
         String team = Config.getRequiredConfig("amara.api.team");
@@ -41,14 +48,15 @@ public class VideoTest extends TestCase {
         //String response = amaraVideo.postAsString(amaraVideo);
     }
 
-
+    @Test
     public void testGet() {
 //        AmaraVideo amaraVideo = AmaraVideo.get("F8i3LbQkBbeG");
-        Video amaraVideo = Config.getAmaraClient().getVideo("FSW0qzp2Enlk"); // test video
+        Video amaraVideo = Config.getAmaraClient().videos().get("FSW0qzp2Enlk"); // test video
 
         LOG.info(amaraVideo.toString());
     }
 
+    @Test
     public void testPomsMidFromOmroepUrl() {
         Video amaraVideo = new Video();
 
@@ -60,6 +68,7 @@ public class VideoTest extends TestCase {
         assertEquals(foundMid, "VPWON_1166750");
     }
 
+    @Test
     public void testPomsMidFromYoutube() {
         Video amaraVideo = new Video();
 
@@ -71,6 +80,7 @@ public class VideoTest extends TestCase {
         assertNull(foundMid);
     }
 
+    @Test
     public void testPomsMidFromEmpty() {
         Video amaraVideo = new Video();
 

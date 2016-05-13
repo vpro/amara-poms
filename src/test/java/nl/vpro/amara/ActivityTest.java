@@ -21,7 +21,7 @@ public class ActivityTest {
     public void get() throws Exception {
         Config.init();
 
-        Activity amaraActivity = Config.getAmaraClient().getActivity("5036197");
+        Activity amaraActivity = Config.getAmaraClient().activity().get("5036197");
 
         LOG.info(amaraActivity.toString());
         if (amaraActivity.getCreated() != null) {
@@ -33,7 +33,7 @@ public class ActivityTest {
     public void getList() throws Exception {
         Config.init();
 
-        List<Activity> amaraActivities = Config.getAmaraClient().getActivities().getActivities();
+        List<Activity> amaraActivities = Config.getAmaraClient().activity().list().getActivities();
 
         LOG.info("Count:" + amaraActivities.size());
         if (amaraActivities.size() > 0) {
@@ -50,7 +50,7 @@ public class ActivityTest {
 
         long now = System.currentTimeMillis() / 1000;
 
-        List<Activity> amaraActivities = Config.getAmaraClient().getActivities(Activity.TYPE_APPROVE_VERSION, now - afterTimestampInSeconds).getActivities();
+        List<Activity> amaraActivities = Config.getAmaraClient().activity().list(Activity.TYPE_APPROVE_VERSION, now - afterTimestampInSeconds).getActivities();
 
         LOG.info("Count:" + amaraActivities.size());
         if (amaraActivities.size() > 0) {

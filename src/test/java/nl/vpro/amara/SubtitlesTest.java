@@ -46,7 +46,7 @@ public class SubtitlesTest {
                 "2\n" +
                 "00:00:05.012 --> 00:00:07.018\n" +
                 "TUNE VAN DWDD\n", "test description", "complete");
-        Subtitles newAmaraSubtitles = Config.getAmaraClient().post(amaraSubtitles, "gDq7bAA5XFCR", "nl");
+        Subtitles newAmaraSubtitles = Config.getAmaraClient().videos().post(amaraSubtitles, "gDq7bAA5XFCR", "nl");
 
         assertNotNull(newAmaraSubtitles);
     }
@@ -54,7 +54,7 @@ public class SubtitlesTest {
     @Test
     public void getActions() {
         String video_id = "Ep1jZa6c2NRt";
-        List<Action> actions = Config.getAmaraClient().getActions(video_id, "nl");
+        List<Action> actions = Config.getAmaraClient().videos().getActions(video_id, "nl");
         System.out.println("" + actions);
     }
     @Test
@@ -67,13 +67,13 @@ public class SubtitlesTest {
         Subtitles amaraSubtitles = new Subtitles("Blauw Bloed // Een interview met prinses Irene", "vtt",
             pomsBroadcast.getSubtitles(), "Een interview met prinses Irene, we volgen koning Willem-Alexander bij de start van de Giro d'Italia en couturier Paul Schulten vertelt alles over koninklijke bloemetjesjurken.", "save-draft");
 
-        Subtitles newAmaraSubtitles = Config.getAmaraClient().post(amaraSubtitles, video_id, "nl");
+        Subtitles newAmaraSubtitles = Config.getAmaraClient().videos().post(amaraSubtitles, video_id, "nl");
 
         assertNotNull(newAmaraSubtitles);
     }
 
     public void testGetVTT() {
-        String amaraSubtitles = Config.getAmaraClient().getAsVTT("G3CnVJdMw21Y", "nl", Config.getRequiredConfig("amara.subtitles.format"));
+        String amaraSubtitles = Config.getAmaraClient().videos().getAsVTT("G3CnVJdMw21Y", "nl", Config.getRequiredConfig("amara.subtitles.format"));
 
         assertNotNull(amaraSubtitles);
 
@@ -81,7 +81,7 @@ public class SubtitlesTest {
     }
 
     public  void testGet() {
-        Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles("G3CnVJdMw21Y", "nl", Config.getRequiredConfig("amara.subtitles.format"));
+        Subtitles amaraSubtitles = Config.getAmaraClient().videos().getSubtitles("G3CnVJdMw21Y", "nl", Config.getRequiredConfig("amara.subtitles.format"));
 
         assertNotNull(amaraSubtitles);
 
