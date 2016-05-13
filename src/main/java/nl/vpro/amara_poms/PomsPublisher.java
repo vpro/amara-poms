@@ -83,11 +83,11 @@ public class PomsPublisher {
             // find pomsId in local db or from video metadata in Amara
             String pomsMid;
             Video amaraVideo = Config.getAmaraClient().getVideo(amaraTask.video_id);
-            pomsMid = amaraVideo.getMetadata().location;
+            pomsMid = amaraVideo.getMetadata().getLocation();
             if (pomsMid != null) {
                 LOG.info("Poms mid found in video meta data:" + pomsMid);
             } else {
-                LOG.info("No poms mid found in video meta data");
+                LOG.info("No poms mid found in video meta data {}", amaraVideo.getMetadata());
                 // try local db
                 nl.vpro.amara_poms.database.task.Task originTask = dbManager.findTask(amaraTask.video_id, Config.getRequiredConfig("amara.api.primary_audio_language_code"));
                 if (originTask != null) {
