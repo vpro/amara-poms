@@ -66,6 +66,7 @@ public class Config {
                 .apiKey(getRequiredConfig("amara.api.key"))
                 .team(getRequiredConfig("amara.api.team"))
                 .build();
+            LOG.info("Created amara client {}", amaraClient);
         }
         return amaraClient;
     }

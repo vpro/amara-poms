@@ -61,6 +61,7 @@ public class AmaraPublisher {
             // Publish to Amara
             //
             if (pomsBroadcast.downloadFileToDownloadServer() != Config.NO_ERROR) {
+                LOG.error("Downloading subtitles to server failed");
                 continue;
             }
 
@@ -156,6 +157,8 @@ public class AmaraPublisher {
                     dbManager.addOrUpdateTask(new nl.vpro.amara_poms.database.task.Task(uploadedAmaraVideo.getId(),
                             targetLanguage,
                             nl.vpro.amara_poms.database.task.Task.STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION, pomsMidBroadcast));
+                } else {
+                    LOG.error("No uploaded amara task received for {}", amaraTask);
                 }
             }
 

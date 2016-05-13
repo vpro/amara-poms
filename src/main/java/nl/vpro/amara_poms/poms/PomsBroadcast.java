@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.SortedSet;
 
 import org.apache.commons.io.IOUtils;
@@ -154,10 +153,9 @@ public class PomsBroadcast {
         int returnValue = Config.NO_ERROR;
 
         ProcessBuilder pb = new ProcessBuilder(Config.getRequiredConfig("fetch.script"), mid);
-        Map<String, String> env = pb.environment();
         pb.directory(new File("."));
         try {
-            Process p = pb.start();
+            pb.start();
         } catch (IOException e) {
             LOG.error(e.toString());
             returnValue = Config.ERROR_COPY_INPUTFILE;
