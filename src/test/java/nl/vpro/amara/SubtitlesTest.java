@@ -85,8 +85,8 @@ public class SubtitlesTest {
 
         assertNotNull(amaraSubtitles);
 
-        LOG.info(StringUtils.abbreviate(amaraSubtitles.subtitles, 20));
-        LOG.info((amaraSubtitles.version_no));
+        LOG.info(StringUtils.abbreviate(amaraSubtitles.getSubtitles(), 20));
+        LOG.info((amaraSubtitles.getVersion_no()));
 
     }
 }

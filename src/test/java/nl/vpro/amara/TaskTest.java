@@ -38,7 +38,7 @@ public class TaskTest {
     @Test
     public void bind() throws JsonProcessingException {
         Task task = new Task();
-        task.completed = Instant.now();
+        task.setCompleted(Instant.now());
         System.out.println(Jackson2Mapper.getInstance().writeValueAsString(task));
     }
 
