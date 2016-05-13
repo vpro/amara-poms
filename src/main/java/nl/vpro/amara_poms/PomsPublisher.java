@@ -1,6 +1,7 @@
 package nl.vpro.amara_poms;
 
 import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -131,7 +132,7 @@ public class PomsPublisher {
 
                 // write subtitles to file
                 try {
-                    amaraSubtitles.writeSubtitlesToFiles(pomsTargetId);
+                    writeSubtitlesToFiles(pomsTargetId, amaraSubtitles);
                     // update version no in local db
                     task.setSubtitlesVersionNo(amaraSubtitles.version_no);
                     task.setStatus(nl.vpro.amara_poms.database.task.Task.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
@@ -143,6 +144,20 @@ public class PomsPublisher {
                 LOG.info("Subtitle version " + amaraSubtitles.version_no + " already exists in Poms for video_id " + amaraSubtitles.video);
             }
             LOG.info("Finished processing video_id " + amaraTask.video_id + " for language " + amaraTask.language);
+        }
+    }
+
+    public String getSubtitleFilepath(String filename, Subtitles subtitles) {
+        String basePath = Config.getRequiredConfig("subtitle.basepath");
+
+        basePath += subtitles.language.getCode() + "/" + filename;
+
+        return basePath;
+    }
+
+    public void writeSubtitlesToFiles(String pomsMid,  Subtitles subtitles) throws FileNotFoundException {
+        try (PrintWriter out = new PrintWriter(getSubtitleFilepath(pomsMid, subtitles))) {
+            out.println(subtitles);
         }
     }
 
