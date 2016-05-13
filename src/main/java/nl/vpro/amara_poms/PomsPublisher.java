@@ -132,7 +132,11 @@ public class PomsPublisher {
 
                 // write subtitles to file
                 try {
-                    writeSubtitlesToFiles(pomsTargetId, amaraSubtitles);
+                    String file = getSubtitleFilepath(pomsTargetId, amaraSubtitles);
+                    try (PrintWriter out = new PrintWriter(file)) {
+                        LOG.info("Writing subtitles to {}", file);
+                        out.println(amaraSubtitles.getSubtitles());
+                    }
                     // update version no in local db
                     task.setSubtitlesVersionNo(amaraSubtitles.getVersion_no());
                     task.setStatus(nl.vpro.amara_poms.database.task.Task.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
@@ -147,18 +151,12 @@ public class PomsPublisher {
         }
     }
 
-    public String getSubtitleFilepath(String filename, Subtitles subtitles) {
+    private String getSubtitleFilepath(String filename, Subtitles subtitles) {
         String basePath = Config.getRequiredConfig("subtitle.basepath");
 
         basePath += subtitles.getLanguage().getCode() + "/" + filename;
 
         return basePath;
-    }
-
-    public void writeSubtitlesToFiles(String pomsMid,  Subtitles subtitles) throws FileNotFoundException {
-        try (PrintWriter out = new PrintWriter(getSubtitleFilepath(pomsMid, subtitles))) {
-            out.println(subtitles);
-        }
     }
 
 }
