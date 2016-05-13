@@ -41,6 +41,7 @@ public class App  {
         } finally {
             LOG.info("removing lockfile {}", path);
             Files.delete(path);
+            Config.getPomsClient().shutdown();
         }
 
         System.exit(exitCode);
