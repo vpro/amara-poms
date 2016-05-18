@@ -36,7 +36,7 @@
     <dependency>
       <groupId>nl.vpro.amara</groupId>
       <artifactId>amara-java</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>0.1</version>
     </dependency>
     <dependency>
       <groupId>javax.el</groupId>

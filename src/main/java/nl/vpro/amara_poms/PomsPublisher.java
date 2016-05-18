@@ -32,7 +32,7 @@ public class PomsPublisher {
         // get tasks for some period
         long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");
         long now = System.currentTimeMillis() / 1000;
-        List<Task> amaraTasks = Config.getAmaraClient().getTasks(Config.getRequiredConfig("amara.task.type.out"),
+        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Config.getRequiredConfig("amara.task.type.out"),
                                                                         now - afterTimestampInSeconds).getTasks();
         LOG.info("Search for Amara tasks...");
         for (Task amaraTask : amaraTasks) {
@@ -60,7 +60,7 @@ public class PomsPublisher {
             }
 
             // fetch subtitles from Amara
-            Subtitles amaraSubtitles = Config.getAmaraClient().getSubtitles(amaraTask.getVideo_id(), amaraTask.getLanguage(), Config.getRequiredConfig("amara.subtitles.format"));
+            Subtitles amaraSubtitles = Config.getAmaraClient().videos().getSubtitles(amaraTask.getVideo_id(), amaraTask.getLanguage(), Config.getRequiredConfig("amara.subtitles.format"));
 
             if (amaraSubtitles == null) {
                 LOG.error("Subtitle for language " + amaraTask.getLanguage() + " and video_id " + amaraTask.getVideo_id() + " not found -> skip");
@@ -82,7 +82,7 @@ public class PomsPublisher {
 
             // find pomsId in local db or from video metadata in Amara
             String pomsMid;
-            Video amaraVideo = Config.getAmaraClient().getVideo(amaraTask.getVideo_id());
+            Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
             pomsMid = amaraVideo.getMetadata().getLocation();
             if (pomsMid != null) {
                 LOG.info("Poms mid found in video meta data:" + pomsMid);
