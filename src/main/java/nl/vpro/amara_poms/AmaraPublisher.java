@@ -1,15 +1,9 @@
 package nl.vpro.amara_poms;
 
-import java.util.Iterator;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import nl.vpro.amara.domain.SubtitleAction;
-import nl.vpro.amara.domain.Subtitles;
-import nl.vpro.amara.domain.Task;
-import nl.vpro.amara.domain.Video;
-import nl.vpro.amara.domain.VideoMetadata;
+import nl.vpro.amara.domain.*;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 import nl.vpro.amara_poms.poms.PomsCollection;
@@ -36,15 +30,15 @@ public class AmaraPublisher {
 
         // Get collection from POMS
         String inputCollectionName = Config.getRequiredConfig("poms.input.collections_mid");
+
+        LOG.info("Search for POMS broadcasts to be translated, using mid {} on {}", inputCollectionName, Config.getPomsClient());
         PomsCollection collectionToBeTranslated = new PomsCollection(inputCollectionName);
-        collectionToBeTranslated.getBroadcastsFromPOMS();
 
         // Iterate over collection
-        LOG.info("Search for POMS broadcasts to be translated...");
-        Iterator<MemberUpdate> pomsBroadcastIterator = collectionToBeTranslated.getBroadcastsIterator();
-        while (pomsBroadcastIterator.hasNext()) {
 
-            PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsBroadcastIterator.next());
+
+        for (MemberUpdate update : collectionToBeTranslated) {
+            PomsBroadcast pomsBroadcast = new PomsBroadcast(update);
 
             String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
             LOG.info("Start processing broadcast with Mid:" + pomsMidBroadcast);

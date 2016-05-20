@@ -33,7 +33,7 @@ public class PomsCollectionTest  {
 
         // load collection
         PomsCollection pomsCollection = new PomsCollection("POMS_S_VPRO_1416538");
-        assertEquals(0, pomsCollection.getBroadcastsFromPOMS());
+        assertEquals(0, pomsCollection.getErrorCode());
 
         LOG.info(pomsCollection.getGroup().toString());
     }
@@ -42,7 +42,7 @@ public class PomsCollectionTest  {
     public void testGetCollectionNotExists() {
         // load collection
         PomsCollection pomsCollection = new PomsCollection("ABC");
-        assertNotEquals(0, pomsCollection.getBroadcastsFromPOMS());
+        assertNotEquals(0, pomsCollection.getErrorCode());
     }
 
 

@@ -14,28 +14,37 @@ import nl.vpro.rs.media.MediaRestClient;
 /**
  * @author joost
  */
-public class PomsCollection {
+public class PomsCollection implements Iterable<MemberUpdate> {
 
-    final Logger logger = LoggerFactory.getLogger(PomsCollection.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PomsCollection.class);
     static final int ERROR_COLLECTION_NOT_FOUND = 1;
     static final int ERROR_BROADCAST_NOT_FOUND = 3;
 
-    String collectionName;
+    private String collectionName;
 
-    GroupUpdate group;
+    private GroupUpdate group;
 
-    Iterable<MemberUpdate> memberUpdateArrayList;
+    private Iterable<MemberUpdate> memberUpdateArrayList;
+    private final int errorCode;
 
-    public Iterator<MemberUpdate> getBroadcastsIterator() {
-        return memberUpdateArrayList.iterator();
+    public PomsCollection(String collectionName) {
+        this.collectionName = collectionName;
+        this.errorCode = getBroadcastsFromPOMS();
     }
+
 
     public GroupUpdate getGroup() {
         return group;
     }
 
-    public PomsCollection(String collectionName) {
-        this.collectionName = collectionName;
+    @Override
+    public Iterator<MemberUpdate> iterator() {
+        return memberUpdateArrayList.iterator();
+
+    }
+
+    public int getErrorCode() {
+        return errorCode;
     }
 
     /**
@@ -43,7 +52,7 @@ public class PomsCollection {
      *
      * @return 0 if found, error code != 0  if not found
      */
-    public int getBroadcastsFromPOMS() {
+    private int getBroadcastsFromPOMS() {
         int returnValue = 0;
         MediaRestClient client = Config.getPomsClient();
 
@@ -51,13 +60,14 @@ public class PomsCollection {
 
         if (group == null) {
             returnValue = ERROR_COLLECTION_NOT_FOUND;
-        }
-        else
-        {
+        } else {
             memberUpdateArrayList = client.getGroupMembers(collectionName); // get group numbers
         }
 
         return returnValue;
     }
+
+
+
 
 }
