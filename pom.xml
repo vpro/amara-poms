@@ -24,6 +24,7 @@
     <api.client.version>4.4-SNAPSHOT</api.client.version>
     <jackson2.version>2.7.4</jackson2.version>
     <spring.version>4.2.6.RELEASE</spring.version>
+    <amara-java.version>0.2-SNAPSHOT</amara-java.version>
   </properties>
 
 
@@ -36,7 +37,7 @@
     <dependency>
       <groupId>nl.vpro.amara</groupId>
       <artifactId>amara-java</artifactId>
-      <version>0.1</version>
+      <version>${amara-java.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.el</groupId>
