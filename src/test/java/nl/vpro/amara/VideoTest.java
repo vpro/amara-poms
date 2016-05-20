@@ -1,7 +1,5 @@
 package nl.vpro.amara;
 
-import junit.framework.TestCase;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -22,7 +20,7 @@ public class VideoTest {
     private final static Logger LOG = LoggerFactory.getLogger(VideoTest.class);
 
     @Before
-    protected void setUp() {
+    public void setUp() {
 
         Config.init();
     }
@@ -39,13 +37,14 @@ public class VideoTest {
 //    }
 
     @Test
-    public void testPostAsString() {
+    public void testPost() {
 
         String team = Config.getRequiredConfig("amara.api.team");
         VideoMetadata amaraVideoMetadata = new VideoMetadata("test speaker", "test location");
         Video amaraVideo = new Video("http://download.omroep.nl/vpro/netinnederland/NPO_bb.m4v",
                 "nl", "Joost test (to be deleted)", "gebruikt for testing purposes", team, amaraVideoMetadata);
-        //String response = amaraVideo.postAsString(amaraVideo);
+        Video response = Config.getAmaraClient().videos().post(amaraVideo);
+        System.out.println(response.toString());
     }
 
     @Test

@@ -89,6 +89,7 @@ public class AmaraPublisher {
             amaraVideo.setProject(Config.getRequiredConfig("amara.api.video.default.project"));
             Video uploadedAmaraVideo = Config.getAmaraClient().videos().post(amaraVideo);
             if (uploadedAmaraVideo == null) {
+                LOG.info("No amara video uploaded for {}", amaraVideo);
                 continue;
             } else {
                 LOG.info("Video uploaded to Amara with id " + uploadedAmaraVideo.getId());
