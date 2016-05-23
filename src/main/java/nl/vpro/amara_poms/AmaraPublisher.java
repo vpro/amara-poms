@@ -116,7 +116,8 @@ public class AmaraPublisher {
         }
         String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
         LOG.info("Uploading subtitles to amara for " + pomsMidBroadcast);
-        Subtitles amaraSubtitles = new Subtitles(uploadedAmaraVideo.getTitle(),
+        Subtitles amaraSubtitles = new Subtitles(
+            uploadedAmaraVideo.getTitle(),
             Config.getRequiredConfig("amara.subtitles.format"),
             pomsBroadcast.getSubtitles(),
             pomsBroadcast.getDescription(),
@@ -129,9 +130,13 @@ public class AmaraPublisher {
         );
 
         if (uploadedAmaraSubtitles != null) {
-            dbManager.addOrUpdateTask(new nl.vpro.amara_poms.database.task.Task(uploadedAmaraVideo.getId(),
-                Config.getRequiredConfig("amara.api.primary_audio_language_code"),
-                nl.vpro.amara_poms.database.task.Task.STATUS_UPLOADED_SUBTITLE_TO_AMARA, pomsMidBroadcast));
+            dbManager.addOrUpdateTask(
+                new nl.vpro.amara_poms.database.task.Task(
+                    uploadedAmaraVideo.getId(),
+                    Config.getRequiredConfig("amara.api.primary_audio_language_code"),
+                    nl.vpro.amara_poms.database.task.Task.STATUS_UPLOADED_SUBTITLE_TO_AMARA,
+                    pomsMidBroadcast)
+            );
             LOG.info("Subtitle uploaded to Amara with id " + uploadedAmaraVideo.getId());
 
             // nl subtitles status is now complete, has to be aproved (can only be done in 2 steps)

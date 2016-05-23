@@ -5,6 +5,7 @@ import org.junit.Test;
 
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Video;
+import nl.vpro.amara_poms.poms.PomsBroadcast;
 
 /**
  * @author Michiel Meeuwissen
@@ -25,7 +26,11 @@ public class AmaraPublisherTest {
         Subtitles subtitles = Config.getAmaraClient().videos().getSubtitles("yiAGdgwxlD3J", "nl", "vtt");
         System.out.println(subtitles);
 
-        Config.getAmaraClient().videos().post(subtitles, "yiAGdgwxlD3J", "nl");
+        System.out.println(Config.getAmaraClient().videos().getActions("yiAGdgwxlD3J", "nl"));
+
+        AmaraPublisher amaraPublisher = new AmaraPublisher();
+        amaraPublisher.uploadSubtitles(video, new PomsBroadcast("POW_02988308"));
+
 
     }
 
