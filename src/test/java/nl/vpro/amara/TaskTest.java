@@ -46,8 +46,6 @@ public class TaskTest {
     public void testGet() {
         long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");
 
-        long now = System.currentTimeMillis() / 1000;
-
         List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Task.TYPE_TRANSLATE, Instant.now().minusSeconds(afterTimestampInSeconds)).getTasks();
 
         LOG.info("Count:" + amaraTasks.size());
