@@ -33,7 +33,9 @@ public class App  {
         try {
             Files.createFile(path);
             LOG.info("Wrote lock file {}", path);
+            LOG.info("=AMARA PUBLISHER (creating new tasks)======================================");
             new AmaraPublisher().processPomsCollection();
+            LOG.info("=POMS PUBLISHER (handling finished tasks)==================================");
             new PomsPublisher().processAmaraTasks();
         } catch (Config.Error e) {
             LOG.error(e.getMessage(), e);
@@ -43,6 +45,8 @@ public class App  {
             Files.delete(path);
             Config.getPomsClient().shutdown();
         }
+        LOG.info("=ready=================================");
+        LOG.info("=======================================");
 
         System.exit(exitCode);
     }
