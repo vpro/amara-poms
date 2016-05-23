@@ -22,12 +22,10 @@ public class PomsPublisher {
 
     private final static Logger LOG = LoggerFactory.getLogger(PomsPublisher.class);
 
-    public void processAmaraTasks() {
+    private Manager dbManager = Config.getDbManager();
 
-        // init db
-        Manager dbManager = Manager.getInstance();
-        dbManager.setFilenameTasks(Config.getRequiredConfig("db.filepath"));
-        dbManager.readFile();
+
+    public void processAmaraTasks() {
 
         // get tasks for some period
         long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");

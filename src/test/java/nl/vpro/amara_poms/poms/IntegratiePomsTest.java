@@ -3,6 +3,7 @@ package nl.vpro.amara_poms.poms;
 import java.io.IOException;
 import java.util.SortedSet;
 
+import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -24,9 +25,14 @@ public class IntegratiePomsTest {
     String pomsMidBroadcast = "VPWON_1250959";
     String midCollectionFrom = "POMS_S_VPRO_1416538"; // NetInNederland - te vertalen;
 
+    @Before
+    public void init() {
+        Config.init();
+    }
+
     @Test
     public void testPomsClipCreate() throws IOException {
-        Config.init();
+
         MediaRestClient client = Config.getPomsClient();
 
         String result = "";
@@ -41,7 +47,7 @@ public class IntegratiePomsTest {
 
     @Test
     public void testAddProgramToCollection() {
-        Config.init();
+
         MediaRestClient client = Config.getPomsClient();
 
         ProgramUpdate update = client.getProgram(pomsMidBroadcast); // test with this one
@@ -60,11 +66,8 @@ public class IntegratiePomsTest {
 
     @Test
     public void removeFromTeVertalenToNetInNL() {
-        Config.init();
-        MediaRestClient client = Config.getPomsClient();
 
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMidBroadcast);
-        pomsBroadcast.programUpdate = client.getProgram(pomsMidBroadcast);
 
         pomsBroadcast.removeFromCollection(midCollectionFrom);
 
@@ -72,12 +75,9 @@ public class IntegratiePomsTest {
 
     @Test
     public void extractImageId() {
-        Config.init();
-        MediaRestClient client = Config.getPomsClient();
 
         String pomsMid = "VPWON_1249693";
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid);
-        pomsBroadcast.programUpdate = ProgramUpdate.forAllOwners(client.getFullProgram(pomsMid)); // not so nice way to test this function
 
         String imageId = pomsBroadcast.getImageId();
         long duration = pomsBroadcast.getProgramUpdate().getDuration().getSeconds();

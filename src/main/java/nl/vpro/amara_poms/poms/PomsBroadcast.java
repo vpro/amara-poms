@@ -9,7 +9,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,19 +25,13 @@ import nl.vpro.domain.media.update.*;
 public class PomsBroadcast {
 
     private static final Logger LOG = LoggerFactory.getLogger(PomsBroadcast.class);
-    private static final int BUFFER_SIZE = 4096;
 
-    ProgramUpdate programUpdate;
-    MemberUpdate memberUpdate;
 
-    SortedSet<LocationUpdate> locationSortedSet;
+    private ProgramUpdate programUpdate;
 
-    String mid;
-    String externalUrl;
+    private String mid;
+    private String externalUrl;
 
-    // config
-    String subtitleUrl;
-    String subtitleUrlBackup;
 
     String subtitles = "";
 
@@ -108,27 +101,9 @@ public class PomsBroadcast {
 
     public PomsBroadcast(String mid) {
         this.mid = mid;
-
-        getConfig();
-    }
-
-    public  PomsBroadcast(MemberUpdate memberUpdate) {
-        this.memberUpdate = memberUpdate;
-        mid = memberUpdate.getMediaUpdate().getMid();
-
-        // get more info through program update
         programUpdate = ProgramUpdate.forAllOwners(Config.getPomsClient().getFullProgram(mid));
-
-        locationSortedSet = programUpdate.getLocations();
-
-        getConfig();
     }
 
-    private void getConfig() {
-        // config
-        subtitleUrl = Config.getRequiredConfig("subtitle.url");
-        subtitleUrlBackup = Config.getConfig("subtitle.url.backup"); // optional
-    }
 
     public void removeFromCollection(String midCollectionFrom) {
         LOG.info("Remove {} from collection {}", mid, midCollectionFrom);
@@ -174,6 +149,8 @@ public class PomsBroadcast {
      * @return NO_ERROR if successfull, otherwise errorcode
      */
     public int downloadSubtitles() {
+        String subtitleUrl = Config.getRequiredConfig("subtitle.url");
+        String subtitleUrlBackup = Config.getConfig("subtitle.url.backup"); // optional
 
         int returnValue = downloadSubtitles(subtitleUrl + mid);
         if (returnValue != Config.NO_ERROR && subtitleUrlBackup != null && !subtitleUrlBackup.isEmpty()) {
@@ -185,7 +162,6 @@ public class PomsBroadcast {
 
     /**
      * Download subtitles
-     * @param urlName
      * @return NO_ERROR if successfull, otherwise errorcode
      */
     private int downloadSubtitles(String urlName) {
@@ -206,13 +182,6 @@ public class PomsBroadcast {
 
             // always check HTTP response code first
             if (responseCode == HttpURLConnection.HTTP_OK) {
-
-                // TODO unused variables?
-                String disposition = httpConn.getHeaderField("Content-Disposition");
-                String contentType = httpConn.getContentType();
-                int contentLength = httpConn.getContentLength();
-
-                // opens input stream from the HTTP connection
                 InputStream inputStream = httpConn.getInputStream();
 
                 StringWriter writer = new StringWriter();
@@ -223,7 +192,7 @@ public class PomsBroadcast {
 
                 // check against 'WEBVTT'
                 if (content.startsWith("WEBVTT")) {
-                    LOG.info("Subtitle downloadeded from " + urlName);
+                    LOG.info("Subtitles downloaded from " + urlName);
                     LOG.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 100));
                     subtitles = content;
                 } else {
@@ -237,8 +206,8 @@ public class PomsBroadcast {
             httpConn.disconnect();
 
         } catch (IOException e) {
-                LOG.error("error opening url " + e.toString());
-                return (Config.ERROR_POM_SUBTITLES_URL_OPEN);
+            LOG.error("error opening url " + e.toString());
+            return Config.ERROR_POM_SUBTITLES_URL_OPEN;
         }
 
         return returnValue;

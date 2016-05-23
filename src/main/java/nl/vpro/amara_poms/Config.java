@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara.Client;
+import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.rs.media.MediaRestClient;
 
 /**
@@ -38,6 +39,10 @@ public class Config {
     public static final int ERROR_DB_NOT_READABLE = 11;
 
     private static Client amaraClient;
+    private static MediaRestClient pomsClient;
+    private static Manager dbManager;
+
+
 
     public static void init() {
         // load config
@@ -72,7 +77,7 @@ public class Config {
     }
 
 
-    private static MediaRestClient pomsClient = null;
+
 
     public static MediaRestClient getPomsClient() {
         if (pomsClient == null) {
@@ -95,6 +100,15 @@ public class Config {
         }
 
         return pomsClient;
+    }
+
+    public static Manager getDbManager() {
+        if (dbManager == null) {
+            dbManager = Manager.getInstance();
+            dbManager.setFilenameTasks(Config.getRequiredConfig("db.filepath"));
+            dbManager.readFile();
+        }
+        return dbManager;
     }
 
     /**
