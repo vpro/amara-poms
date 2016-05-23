@@ -48,7 +48,7 @@ public class TaskTest {
 
         long now = System.currentTimeMillis() / 1000;
 
-        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Task.TYPE_TRANSLATE, now - afterTimestampInSeconds).getTasks();
+        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Task.TYPE_TRANSLATE, Instant.now().minusSeconds(afterTimestampInSeconds)).getTasks();
 
         LOG.info("Count:" + amaraTasks.size());
         if (amaraTasks.size() > 0) {
