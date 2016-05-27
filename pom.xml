@@ -8,8 +8,34 @@
   <packaging>jar</packaging>
 
   <name>amara_publisher</name>
-  <url>http://maven.apache.org</url>
+  <url>https://github.com/vpro/amara-poms</url>
+  <inceptionYear>2016</inceptionYear>
+  <description>A tool to sync amara translations tasks with POMS clips and playlists. Used by http://www.netinnl.nl </description>
 
+
+  <developers>
+    <developer>
+      <id>mihxil</id>
+      <name>Michiel Meeuwissen</name>
+      <email>michiel.meeuwissen+github@gmail.com</email>
+      <url>http://www.meeuw.org</url>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Amsterdam</timezone>
+    </developer>
+    <developer>
+      <id>joost</id>
+      <name>Joost Aafjes</name>
+      <email>joost@knijter.nl</email>
+      <roles>
+        <role>architect</role>
+        <role>developer</role>
+      </roles>
+      <timezone>Europe/Amsterdam</timezone>
+    </developer>
+  </developers>
 
   <scm>
     <connection>scm:git:git://git@github.com/vpro/amara-poms.git</connection>
