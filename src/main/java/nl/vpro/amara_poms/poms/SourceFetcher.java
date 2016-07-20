@@ -2,7 +2,7 @@ package nl.vpro.amara_poms.poms;
 
 import lombok.ToString;
 
-import java.io.File;
+import java.net.URI;
 
 import nl.vpro.domain.media.Program;
 
@@ -18,10 +18,10 @@ public interface SourceFetcher {
     @ToString
     class FetchResult {
 
-        public final File destination;
+        public final URI destination;
         public final Status status;
 
-        public static FetchResult succes(File dest) {
+        public static FetchResult succes(URI dest) {
             return new FetchResult(dest, Status.SUCCESS);
         }
         public static FetchResult error() {
@@ -31,7 +31,7 @@ public interface SourceFetcher {
             return new FetchResult(null, Status.NOTABLE);
         }
 
-        private FetchResult(File destination, Status status) {
+        private FetchResult(URI destination, Status status) {
             this.destination = destination;
             this.status = status;
         }

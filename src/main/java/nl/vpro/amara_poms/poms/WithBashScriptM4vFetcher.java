@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.Program;
@@ -42,6 +43,10 @@ public class WithBashScriptM4vFetcher implements SourceFetcher {
         }
 
         log.info("Copied video file for mid " + mid);
-        return FetchResult.succes(new File("/e/download/pages/vpro/netinnederland/h264/" + mid + ".m4v"));
+
+        String basePath = Config.getRequiredConfig("script.download.url.base");
+        String extension = Config.getRequiredConfig("script.download.url.ext");
+        String externalUrl = basePath + mid + "." + extension;
+        return FetchResult.succes(URI.create(externalUrl));
     }
 }

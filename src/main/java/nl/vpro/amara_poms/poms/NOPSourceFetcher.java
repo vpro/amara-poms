@@ -1,6 +1,6 @@
 package nl.vpro.amara_poms.poms;
 
-import java.io.File;
+import java.net.URI;
 
 import nl.vpro.domain.media.Program;
 
@@ -11,6 +11,6 @@ import nl.vpro.domain.media.Program;
 public class NOPSourceFetcher implements SourceFetcher {
     @Override
     public FetchResult fetch(Program program) {
-        return FetchResult.succes(new File("success"));
+        return FetchResult.succes(URI.create("mock:success"));
     }
 }

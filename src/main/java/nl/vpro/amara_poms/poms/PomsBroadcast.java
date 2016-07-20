@@ -42,13 +42,6 @@ public class PomsBroadcast {
         return program;
     }
 
-    public String getExternalUrl() {
-
-        String basePath = Config.getRequiredConfig("download.url.base");
-        String extension = Config.getRequiredConfig("download.url.ext");
-        externalUrl = basePath + mid + "." + extension;
-        return externalUrl;
-    }
 
     public String getTitle() {
         return program.getMainTitle();

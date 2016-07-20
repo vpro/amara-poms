@@ -1,5 +1,7 @@
 package nl.vpro.amara_poms;
 
+import java.net.URI;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,7 +69,7 @@ public class AmaraPublisher {
             return false;
         }
 
-        Video amaraVideo = constructVideo(pomsBroadcast);
+        Video amaraVideo = constructVideo(pomsBroadcast, result.destination);
         Video uploadedAmaraVideo = Config.getAmaraClient().videos().post(amaraVideo);
         if (uploadedAmaraVideo == null) {
             LOG.info("No amara video uploaded for {}", amaraVideo);
@@ -85,7 +87,7 @@ public class AmaraPublisher {
         return true;
     }
 
-    protected Video constructVideo(PomsBroadcast pomsBroadcast) {
+    protected Video constructVideo(PomsBroadcast pomsBroadcast, URI uri) {
         String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
         // construct title, etc.
         final String videoTitel;
@@ -106,7 +108,7 @@ public class AmaraPublisher {
         }
 
         VideoMetadata amaraVideoMetadata = new VideoMetadata(speakerName, pomsMidBroadcast);
-        Video amaraVideo = new Video(pomsBroadcast.getExternalUrl(),
+        Video amaraVideo = new Video(uri.toString(),
             Config.getRequiredConfig("amara.api.primary_audio_language_code"),
             videoTitel,
             pomsBroadcast.getDescription(),
