@@ -13,6 +13,7 @@ import nl.vpro.domain.media.Program;
  * @since 1.3
  */
 @Slf4j
+@Deprecated
 public class WithBashScriptMp4Fetcher implements SourceFetcher {
 
     /**
