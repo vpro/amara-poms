@@ -14,7 +14,7 @@ import nl.vpro.domain.media.Program;
  */
 @Slf4j
 @Deprecated
-public class WithBashScriptMp4Fetcher implements SourceFetcher {
+public class WithBashScriptM4vFetcher implements SourceFetcher {
 
     /**
      * Copy source video file to download.omroep.nl to make it accessable for Amara
