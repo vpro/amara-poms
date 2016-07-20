@@ -30,7 +30,7 @@ public class App  {
             LOG.error("Another AmaraPomsPublisher process is running ({} exists since {}) -> will quit", path, Files.getLastModifiedTime(path).toInstant());
             System.exit(Config.ERROR_LOCKFILE_EXISTS);
         }
-        int exitCode = 0;
+        int exitCode = -1;
         try {
             Files.createFile(path);
             LOG.info("Wrote lock file {}", path);
@@ -38,17 +38,21 @@ public class App  {
             new AmaraPublisher(new WithBashScriptMp4Fetcher()).processPomsCollection();
             LOG.info("=POMS PUBLISHER (handling finished tasks)==================================");
             new PomsPublisher().processAmaraTasks();
+            exitCode = 0;
         } catch (Config.Error e) {
             LOG.error(e.getMessage(), e);
             exitCode = e.getErrorCode();
+        } catch (Throwable t) {
+            LOG.error(t.getMessage(), t);
+            exitCode = 1;
         } finally {
             LOG.info("removing lockfile {}", path);
             Files.delete(path);
             Config.getPomsClient().shutdown();
+            LOG.info("=ready=================================");
+            LOG.info("=======================================");
         }
-        LOG.info("=ready=================================");
-        LOG.info("=======================================");
-
         System.exit(exitCode);
+
     }
 }
