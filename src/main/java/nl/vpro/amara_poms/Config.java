@@ -11,6 +11,8 @@ import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara.Client;
 import nl.vpro.amara_poms.database.Manager;
+import nl.vpro.amara_poms.poms.ChainedFetcher;
+import nl.vpro.amara_poms.poms.SourceFetcher;
 import nl.vpro.rs.media.MediaRestClient;
 
 /**
@@ -41,6 +43,7 @@ public class Config {
     private static Client amaraClient;
     private static MediaRestClient pomsClient;
     private static Manager dbManager;
+    private static ChainedFetcher fetcher;
 
 
 
@@ -109,6 +112,23 @@ public class Config {
             dbManager.readFile();
         }
         return dbManager;
+    }
+
+    public static ChainedFetcher getFetcher() {
+        if (fetcher == null) {
+            fetcher = new ChainedFetcher();
+            for(String clazz : getRequiredConfigAsArray("fetchers")) {
+                try {
+                    Class<SourceFetcher> fetcherClass = (Class<SourceFetcher>) Class.forName(clazz);
+                    fetcher.add(fetcherClass.newInstance());
+                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+
+
+        }
+        return fetcher;
     }
 
     /**

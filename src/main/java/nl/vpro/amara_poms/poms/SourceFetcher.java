@@ -4,6 +4,8 @@ import lombok.ToString;
 
 import java.io.File;
 
+import nl.vpro.domain.media.Program;
+
 /**
  * @author Michiel Meeuwissen
  * @since 1.3
@@ -11,7 +13,7 @@ import java.io.File;
 public interface SourceFetcher {
 
 
-   FetchResult fetch(String mid);
+   FetchResult fetch(Program program);
 
     @ToString
     class FetchResult {

@@ -6,6 +6,9 @@ import org.junit.Test;
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
+import nl.vpro.amara_poms.poms.SourceFetcher;
+
+import static org.mockito.Mockito.mock;
 
 /**
  * @author Michiel Meeuwissen
@@ -28,6 +31,7 @@ public class AmaraPublisherTest {
 
         System.out.println(Config.getAmaraClient().videos().getActions("yiAGdgwxlD3J", "nl"));
 
+        SourceFetcher fetcher = mock(SourceFetcher.class);
         AmaraPublisher amaraPublisher = new AmaraPublisher(fetcher);
         amaraPublisher.uploadSubtitles(video, new PomsBroadcast("POW_02988308"));
 

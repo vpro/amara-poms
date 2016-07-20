@@ -61,7 +61,7 @@ public class AmaraPublisher {
             return false;
         }
         //
-        SourceFetcher.FetchResult result = fetcher.fetch(mid);
+        SourceFetcher.FetchResult result = fetcher.fetch(pomsBroadcast.getProgram());
         if (result.status != SourceFetcher.Status.SUCCESS) {
             LOG.error("Downloading subtitles to server failed :{}", result);
             return false;
@@ -100,7 +100,7 @@ public class AmaraPublisher {
 
         // construct image thumbnail
         String thumbnailUrl = null;
-        String imageId = pomsBroadcast.getImageId();
+        Long imageId = pomsBroadcast.getImageId();
         if (imageId != null) {
             thumbnailUrl = Config.getRequiredConfig("poms.image_url") + imageId + ".jpg";
         }

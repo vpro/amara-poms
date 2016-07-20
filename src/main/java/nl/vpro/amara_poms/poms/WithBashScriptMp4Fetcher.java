@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 import nl.vpro.amara_poms.Config;
+import nl.vpro.domain.media.Program;
 
 /**
  * @author Michiel Meeuwissen
@@ -28,7 +29,8 @@ public class WithBashScriptMp4Fetcher implements SourceFetcher {
      * It seems odd to require a system call for that!
      */
     @Override
-    public FetchResult fetch(String mid) {
+    public FetchResult fetch(Program program) {
+        String mid = program.getMid();
         ProcessBuilder pb = new ProcessBuilder(Config.getRequiredConfig("fetch.script"), mid);
         pb.directory(new File("."));
         try {

@@ -79,7 +79,7 @@ public class IntegratiePomsTest {
         String pomsMid = "VPWON_1249693";
         PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid);
 
-        String imageId = pomsBroadcast.getImageId();
+        Long imageId = pomsBroadcast.getImageId();
         long duration = pomsBroadcast.getProgramUpdate().getDuration().getSeconds();
 
         System.out.println("Duration:" + Long.toString(duration));

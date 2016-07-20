@@ -6,7 +6,6 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.io.IOUtils;
@@ -15,8 +14,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.support.TextualType;
-import nl.vpro.domain.media.update.*;
+import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.support.Image;
+import nl.vpro.domain.media.update.ProgramUpdate;
 
 /**
  * @author joost
@@ -26,7 +26,7 @@ public class PomsBroadcast {
     private static final Logger LOG = LoggerFactory.getLogger(PomsBroadcast.class);
 
 
-    private ProgramUpdate programUpdate;
+    private Program program;
 
     private String mid;
     private String externalUrl;
@@ -34,8 +34,12 @@ public class PomsBroadcast {
 
     String subtitles = "";
 
-    public MediaUpdate getProgramUpdate() {
-        return programUpdate;
+    public ProgramUpdate getProgramUpdate() {
+        return ProgramUpdate.forAllOwners(program);
+    }
+
+    public Program getProgram() {
+        return program;
     }
 
     public String getExternalUrl() {
@@ -47,46 +51,15 @@ public class PomsBroadcast {
     }
 
     public String getTitle() {
-        String title = "";
-
-        Iterator<TitleUpdate> iterator = programUpdate.getTitles().iterator();
-        while (iterator.hasNext() && title.equals("")) {
-            TitleUpdate titleUpdate = iterator.next();
-            if (titleUpdate.getType() == TextualType.MAIN) {
-                title = titleUpdate.getTitle();
-            }
-        }
-
-        return title;
+        return program.getMainTitle();
     }
 
     public String getSubTitle() {
-        String subTitle = "";
-
-        Iterator<TitleUpdate> iterator = programUpdate.getTitles().iterator();
-        while (iterator.hasNext() && subTitle.equals("")) {
-            TitleUpdate titleUpdate = iterator.next();
-            if (titleUpdate.getType() == TextualType.SUB) {
-                subTitle = titleUpdate.getTitle();
-            }
-        }
-
-        return subTitle;
+        return program.getSubTitle();
     }
 
     public String getDescription() {
-
-        String shortDescription = "";
-
-        Iterator<DescriptionUpdate> iterator = programUpdate.getDescriptions().iterator();
-        while (iterator.hasNext() && shortDescription.equals("")) {
-            DescriptionUpdate descriptionUpdate = iterator.next();
-            if (descriptionUpdate.getType() == TextualType.SHORT) {
-                shortDescription = descriptionUpdate.getDescription();
-            }
-        }
-
-        return shortDescription;
+        return program.getShortDescription();
     }
 
     public String getSubtitles() {
@@ -94,13 +67,12 @@ public class PomsBroadcast {
     }
 
     public String getDuration() {
-        long duration = programUpdate.getDuration().getSeconds();
-        return Long.toString(duration);
+        return String.valueOf(program.getDuration().get().getSeconds());
     }
 
     public PomsBroadcast(String mid) {
         this.mid = mid;
-        programUpdate = ProgramUpdate.forAllOwners(Config.getPomsClient().getFullProgram(mid));
+        program = Config.getPomsClient().getFullProgram(mid);
     }
 
 
@@ -184,27 +156,14 @@ public class PomsBroadcast {
      * Extract image id from first image
      * @return id as a String
      */
-    public String getImageId() {
-        List<ImageUpdate> images = programUpdate.getImages();
-        String imageId = null;
-
-        // get first image
+    public Long getImageId() {
+        List<Image> images = program.getImages();
         if (images.size() > 0) {
-            ImageUpdate imageUpdate = images.get(0);
-
-            // get urn (e.g. urn:vpro.image:6975) and extract last id
-            String urn = imageUpdate.getImage().toString();
-            String[] urnParts = urn.split(":");
-            imageId = urnParts[urnParts.length - 1];
-            if (imageId.matches("[0-9]+")) {
-                LOG.info("Image id extracted " + imageId);
-            } else {
-                LOG.error("Image id not numeric " + imageId);
-                imageId = null;
-            }
+            return images.get(0).getId();
+        } else {
+            return null;
         }
 
-        return imageId;
     }
 
 }
