@@ -28,7 +28,7 @@ public class AmaraPublisherTest {
 
         System.out.println(Config.getAmaraClient().videos().getActions("yiAGdgwxlD3J", "nl"));
 
-        AmaraPublisher amaraPublisher = new AmaraPublisher();
+        AmaraPublisher amaraPublisher = new AmaraPublisher(fetcher);
         amaraPublisher.uploadSubtitles(video, new PomsBroadcast("POW_02988308"));
 
 

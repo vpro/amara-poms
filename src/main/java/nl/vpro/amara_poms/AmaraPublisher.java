@@ -7,6 +7,7 @@ import nl.vpro.amara.domain.*;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 import nl.vpro.amara_poms.poms.PomsCollection;
+import nl.vpro.amara_poms.poms.SourceFetcher;
 import nl.vpro.domain.media.update.MemberUpdate;
 
 /**
@@ -20,6 +21,12 @@ public class AmaraPublisher {
 
 
     private Manager dbManager = Config.getDbManager();
+
+    private final SourceFetcher fetcher;
+
+    public AmaraPublisher(SourceFetcher fetcher) {
+        this.fetcher = fetcher;
+    }
 
     /**
      * Get collection 'Net in Nederland - te vertalen
@@ -43,19 +50,20 @@ public class AmaraPublisher {
     }
 
     protected boolean handle(PomsBroadcast pomsBroadcast) {
-        String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
-        LOG.info("Start processing broadcast with Mid:" + pomsMidBroadcast);
+        String mid = pomsBroadcast.getProgramUpdate().getMid();
+        LOG.info("Start processing broadcast with Mid:" + mid);
 
         // check if broadcast has already been sent to Amara
-        nl.vpro.amara_poms.database.task.Task task = dbManager.findTaskByPomsSourceId(pomsMidBroadcast);
+        nl.vpro.amara_poms.database.task.Task task = dbManager.findTaskByPomsSourceId(mid);
         if (task != null) {
             // task exists, so at least video is uploaded
-            LOG.info("Poms broadcast with poms mid " + pomsMidBroadcast + " already sent to Amara -> skip");
+            LOG.info("Poms broadcast with poms mid " + mid + " already sent to Amara -> skip");
             return false;
         }
         //
-        if (pomsBroadcast.downloadFileToDownloadServer() != Config.NO_ERROR) {
-            LOG.error("Downloading subtitles to server failed");
+        SourceFetcher.FetchResult result = fetcher.fetch(mid);
+        if (result.status != SourceFetcher.Status.SUCCESS) {
+            LOG.error("Downloading subtitles to server failed :{}", result);
             return false;
         }
 
@@ -69,11 +77,11 @@ public class AmaraPublisher {
             dbManager.addOrUpdateTask(new nl.vpro.amara_poms.database.task.Task(uploadedAmaraVideo.getId(),
                 Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                 nl.vpro.amara_poms.database.task.Task.STATUS_UPLOADED_VIDEO_TO_AMARA,
-                pomsMidBroadcast));
+                mid));
         }
 
         uploadSubtitles(uploadedAmaraVideo, pomsBroadcast);
-        createTasks(uploadedAmaraVideo, pomsMidBroadcast);
+        createTasks(uploadedAmaraVideo, mid);
         return true;
     }
 

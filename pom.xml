@@ -48,7 +48,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <api.client.version>4.6.0</api.client.version>
-    <jackson2.version>2.7.4</jackson2.version>
+    <jackson2.version>2.8.0</jackson2.version>
     <amara-java.version>0.1</amara-java.version>
   </properties>
 
@@ -99,6 +99,14 @@
       <version>3.4.0</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.16.10</version>
+      <scope>provided</scope>
+    </dependency>
+
 
   </dependencies>
 

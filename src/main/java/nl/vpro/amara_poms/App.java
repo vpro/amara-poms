@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import nl.vpro.amara_poms.poms.WithBashScriptMp4Fetcher;
 import nl.vpro.domain.classification.ClassificationServiceLocator;
 import nl.vpro.domain.media.MediaClassificationService;
 
@@ -34,7 +35,7 @@ public class App  {
             Files.createFile(path);
             LOG.info("Wrote lock file {}", path);
             LOG.info("=AMARA PUBLISHER (creating new tasks)======================================");
-            new AmaraPublisher().processPomsCollection();
+            new AmaraPublisher(new WithBashScriptMp4Fetcher()).processPomsCollection();
             LOG.info("=POMS PUBLISHER (handling finished tasks)==================================");
             new PomsPublisher().processAmaraTasks();
         } catch (Config.Error e) {
