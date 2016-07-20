@@ -2,11 +2,11 @@ package nl.vpro.amara_poms.poms.fetchers;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-
-import com.google.common.io.Files;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
@@ -23,14 +23,34 @@ import nl.vpro.domain.media.Program;
 public class HaspFetcher implements SourceFetcher {
     @Override
     public FetchResult fetch(Program program) {
+        String mid = program.getMid();
+        Path dir = Paths.get(Config.getRequiredConfig("videofile.dir"), "hasp");
         for (Location location : program.getLocations()) {
             if (location.getAvFileFormat() == AVFileFormat.HASP) {
-                File file = new File("/d/media3/ru/09/pa/ceres/mnt/active/webonly/adaptive/5/ntr/rest/2014/" + program.getMid() + "/20070809_dieropvang01_628.ismv");
+                URI url = URI.create(location.getProgramUrl());
+                String[] path = url.getPath().split("/");
+                String fileName = path[path.length - 1];
                 try {
-                    String fileName = program.getMid() + ".ismv";
-                    Files.copy(file, new File(Config.getRequiredConfig("videofile.dir"), fileName));
-
-                    return FetchResult.succes(URI.create(Config.getRequiredConfig("download.url.base") + "/" + fileName));
+                    Files.find(Paths.get(Config.getRequiredConfig("hasp.source.dir")), 100, (p, a) -> Files.isDirectory(p))
+                        .forEach(p -> {
+                            if (p.getFileName().toString().equals(mid)) {
+                                String[] fileNames = {mid + ".mp4", fileName + "_1092.ismv"};
+                                for (String name : fileNames) {
+                                    Path file = p.resolve(name);
+                                    if (Files.isRegularFile(file)) {
+                                        try {
+                                            Files.copy(file, dir.resolve(mid + ".mp4"));
+                                            //return false;
+                                        } catch (IOException e) {
+                                            log.error(e.getMessage(), e);
+                                        }
+                                    }
+                                }
+                            }
+                            // continue
+                            //return true;
+                        });
+                    return FetchResult.succes(URI.create(Config.getRequiredConfig("download.url.base") + "hasp/" + fileName));
                 } catch (IOException e) {
                     log.error(e.getMessage(), e);
                     return FetchResult.error();

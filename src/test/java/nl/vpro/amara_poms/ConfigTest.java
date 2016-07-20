@@ -20,4 +20,10 @@ public class ConfigTest {
         assertThat(Config.getFetcher()).hasSize(2);
     }
 
+    @Test
+    public void getDir() throws Exception {
+        System.out.println(Config.getRequiredConfig("script.download.url.base"));
+        assertThat(Config.getRequiredConfig("script.download.url.base")).startsWith("http://download.omroep.nl/vpro/netinnederland/");
+    }
+
 }

@@ -75,7 +75,7 @@ public class AmaraPublisher {
             LOG.info("No amara video uploaded for {}", amaraVideo);
             return false;
         } else {
-            LOG.info("Video uploaded to Amara with id " + uploadedAmaraVideo.getId());
+            LOG.info("Video {} for {} uploaded to Amara with id {}", mid, result.destination, uploadedAmaraVideo.getId());
             dbManager.addOrUpdateTask(new nl.vpro.amara_poms.database.task.Task(uploadedAmaraVideo.getId(),
                 Config.getRequiredConfig("amara.api.primary_audio_language_code"),
                 nl.vpro.amara_poms.database.task.Task.STATUS_UPLOADED_VIDEO_TO_AMARA,

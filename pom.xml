@@ -112,7 +112,11 @@
       <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
-
+  <!--  <dependency>
+      <groupId>org.axsl.org.w3c.dom.smil</groupId>
+      <artifactId>smil-boston-dom-java</artifactId>
+      <version>2000-02-25</version>
+    </dependency>-->
 
   </dependencies>
 

@@ -4,8 +4,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.collections15.map.HashedMap;
+import org.apache.commons.lang3.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +25,7 @@ public class Config {
 
     private final static Logger LOG = LoggerFactory.getLogger(Config.class);
     private final static File[] FILES = new File[] { new File(System.getProperty("user.home") + File.separator + "conf" + File.separator + "amaraimport.properties")};
-    private static final Properties PROPERTIES = new Properties();
+    private static final Map<String, String> PROPERTIES = new HashedMap<>();
 
     public static final int NO_ERROR = 0;
     public static final int ERROR_APP_CONFIG_NOT_FOUND = 1;
@@ -51,18 +54,29 @@ public class Config {
         // load config
         InputStream inputStream;
         try {
-            PROPERTIES.load(Config.class.getResourceAsStream("/amaraimport.properties"));
+            Properties properties = new Properties();
+            properties.load(Config.class.getResourceAsStream("/amaraimport.properties"));
             for (File f : FILES) {
                 if (f.canRead()) {
                     inputStream = new FileInputStream(f);
-                    PROPERTIES.load(inputStream);
+                    properties.load(inputStream);
                     LOG.info(f + " loaded");
                 } else {
                     LOG.info("Could not read {}", f);
                 }
             }
+            init((Map) properties);
+
         } catch (Exception e) {
             throw new Error("Error opening properties file: " + e.getMessage(), ERROR_APP_CONFIG_NOT_FOUND);
+        }
+    }
+
+    public static void init(Map<String, String> props) {
+        PROPERTIES.putAll(props);
+        StrSubstitutor subst = new StrSubstitutor(PROPERTIES);
+        for (Map.Entry<String, String> e : PROPERTIES.entrySet()) {
+            e.setValue(subst.replace(e.getValue()));
         }
     }
 
@@ -136,7 +150,7 @@ public class Config {
      *
      */
     public static String getRequiredConfig(String propertyName) {
-        String returnValue = PROPERTIES.getProperty(propertyName);
+        String returnValue = PROPERTIES.get(propertyName);
 
         exitNotSet(propertyName, returnValue);
 
@@ -148,7 +162,7 @@ public class Config {
      *
      */
     public static int getRequiredConfigAsInt(String propertyName) {
-        String propertyValue = PROPERTIES.getProperty(propertyName);
+        String propertyValue = PROPERTIES.get(propertyName);
 
         exitNotSet(propertyName, propertyValue);
 
@@ -163,7 +177,7 @@ public class Config {
      * Get required config and exit if not found
      */
     public static long getRequiredConfigAsLong(String propertyName) {
-        String propertyValue = PROPERTIES.getProperty(propertyName);
+        String propertyValue = PROPERTIES.get(propertyName);
 
         exitNotSet(propertyName, propertyValue);
 
@@ -190,7 +204,7 @@ public class Config {
      * @return array of values
      */
     public static String[] getRequiredConfigAsArray(String propertyName, String split) {
-        String propertyValue = PROPERTIES.getProperty(propertyName);
+        String propertyValue = PROPERTIES.get(propertyName);
 
         exitNotSet(propertyName, propertyValue);
 
@@ -202,7 +216,7 @@ public class Config {
      * Get config and log error if not found
      */
     public static String getConfig(String propertyName) {
-        String returnValue = PROPERTIES.getProperty(propertyName);
+        String returnValue = PROPERTIES.get(propertyName);
 
         if (returnValue == null) {
             LOG.debug(propertyName + " not set in " + Arrays.asList(FILES));
