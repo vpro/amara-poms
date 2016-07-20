@@ -1,9 +1,10 @@
-package nl.vpro.amara_poms.poms;
+package nl.vpro.amara_poms.poms.fetchers;
 
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
 
+import nl.vpro.amara_poms.poms.SourceFetcher;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.Program;

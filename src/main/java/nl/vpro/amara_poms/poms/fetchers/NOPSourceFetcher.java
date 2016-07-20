@@ -1,7 +1,8 @@
-package nl.vpro.amara_poms.poms;
+package nl.vpro.amara_poms.poms.fetchers;
 
 import java.net.URI;
 
+import nl.vpro.amara_poms.poms.SourceFetcher;
 import nl.vpro.domain.media.Program;
 
 /**
