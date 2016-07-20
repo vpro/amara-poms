@@ -51,7 +51,7 @@ public class Config {
         // load config
         InputStream inputStream;
         try {
-            PROPERTIES.load(Config.class.getResourceAsStream("amaraimport.properties"));
+            PROPERTIES.load(Config.class.getResourceAsStream("/amaraimport.properties"));
             for (File f : FILES) {
                 if (f.canRead()) {
                     inputStream = new FileInputStream(f);
@@ -117,7 +117,7 @@ public class Config {
     public static ChainedFetcher getFetcher() {
         if (fetcher == null) {
             fetcher = new ChainedFetcher();
-            for(String clazz : getRequiredConfigAsArray("poms.fetchers", "[\\s,]*")) {
+            for(String clazz : getRequiredConfigAsArray("poms.fetchers", "[\\s,]+")) {
                 try {
                     Class<SourceFetcher> fetcherClass = (Class<SourceFetcher>) Class.forName(clazz);
                     fetcher.add(fetcherClass.newInstance());
