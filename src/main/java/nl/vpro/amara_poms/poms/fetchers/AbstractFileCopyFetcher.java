@@ -12,7 +12,7 @@ import nl.vpro.amara_poms.poms.SourceFetcher;
 
 /**
  * @author Michiel Meeuwissen
- * @since 1.23
+ * @since 1.3
  */
 @Slf4j
 public abstract class AbstractFileCopyFetcher implements  SourceFetcher {

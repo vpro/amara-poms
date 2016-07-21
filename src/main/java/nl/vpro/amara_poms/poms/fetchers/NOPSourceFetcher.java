@@ -7,7 +7,7 @@ import nl.vpro.domain.media.Program;
 
 /**
  * @author Michiel Meeuwissen
- * @since 1.13
+ * @since 1.3
  */
 public class NOPSourceFetcher implements SourceFetcher {
     @Override

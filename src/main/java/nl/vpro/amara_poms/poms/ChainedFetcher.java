@@ -10,7 +10,7 @@ import nl.vpro.domain.media.Program;
 
 /**
  * @author Michiel Meeuwissen
- * @since 1.13
+ * @since 1.3
  */
 @Slf4j
 public class ChainedFetcher implements SourceFetcher, Iterable<SourceFetcher> {
