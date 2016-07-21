@@ -13,7 +13,7 @@ import nl.vpro.domain.media.Program;
 public interface SourceFetcher {
 
 
-   FetchResult fetch(Program program);
+    FetchResult fetch(Program program);
 
     @ToString
     class FetchResult {
