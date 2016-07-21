@@ -1,13 +1,20 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPathExpressionException;
+
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.xml.sax.SAXException;
+
+import com.google.common.io.Files;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
@@ -16,6 +23,8 @@ import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.MediaBuilder;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.support.OwnerType;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Michiel Meeuwissen
@@ -50,9 +59,25 @@ public class HaspFetcherTest {
     }
 
     @Test
+    @Ignore
     public void testDamnJava() throws IOException {
-        Files.find(Paths.get("/tmp"), 100,
-            (p, a) -> Files.isDirectory(p)).forEach(System.out::println);
+        File rootDir = new File("/tmp");
+        for (File f : Files.fileTreeTraverser().preOrderTraversal(rootDir)) {
+            if (f.isDirectory()) {
+                // do whatever you need with the file/directory
+                System.out.println(f);
+            }
+        }
+    }
+
+    @Test
+    public void testIsm() throws IOException, XPathExpressionException, SAXException, ParserConfigurationException {
+        HaspFetcher fetcher = new HaspFetcher();
+        List<HaspFetcher.Video> list = fetcher.getVideos(getClass().getResourceAsStream("/WO_NTR_425372.ism"));
+        assertThat(list).hasSize(3);
+        assertThat(list.get(0).src).isEqualTo("20070809_dieropvang01_264.ismv");
+        assertThat(list.get(0).systemBitRate).isEqualTo(200000);
+
     }
 
 }

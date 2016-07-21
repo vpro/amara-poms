@@ -117,6 +117,12 @@
       <artifactId>smil-boston-dom-java</artifactId>
       <version>2000-02-25</version>
     </dependency>-->
+<!--
+    <dependency>
+      <groupId>nl.vpro.smil</groupId>
+      <artifactId>smil-java</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>-->
 
   </dependencies>
 

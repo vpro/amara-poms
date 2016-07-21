@@ -45,8 +45,8 @@ public class WithBashScriptM4vFetcher implements SourceFetcher {
 
         log.info("Copied video file for mid " + mid);
 
-        String basePath = Config.getRequiredConfig("script.download.url.base");
-        String extension = Config.getRequiredConfig("script.download.url.ext");
+        String basePath = Config.getRequiredConfig("h264.download.url.base");
+        String extension = Config.getRequiredConfig("h264.download.url.ext");
         String externalUrl = basePath + mid + "." + extension;
         return FetchResult.succes(URI.create(externalUrl));
     }
