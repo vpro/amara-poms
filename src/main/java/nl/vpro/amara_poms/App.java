@@ -18,12 +18,12 @@ import nl.vpro.domain.media.MediaClassificationService;
 public class App  {
     private final static Logger LOG = LoggerFactory.getLogger(App.class);
 
-    public static void main( String[] args ) throws IOException {
+    public static void main(String[] args) throws IOException {
 
         LOG.info("Started...");
         ClassificationServiceLocator.setInstance(new MediaClassificationService());
         // check lock file
-        Config.init();
+        Config.init(args);
         Path path = Paths.get(Config.getRequiredConfig("process.lock.filepath"));
         if (Files.exists(path)) {
             LOG.error("Another AmaraPomsPublisher process is running ({} exists since {}) -> will quit", path, Files.getLastModifiedTime(path).toInstant());

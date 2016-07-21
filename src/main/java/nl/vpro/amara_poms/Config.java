@@ -3,7 +3,6 @@ package nl.vpro.amara_poms;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.Properties;
 
@@ -24,7 +23,6 @@ import nl.vpro.rs.media.MediaRestClient;
 public class Config {
 
     private final static Logger LOG = LoggerFactory.getLogger(Config.class);
-    private final static File[] FILES = new File[] { new File(System.getProperty("user.home") + File.separator + "conf" + File.separator + "amaraimport.properties")};
     private static final Map<String, String> PROPERTIES = new HashedMap<>();
 
     public static final int NO_ERROR = 0;
@@ -48,6 +46,8 @@ public class Config {
     private static Manager dbManager;
     private static ChainedFetcher fetcher;
 
+    private static File configFile = new File(System.getProperty("user.home") +File.separator +"conf"+File.separator +"amaraimport.properties");
+
 
 
     public static void init() {
@@ -56,20 +56,26 @@ public class Config {
         try {
             Properties properties = new Properties();
             properties.load(Config.class.getResourceAsStream("/amaraimport.properties"));
-            for (File f : FILES) {
-                if (f.canRead()) {
-                    inputStream = new FileInputStream(f);
-                    properties.load(inputStream);
-                    LOG.info(f + " loaded");
-                } else {
-                    LOG.info("Could not read {}", f);
-                }
+            //File configFile =
+            if (configFile.canRead()) {
+                inputStream = new FileInputStream(configFile);
+                properties.load(inputStream);
+                LOG.info(configFile + " loaded");
+            } else {
+                LOG.info("Could not read {}", configFile);
             }
             init((Map) properties);
 
         } catch (Exception e) {
             throw new Error("Error opening properties file: " + e.getMessage(), ERROR_APP_CONFIG_NOT_FOUND);
         }
+    }
+
+    public static void init(String[] argv) {
+        if (argv.length > 0) {
+            configFile = new File(argv[0]);
+        }
+        init();
     }
 
     public static void init(Map<String, String> props) {
@@ -219,7 +225,7 @@ public class Config {
         String returnValue = PROPERTIES.get(propertyName);
 
         if (returnValue == null) {
-            LOG.debug(propertyName + " not set in " + Arrays.asList(FILES));
+            LOG.debug(propertyName + " not set in " + configFile);
         }
 
         return  returnValue;
@@ -228,7 +234,7 @@ public class Config {
 
     private static void exitNotSet(String propertyName, String propertyValue) {
         if (propertyValue == null) {
-            throw new Error(propertyName + " not set in " + Arrays.asList(FILES), ERROR_CONFIG_ERROR);
+            throw new Error(propertyName + " not set in " + configFile, ERROR_CONFIG_ERROR);
         }
     }
 

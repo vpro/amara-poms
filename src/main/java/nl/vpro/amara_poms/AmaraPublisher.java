@@ -53,7 +53,7 @@ public class AmaraPublisher {
 
     protected boolean handle(PomsBroadcast pomsBroadcast) {
         String mid = pomsBroadcast.getProgramUpdate().getMid();
-        LOG.info("Start processing broadcast with Mid:" + mid);
+        LOG.info("Start processing broadcast {}: {}", mid, pomsBroadcast.getTitle());
 
         // check if broadcast has already been sent to Amara
         nl.vpro.amara_poms.database.task.Task task = dbManager.findTaskByPomsSourceId(mid);

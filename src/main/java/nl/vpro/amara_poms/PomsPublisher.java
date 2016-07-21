@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.time.Instant;
@@ -130,7 +131,7 @@ public class PomsPublisher {
 
             // write subtitles to file
             try {
-                String file = getSubtitleFilepath(pomsTargetId, amaraSubtitles);
+                File file = getSubtitleFile(pomsTargetId, amaraSubtitles);
                 try (PrintWriter out = new PrintWriter(file)) {
                     LOG.info("Writing subtitles to {}", file);
                     out.println(amaraSubtitles.getSubtitles());
@@ -148,12 +149,13 @@ public class PomsPublisher {
         LOG.info("Finished processing video_id " + amaraTask.getVideo_id() + " for language " + amaraTask.getLanguage());
     }
 
-    private String getSubtitleFilepath(String filename, Subtitles subtitles) {
+    private File getSubtitleFile(String filename, Subtitles subtitles) {
         String basePath = Config.getRequiredConfig("subtitle.basepath");
-
-        basePath += subtitles.getLanguage().getCode() + "/" + filename;
-
-        return basePath;
+        File dir = new File(basePath, subtitles.getLanguage().getCode());
+        if (dir.mkdirs()) {
+            LOG.info("Made {}", dir);
+        }
+        return new File(dir, filename);
     }
 
 }
