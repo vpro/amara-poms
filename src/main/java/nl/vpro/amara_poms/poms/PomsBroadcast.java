@@ -25,12 +25,8 @@ public class PomsBroadcast {
 
     private static final Logger LOG = LoggerFactory.getLogger(PomsBroadcast.class);
 
-
     private Program program;
-
     private String mid;
-    private String externalUrl;
-
 
     String subtitles = "";
 
@@ -44,15 +40,15 @@ public class PomsBroadcast {
 
 
     public String getTitle() {
-        return program.getMainTitle();
+        return StringUtils.trim(program.getMainTitle());
     }
 
     public String getSubTitle() {
-        return program.getSubTitle();
+        return StringUtils.trim(program.getSubTitle());
     }
 
     public String getDescription() {
-        return program.getShortDescription();
+        return StringUtils.trim(program.getShortDescription());
     }
 
     public String getSubtitles() {
