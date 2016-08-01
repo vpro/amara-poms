@@ -41,7 +41,10 @@ public class HaspFetcher extends AbstractFileCopyFetcher {
 
 
     public HaspFetcher() {
-        super(new File(Config.getRequiredConfig("hasp.videofile.dir")), "mp4", Config.getRequiredConfig("hasp.download.url.base"));
+        super(
+            new File(Config.getRequiredConfig("hasp.videofile.dir")),
+            "m4v",
+            Config.getRequiredConfig("hasp.download.url.base"));
     }
 
     @Override
