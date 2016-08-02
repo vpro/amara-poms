@@ -46,7 +46,8 @@ public class Config {
     private static Manager dbManager;
     private static ChainedFetcher fetcher;
 
-    private static File configFile = new File(System.getProperty("user.home") +File.separator +"conf"+File.separator +"amaraimport.properties");
+    private static File configFile = new File(System.getProperty("user.home") + 
+        File.separator + "conf" + File.separator +"amaraimport.properties");
 
 
 

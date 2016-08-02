@@ -22,6 +22,7 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
     CommandExecutor BASH = new CommandExecutorImpl(Config.getRequiredConfig("bash"));
 
     File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));
+    int depth = (int) Config.getRequiredConfigAsLong("h264.source.dir.depth");
 
 
     public M4vWithLsFetcher() {
@@ -37,7 +38,8 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
         File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));
         log.info("Search files in {}", sourceDir);
         StringWriter files = new StringWriter();
-        BASH.execute(files, "-c", "ls " + new File(sourceDir, "*/*/*/*/" + mid + "/").toString());
+        String stars = new String(new char[depth]).replaceAll("\0", "*/");
+        BASH.execute(files, "-c", "ls -d -1 " + new File(sourceDir, stars + mid + "/*").toString());
         BufferedReader reader = new BufferedReader(new StringReader(files.toString()));
         String f;
         try {
@@ -54,6 +56,7 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
         } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
+        log.info("No feasible file found in\n{}", files.toString());
         return FetchResult.notable();
     }
 }
