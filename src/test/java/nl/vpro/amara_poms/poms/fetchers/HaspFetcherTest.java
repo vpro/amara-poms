@@ -28,7 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author Michiel Meeuwissen
- * @since 1.13
+ * @since 1.3
  */
 public class HaspFetcherTest {
 

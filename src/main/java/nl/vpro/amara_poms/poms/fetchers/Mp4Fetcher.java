@@ -23,9 +23,13 @@ public class Mp4Fetcher implements SourceFetcher {
         //File dest = new File(Config.getRequiredConfig("videofile.dir"), program.getMid() + ".mp4");
         for (Location location : program.getLocations()) {
             if (location.isPublishable() && location.getAvFileFormat() == AVFileFormat.MP4) {
-                URI url = URI.create(location.getProgramUrl());
+
+                URI uri = URI.create(location.getProgramUrl());
+                if (uri.getScheme().equals("odi+http")) {
+                    continue;
+                }
                 //IOUtils.copy(url.openStream(), new FileOutputStream(dest));
-                return FetchResult.succes(url);
+                return FetchResult.succes(uri);
             }
         }
         return FetchResult.notable();
