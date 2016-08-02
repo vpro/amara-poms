@@ -17,9 +17,8 @@ import nl.vpro.util.CommandExecutorImpl;
 @Slf4j
 @ToString
 public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
-
-
-    CommandExecutor BASH = new CommandExecutorImpl(Config.getRequiredConfig("bash"));
+    
+    CommandExecutor BASH = new CommandExecutorImpl(Config.getRequiredConfig("bash")); // bash does globbing very well!
 
     File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));
     int depth = (int) Config.getRequiredConfigAsLong("h264.source.dir.depth");
