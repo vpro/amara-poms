@@ -23,6 +23,7 @@ public abstract class AbstractFileCopyFetcher extends AbstractFileFetcher {
     protected File produce(File file, String mid) throws IOException {
         String destFileName = mid + "." + destExtension;
         File destFile = new File(destDirectory, destFileName);
+        log.info("Copy {} -> {}", file, destFile);
         Files.copy(file, destFile);
         return  destFile;
     }

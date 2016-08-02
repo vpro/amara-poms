@@ -21,6 +21,7 @@ public class ChainedFetcher implements SourceFetcher, Iterable<SourceFetcher> {
         for (SourceFetcher sf : this) {
             FetchResult result = sf.fetch(program);
             if (result.status == Status.SUCCESS) {
+                log.info("Matched {}", sf);
                 return result;
             }
         }
