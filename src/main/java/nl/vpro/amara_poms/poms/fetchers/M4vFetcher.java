@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import nl.vpro.domain.media.Program;
  * @since 1.3
  */
 @Slf4j
+@ToString
 public class M4vFetcher extends AbstractFileCopyFetcher {
 
     File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));

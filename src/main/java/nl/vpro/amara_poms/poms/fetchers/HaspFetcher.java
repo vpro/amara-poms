@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import nl.vpro.util.CommandExecutorImpl;
  * @since 1.3
  */
 @Slf4j
+@ToString
 public class HaspFetcher extends AbstractFileFetcher {
 
 

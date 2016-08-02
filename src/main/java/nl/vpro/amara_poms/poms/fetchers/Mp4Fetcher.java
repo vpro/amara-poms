@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
@@ -14,6 +15,7 @@ import nl.vpro.domain.media.Program;
  * @since 1.3
  */
 @Slf4j
+@ToString
 public class Mp4Fetcher implements SourceFetcher {
 
     @Override

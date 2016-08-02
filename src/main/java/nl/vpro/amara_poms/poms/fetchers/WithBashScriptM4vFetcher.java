@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import nl.vpro.domain.media.Program;
  */
 @Slf4j
 @Deprecated
+@ToString
 public class WithBashScriptM4vFetcher implements SourceFetcher {
 
     /**
