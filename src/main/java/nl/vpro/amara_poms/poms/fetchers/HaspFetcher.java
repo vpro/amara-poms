@@ -71,6 +71,7 @@ public class HaspFetcher extends AbstractFileFetcher {
                 //Files.find(Paths.get(Config.getRequiredConfig("hasp.source.dir")), 100, (p, a) -> Files.isDirectory(p))
 
                 // this is easier
+                log.info("Search files in {}", sourceDir);
                 for (File f : Files.fileTreeTraverser().preOrderTraversal(sourceDir)) {
                     if (f.isDirectory() && f.getName().equals(mid)) {
                         String[] fileNames = {mid + ".ism", fileName + ".ism"};
