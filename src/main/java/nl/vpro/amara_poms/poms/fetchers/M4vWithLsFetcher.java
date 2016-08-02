@@ -37,7 +37,7 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
         File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));
         log.info("Search files in {}", sourceDir);
         StringWriter files = new StringWriter();
-        BASH.execute(files, "-e", "ls " + new File(sourceDir, "*/*/*/*/" + mid + "/").toString());
+        BASH.execute(files, "-c", "ls " + new File(sourceDir, "*/*/*/*/" + mid + "/").toString());
         BufferedReader reader = new BufferedReader(new StringReader(files.toString()));
         String f;
         try {
