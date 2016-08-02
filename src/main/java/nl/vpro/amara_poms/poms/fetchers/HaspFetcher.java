@@ -30,6 +30,7 @@ import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.Program;
+import nl.vpro.logging.LoggerOutputStream;
 import nl.vpro.util.CommandExecutor;
 import nl.vpro.util.CommandExecutorImpl;
 
@@ -110,7 +111,7 @@ public class HaspFetcher extends AbstractFileFetcher {
     protected File produce(File file, String mid) throws IOException {
         File destFile = new File(destDirectory, mid + ".mp4");
         if (file.getName().endsWith(".ismv")) {
-            MP4SPLIT.execute("-o", destFile.toString(), file.toString());
+            MP4SPLIT.execute(LoggerOutputStream.info(log), LoggerOutputStream.info(log), "-o", destFile.toString(), file.toString());
         } else {
             log.info("File {} is an mp4 already", file);
             Files.copy(file, destFile);
