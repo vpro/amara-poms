@@ -3,10 +3,10 @@ package nl.vpro.amara_poms;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.collections15.map.HashedMap;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ import nl.vpro.rs.media.MediaRestClient;
 public class Config {
 
     private final static Logger LOG = LoggerFactory.getLogger(Config.class);
-    private static final Map<String, String> PROPERTIES = new HashedMap<>();
+    private static final Map<String, String> PROPERTIES = new HashMap<>();
 
     public static final int NO_ERROR = 0;
     public static final int ERROR_APP_CONFIG_NOT_FOUND = 1;

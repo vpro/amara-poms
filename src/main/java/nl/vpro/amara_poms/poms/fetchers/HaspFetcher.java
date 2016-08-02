@@ -30,6 +30,8 @@ import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.Program;
+import nl.vpro.util.CommandExecutor;
+import nl.vpro.util.CommandExecutorImpl;
 
 /**
  * WO_NTR_425372
@@ -37,13 +39,15 @@ import nl.vpro.domain.media.Program;
  * @since 1.3
  */
 @Slf4j
-public class HaspFetcher extends AbstractFileCopyFetcher {
+public class HaspFetcher extends AbstractFileFetcher {
 
+
+    CommandExecutor MP4SPLIT = new CommandExecutorImpl(Config.getRequiredConfig("mp4split"));
 
     public HaspFetcher() {
         super(
             new File(Config.getRequiredConfig("hasp.videofile.dir")),
-            "m4v",
+            "mp4",
             Config.getRequiredConfig("hasp.download.url.base"));
     }
 
@@ -99,6 +103,19 @@ public class HaspFetcher extends AbstractFileCopyFetcher {
             }
         }
         return FetchResult.notable();
+
+    }
+
+    @Override
+    protected File produce(File file, String mid) throws IOException {
+        File destFile = new File(destDirectory, mid + ".mp4");
+        if (file.getName().endsWith(".ismv")) {
+            MP4SPLIT.execute("-o", destFile.toString(), file.toString());
+        } else {
+            log.info("File {} is an mp4 already", file);
+            Files.copy(file, destFile);
+        }
+        return destFile;
 
     }
 

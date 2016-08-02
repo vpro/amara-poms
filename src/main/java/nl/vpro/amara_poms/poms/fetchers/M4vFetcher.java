@@ -21,7 +21,7 @@ public class M4vFetcher extends AbstractFileCopyFetcher {
 
 
     public M4vFetcher() {
-        super(new File(Config.getRequiredConfig("h264.videofile.dir")), "m4v", Config.getRequiredConfig("h264.download.url.base"));
+        super(new File(Config.getRequiredConfig("h264.videofile.dir")), "mp4", Config.getRequiredConfig("h264.download.url.base"));
     }
 
     /**
