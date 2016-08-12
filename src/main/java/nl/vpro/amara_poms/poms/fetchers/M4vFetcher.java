@@ -16,7 +16,7 @@ import nl.vpro.domain.media.Program;
  * @since 1.3
  */
 @Slf4j
-@ToString
+@ToString(callSuper = true)
 public class M4vFetcher extends AbstractFileCopyFetcher {
 
     File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));

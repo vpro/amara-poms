@@ -17,7 +17,7 @@ import nl.vpro.util.CommandExecutorImpl;
  * @since 1.3
  */
 @Slf4j
-@ToString
+@ToString(callSuper = true)
 public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
 
     CommandExecutor BASH = new CommandExecutorImpl(Config.getRequiredConfig("bash")); // bash does globbing very well!

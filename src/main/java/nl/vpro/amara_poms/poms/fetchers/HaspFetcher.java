@@ -41,7 +41,7 @@ import nl.vpro.util.CommandExecutorImpl;
  * @since 1.3
  */
 @Slf4j
-@ToString
+@ToString(callSuper = true)
 public class HaspFetcher extends AbstractFileFetcher {
 
 

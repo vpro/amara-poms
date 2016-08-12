@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
@@ -12,6 +13,7 @@ import com.google.common.io.Files;
  * @since 1.3
  */
 @Slf4j
+@ToString(callSuper = true)
 public abstract class AbstractFileCopyFetcher extends AbstractFileFetcher {
 
     protected AbstractFileCopyFetcher(File destDirectory, String destExtension, String downloadUrlBase) {
