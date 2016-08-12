@@ -111,7 +111,7 @@ public class PomsClip {
 
         // add collection
         SortedSet<MemberRefUpdate> memberRefUpdates = update.getMemberOf();
-        MemberRefUpdate memberRefUpdate = new MemberRefUpdate(memberRefUpdates.size(), netInNlTargetCollection);
+        MemberRefUpdate memberRefUpdate = new MemberRefUpdate(memberRefUpdates.size() + 1, netInNlTargetCollection);
         memberRefUpdates.add(memberRefUpdate);
         update.setMemberOf(memberRefUpdates);
 
