@@ -50,7 +50,7 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
                     while ((f = reader.readLine()) != null) {
                         File candidate = new File(f);
                         try {
-                            if (candidate.canRead() && candidate.getName().startsWith("sb.") && candidate.getName().endsWith(".m4v")) {
+                            if (candidate.canRead() && candidate.getName().startsWith("sb") && candidate.getName().endsWith(".m4v")) {
                                 return success(candidate, mid);
                             }
                         } catch (IOException e) {
