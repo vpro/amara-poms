@@ -24,8 +24,7 @@ import nl.vpro.util.CommandExecutorImpl;
 public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
 
     CommandExecutor BASH = new CommandExecutorImpl(Config.getRequiredConfig("bash")); // bash does globbing very well!
-    List<File> sourceDirs = Arrays.stream(Config.getRequiredConfigAsArray("h264.source.dir")).map(File::new).collect(Collectors.toList());
-    int depth = (int) Config.getRequiredConfigAsLong("h264.source.dir.depth");
+    List<String> sourceFiles = Arrays.stream(Config.getRequiredConfigAsArray("h264.source.files")).collect(Collectors.toList());
 
     public M4vWithLsFetcher() {
         super(new File(
@@ -39,12 +38,11 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
     @Override
     public FetchResult fetch(Program program) {
         String mid = program.getMid();
-        for (File sourceDir : sourceDirs) {
-            log.info("Search files in {}", sourceDir);
+        for (String sourceFile : sourceFiles) {
+            log.info("Search files in {}", sourceFile);
             StringWriter files = new StringWriter();
-            String stars = new String(new char[depth]).replaceAll("\0", "*/");
-            File dirs = new File(sourceDir, stars + mid + "/*");
-            BASH.execute(files, "-c", "ls -d -1 " + dirs.toString());
+            String ls = String.format(sourceFile, mid);
+            BASH.execute(files, "-c", "ls -1 " + ls);
             if (StringUtils.isNotBlank(files.toString().trim())) {
                 BufferedReader reader = new BufferedReader(new StringReader(files.toString()));
                 String f;
@@ -64,7 +62,7 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
                 }
                 log.info("No feasible file found in\n{}", files);
             } else {
-                log.info("No files found in {}", dirs);
+                log.info("No files found in {}", sourceFile);
             }
         }
         return FetchResult.notable();

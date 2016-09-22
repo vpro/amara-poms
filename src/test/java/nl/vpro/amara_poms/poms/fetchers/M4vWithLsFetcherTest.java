@@ -30,7 +30,7 @@ public class M4vWithLsFetcherTest {
     public void fetch() throws Exception {
         M4vWithLsFetcher fetcher = new M4vWithLsFetcher();
 
-        fetcher.fetch(MediaBuilder.program().mid("MID_1234").build());
+        fetcher.fetch(MediaBuilder.program().mid("POW_03028216").build());
 
 
     }

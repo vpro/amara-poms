@@ -17,3 +17,5 @@ target
 
 # config
 app.config
+
+dependency-reduced-pom.xml
