@@ -13,7 +13,6 @@ import nl.vpro.domain.media.update.ProgramUpdate;
 import nl.vpro.rs.media.MediaRestClient;
 
 import static junit.framework.Assert.assertTrue;
-import static junit.framework.TestCase.assertNotNull;
 
 /**
  * @author Michiel Meeuwissen
@@ -67,7 +66,7 @@ public class IntegratiePomsTest {
     @Test
     public void removeFromTeVertalenToNetInNL() {
 
-        PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMidBroadcast);
+        PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMidBroadcast, Config.getPomsClient().getFullProgram(pomsMidBroadcast));
 
         pomsBroadcast.removeFromCollection(midCollectionFrom);
 
@@ -77,19 +76,16 @@ public class IntegratiePomsTest {
     public void extractImageId() {
 
         String pomsMid = "VPWON_1249693";
-        PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid);
+        PomsBroadcast pomsBroadcast = new PomsBroadcast(pomsMid, Config.getPomsClient().getFullProgram(pomsMidBroadcast));
 
-        Long imageId = pomsBroadcast.getImageId();
         long duration = pomsBroadcast.getProgramUpdate().getDuration().getSeconds();
 
         System.out.println("Duration:" + Long.toString(duration));
-        System.out.println("ImageId:" + imageId);
-
+        System.out.println("Image url: " + pomsBroadcast.getThumbNailUrl());
         System.out.println("Title:" + pomsBroadcast.getTitle());
         System.out.println("Subtitle:" + pomsBroadcast.getSubTitle());
         System.out.println("Description:" + pomsBroadcast.getDescription());
 
-        assertNotNull(imageId);
     }
 
 }

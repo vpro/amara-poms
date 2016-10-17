@@ -28,12 +28,11 @@ public class AmaraPublisherTest {
         System.out.println(video.getTitle());
         Subtitles subtitles = Config.getAmaraClient().videos().getSubtitles("yiAGdgwxlD3J", "nl", "vtt");
         System.out.println(subtitles);
-
         System.out.println(Config.getAmaraClient().videos().getActions("yiAGdgwxlD3J", "nl"));
 
         SourceFetcher fetcher = mock(SourceFetcher.class);
         AmaraPublisher amaraPublisher = new AmaraPublisher(fetcher);
-        amaraPublisher.uploadSubtitles(video, new PomsBroadcast("POW_02988308"));
+        amaraPublisher.uploadSubtitles(video, new PomsBroadcast("POW_02988308", null));
 
 
     }

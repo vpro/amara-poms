@@ -6,7 +6,7 @@ import java.io.StringWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.support.Image;
+import nl.vpro.domain.media.support.Images;
 import nl.vpro.domain.media.update.ProgramUpdate;
 
 /**
@@ -25,8 +26,8 @@ public class PomsBroadcast {
 
     private static final Logger LOG = LoggerFactory.getLogger(PomsBroadcast.class);
 
-    private Program program;
-    private String mid;
+    private final Program program;
+    private final String mid;
 
     String subtitles = "";
 
@@ -59,9 +60,9 @@ public class PomsBroadcast {
         return String.valueOf(program.getDuration().get().getSeconds());
     }
 
-    public PomsBroadcast(String mid) {
+    public PomsBroadcast(String mid, Program  program) {
         this.mid = mid;
-        program = Config.getPomsClient().getFullProgram(mid);
+        this.program = program;
     }
 
 
@@ -145,14 +146,14 @@ public class PomsBroadcast {
      * Extract image id from first image
      * @return id as a String
      */
-    public Long getImageId() {
-        List<Image> images = program.getImages();
-        if (images.size() > 0) {
-            return images.get(0).getId();
-        } else {
-            return null;
-        }
-
+    public Optional<Image> getImage() {
+        return program.getImages().stream().findFirst();
     }
 
+
+    public String getThumbNailUrl() {
+        return getImage()
+            .map(i -> Images.getImageLocation(i, "jpg", "s620"))
+            .orElse(null);
+    }
 }

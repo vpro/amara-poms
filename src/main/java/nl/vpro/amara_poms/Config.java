@@ -15,6 +15,7 @@ import nl.vpro.amara.Client;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.poms.ChainedFetcher;
 import nl.vpro.amara_poms.poms.SourceFetcher;
+import nl.vpro.domain.media.support.Images;
 import nl.vpro.rs.media.MediaRestClient;
 
 /**
@@ -46,7 +47,7 @@ public class Config {
     private static Manager dbManager;
     private static ChainedFetcher fetcher;
 
-    private static File configFile = new File(System.getProperty("user.home") + 
+    private static File configFile = new File(System.getProperty("user.home") +
         File.separator + "conf" + File.separator +"amaraimport.properties");
 
 
@@ -85,6 +86,7 @@ public class Config {
         for (Map.Entry<String, String> e : PROPERTIES.entrySet()) {
             e.setValue(subst.replace(e.getValue()));
         }
+        Images.setImageHost(getRequiredConfig("poms.image_url"));
     }
 
     public static Client getAmaraClient() {

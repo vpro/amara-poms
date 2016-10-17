@@ -41,7 +41,8 @@ public class AmaraPublisher {
 
         PomsCollection collectionToBeTranslated = new PomsCollection(inputCollectionName);
         for (MemberUpdate update : collectionToBeTranslated) {
-            PomsBroadcast pomsBroadcast = new PomsBroadcast(update.getMediaUpdate().getMid());
+            String mid = update.getMediaUpdate().getMid();
+            PomsBroadcast pomsBroadcast = new PomsBroadcast(mid, Config.getPomsClient().getFullProgram(mid));
             if (handle(pomsBroadcast)) {
                 // verwijder uit POMS collectie 'Net in Nederland te vertalen'
                 pomsBroadcast.removeFromCollection(inputCollectionName);
@@ -100,12 +101,7 @@ public class AmaraPublisher {
             speakerName = pomsBroadcast.getTitle();
         }
 
-        // construct image thumbnail
-        String thumbnailUrl = null;
-        Long imageId = pomsBroadcast.getImageId();
-        if (imageId != null) {
-            thumbnailUrl = Config.getRequiredConfig("poms.image_url") + imageId + ".jpg";
-        }
+        String thumbnailUrl = pomsBroadcast.getThumbNailUrl();
 
         VideoMetadata amaraVideoMetadata = new VideoMetadata(speakerName, pomsMidBroadcast);
         Video amaraVideo = new Video(uri.toString(),

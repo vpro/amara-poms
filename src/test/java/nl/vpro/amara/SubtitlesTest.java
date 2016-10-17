@@ -61,7 +61,7 @@ public class SubtitlesTest {
     public void amarapoms3() {
         String video_id = "Ep1jZa6c2NRt";
 
-        PomsBroadcast pomsBroadcast = new PomsBroadcast("VPWON_1256298");
+        PomsBroadcast pomsBroadcast = new PomsBroadcast("VPWON_1256298", null);
         pomsBroadcast.downloadSubtitles();
 
         Subtitles amaraSubtitles = new Subtitles("Blauw Bloed // Een interview met prinses Irene", "vtt",
