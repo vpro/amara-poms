@@ -107,22 +107,23 @@ public class Config {
 
     public static MediaRestClient getPomsClient() {
         if (pomsClient == null) {
-            pomsClient = new MediaRestClient();
-
             // get config
             String username = getRequiredConfig("poms.username");
             String password = getRequiredConfig("poms.password");
             String url = getRequiredConfig("poms.url");
             String errors = getRequiredConfig("poms.errors");
 
-            // get client
-            pomsClient.setTrustAll(true);
-            pomsClient.setUserName(username);
-            pomsClient.setPassword(password);
-            pomsClient.setErrors(errors);
-            pomsClient.setUrl(url);
+            pomsClient = MediaRestClient.builder()
+                .trustAll(true)
+                .userName(username)
+                .password(password)
+                .errors(errors)
+                .baseUrl(url)
+                .waitForRetry(true)
+                .build()
+            ;
+
             pomsClient.setThrottleRate(50);
-            pomsClient.setWaitForRetry(true);
         }
 
         return pomsClient;
