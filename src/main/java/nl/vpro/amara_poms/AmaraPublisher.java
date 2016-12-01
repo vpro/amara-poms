@@ -169,7 +169,7 @@ public class AmaraPublisher {
         for (String targetLanguage : targetLanguages) {
             Task amaraTask = new Task(uploadedAmaraVideo.getId(), targetLanguage,
                 Config.getRequiredConfig("amara.task.type.in"),
-                Config.getRequiredConfig("amara.task.user.default"));
+                User.ofUsername(Config.getRequiredConfig("amara.task.user.default")));
             Task uploadedAmaraTask = Config.getAmaraClient().teams().post(amaraTask);
 
             if (uploadedAmaraTask != null) {
