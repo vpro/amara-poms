@@ -126,7 +126,7 @@ public class PomsClip {
         // update
         String newPomsMid = client.set(update);
 
-        log.debug("Found new poms mid {}", newPomsMid);
+        log.debug("Found new poms mid {} ({} translation for {}}", newPomsMid, language, sourcePomsMid);
 
         return newPomsMid;
     }
