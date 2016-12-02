@@ -1,11 +1,11 @@
 package nl.vpro.amara_poms.poms;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
@@ -19,9 +19,8 @@ import nl.vpro.rs.media.MediaRestClient;
 /**
  * @author Joost Aafjes
  */
+@Slf4j
 public class PomsClip {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PomsClip.class);
 
 
     public static final RelationDefinition ORIGINAL = RelationDefinition.of("TRANSLATION_SOURCE", "VPRO");
@@ -62,7 +61,7 @@ public class PomsClip {
         TreeSet<TitleUpdate> titleUpdate = new TreeSet<>();
 
         if (StringUtils.isBlank(newTitle)) {
-            LOG.debug("No title find in translation, using the title of the original broadcast");
+            log.debug("No title find in translation, using the title of the original broadcast");
             titleUpdate.add(sourceProgram.getTitles().first());
         } else {
             titleUpdate.add(new TitleUpdate(newTitle, TextualType.MAIN));
@@ -87,7 +86,7 @@ public class PomsClip {
             update.setDuration(sourceProgram.getDuration());
         } catch (ModificationException e) {
             // ignore
-            LOG.error("Error setting duration for source POM Mid " + sourcePomsMid);
+            log.error("Error setting duration for source POM Mid " + sourcePomsMid);
 
         }
         update.setBroadcasters(sourceProgram.getBroadcasters());
@@ -127,7 +126,7 @@ public class PomsClip {
         // update
         String newPomsMid = client.set(update);
 
-        LOG.debug("Found new poms mid {}", newPomsMid);
+        log.debug("Found new poms mid {}", newPomsMid);
 
         return newPomsMid;
     }
