@@ -91,7 +91,7 @@ public class Config {
 
     public static Client getAmaraClient() {
         if (amaraClient ==  null) {
-            amaraClient = new Client.Builder()
+            amaraClient = Client.builder()
                 .url(getRequiredConfig("amara.api.url"))
                 .user(getRequiredConfig("amara.api.username"))
                 .apiKey(getRequiredConfig("amara.api.key"))
