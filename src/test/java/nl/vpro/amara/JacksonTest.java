@@ -13,8 +13,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,10 +25,8 @@ public class JacksonTest {
 
     @Test
     public void test() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModule(new JavaTimeModule());
 
-        GreetingResource greeting = mapper.readValue(json, GreetingResource.class);
+        GreetingResource greeting = AmaraObjectMapper.INSTANCE.readValue(json, GreetingResource.class);
         assertThat(greeting.getDate()).isEqualTo(Instant.parse("2014-08-20T11:51:31.233Z"));
     }
 }

@@ -18,13 +18,13 @@ public class TaskReader {
 
     private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
-    public static List<Task> readCsvFile(String fileName) {
+    public static List<DatabaseTask> readCsvFile(String fileName) {
 
-        List<Task> tasks = new ArrayList<>();
+        List<DatabaseTask> tasks = new ArrayList<>();
 
 
         // Create the CSVFormat object with the header mapping
-        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(Task.getFileHeaderForReading());
+        CSVFormat csvFileFormat = CSVFormat.DEFAULT.withHeader(DatabaseTask.getFileHeaderForReading());
 
         try (
             FileReader fileReader  = new FileReader(fileName);
@@ -39,7 +39,7 @@ public class TaskReader {
 
             // loop
             while (iterator.hasNext()) {
-                tasks.add(Task.from(iterator.next()));
+                tasks.add(DatabaseTask.from(iterator.next()));
             }
 
         } catch (Exception e) {

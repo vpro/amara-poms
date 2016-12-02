@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.database.task.Task;
+import nl.vpro.amara_poms.database.task.DatabaseTask;
 
 import static org.junit.Assert.*;
 
@@ -24,7 +24,7 @@ public class DatabaseManagerTest {
     final static private String DB_TEST_FILENAME_TASKS = "./testdb-tasks.csv";
 
 
-    Task task1;
+    DatabaseTask task1;
     String testVideoId;
     String testVideoLanguage;
     String testPomsMid;
@@ -45,12 +45,12 @@ public class DatabaseManagerTest {
         testVideoId = "testid";
         testVideoLanguage = "nl";
         testPomsMid = "VPWON_1250959";
-        task1 = new Task(testVideoId, testVideoLanguage, Task.STATUS_UPLOADED_VIDEO_TO_AMARA);
+        task1 = new DatabaseTask(testVideoId, testVideoLanguage, DatabaseTask.STATUS_UPLOADED_VIDEO_TO_AMARA);
         task1.setPomsSourceMid(testPomsMid);
         dbManager.addOrUpdateTask(task1);
-        Task task2 = new Task("testid2", "nl", Task.STATUS_UPLOADED_VIDEO_TO_AMARA);
+        DatabaseTask task2 = new DatabaseTask("testid2", "nl", DatabaseTask.STATUS_UPLOADED_VIDEO_TO_AMARA);
         dbManager.addOrUpdateTask(task2);
-        Task task3 = new Task(testVideoId, "en", Task.STATUS_UPLOADED_VIDEO_TO_AMARA);
+        DatabaseTask task3 = new DatabaseTask(testVideoId, "en", DatabaseTask.STATUS_UPLOADED_VIDEO_TO_AMARA);
         dbManager.addOrUpdateTask(task3);
 
         countBefore = dbManager.getTasks().size();
@@ -75,10 +75,10 @@ public class DatabaseManagerTest {
         // than test reading
         dbManager.readFile();
 
-        Task task = dbManager.findTask(testVideoId, testVideoLanguage);
+        DatabaseTask task = dbManager.findTask(testVideoId, testVideoLanguage);
         assertEquals(countBefore, dbManager.getTasks().size());
 
-        for (Task task3 : dbManager) {
+        for (DatabaseTask task3 : dbManager) {
             LOG.info(task3.toString());
         }
 
@@ -106,21 +106,21 @@ public class DatabaseManagerTest {
         dbManager.readFile();
 
         // test searching - found
-        Task task = dbManager.findTask(testVideoId, testVideoLanguage);
+        DatabaseTask task = dbManager.findTask(testVideoId, testVideoLanguage);
         assertNotNull(task);
         assertEquals(testVideoId, task.getVideoId());
 
         // test searching - not found
-        Task task2 = dbManager.findTask("897yuhjklj", testVideoLanguage);
+        DatabaseTask task2 = dbManager.findTask("897yuhjklj", testVideoLanguage);
         assertNull(task2);
 
         // test search - pomsmid - found
-        Task task3 = dbManager.findTaskByPomsSourceId(testPomsMid);
+        DatabaseTask task3 = dbManager.findTaskByPomsSourceId(testPomsMid);
         assertNotNull(task3);
         assertEquals(testPomsMid, task.getPomsSourceMid());
 
         // test search - pomsmid - not found
-        Task task4 = dbManager.findTaskByPomsSourceId("dsfgdfg");
+        DatabaseTask task4 = dbManager.findTaskByPomsSourceId("dsfgdfg");
         assertNull(task4);
 
 
@@ -147,12 +147,12 @@ public class DatabaseManagerTest {
         dbManager.readFile();
 
         String videoTestId = "%^&GHJK";
-        Task task2 = new Task(videoTestId, "nl", Task.STATUS_UPLOADED_VIDEO_TO_AMARA);
+        DatabaseTask task2 = new DatabaseTask(videoTestId, "nl", DatabaseTask.STATUS_UPLOADED_VIDEO_TO_AMARA);
         dbManager.addOrUpdateTask(task2);
         dbManager.addOrUpdateTask(task2);
 
         // test searching
-        Task task = dbManager.findTask(testVideoId, testVideoLanguage);
+        DatabaseTask task = dbManager.findTask(testVideoId, testVideoLanguage);
 
         assertNotNull(task);
         assertEquals(testVideoId, task.getVideoId());
@@ -181,7 +181,7 @@ public class DatabaseManagerTest {
         dbManager.readFile();
 
         // actual test
-        for (Task task3 : dbManager) {
+        for (DatabaseTask task3 : dbManager) {
             LOG.info(task3.toString());
         }
 
@@ -197,7 +197,7 @@ public class DatabaseManagerTest {
     @Test
     public void gt()
     {
-        Task task = new Task();
+        DatabaseTask task = new DatabaseTask();
 
         assertTrue(task.isNewer(null));
         assertTrue(task.isNewer(""));

@@ -11,8 +11,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author joost
  */
-public class Task {
-    private final static Logger LOG = LoggerFactory.getLogger(Task.class);
+public class DatabaseTask {
+    private final static Logger LOG = LoggerFactory.getLogger(DatabaseTask.class);
 
     public static final String STATUS_UPLOADED_VIDEO_TO_AMARA = "0";
     public static final String STATUS_UPLOADED_SUBTITLE_TO_AMARA = "1";
@@ -31,24 +31,24 @@ public class Task {
     private ZonedDateTime createDateTime;
     private ZonedDateTime updateDateTime;
 
-    public Task() {
+    public DatabaseTask() {
     }
 
-    public Task(String videoId, String language, String status) {
+    public DatabaseTask(String videoId, String language, String status) {
         this.videoId = videoId;
         this.language = language;
         this.status = status;
     }
 
-    public Task(String videoId, String language, String status, String pomsSourceMid) {
+    public DatabaseTask(String videoId, String language, String status, String pomsSourceMid) {
         this.videoId = videoId;
         this.language = language;
         this.status = status;
         this.pomsSourceMid = pomsSourceMid;
     }
 
-    static public Task from(CSVRecord csvRecord) {
-        Task task = new Task();
+    static public DatabaseTask from(CSVRecord csvRecord) {
+        DatabaseTask task = new DatabaseTask();
 
         task.videoId = csvRecord.get("videoId");
         task.language = csvRecord.get("language");

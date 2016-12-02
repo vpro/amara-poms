@@ -15,6 +15,7 @@ import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Task;
 import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.Manager;
+import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.poms.PomsClip;
 
 /**
@@ -69,14 +70,14 @@ public class PomsPublisher {
         LOG.info("Fetched subtitle " + StringUtils.abbreviate(amaraSubtitles.getSubtitles().replaceAll("(\\r|\\n)", ""), 80));
 
         // check video_id/language/version in local db
-        nl.vpro.amara_poms.database.task.Task task = dbManager.findTask(amaraTask.getVideo_id(), amaraTask.getLanguage());
+        DatabaseTask task = dbManager.findTask(amaraTask.getVideo_id(), amaraTask.getLanguage());
 
         // task not found -> error
         if (task == null) {
             LOG.error("Task for videoId " + amaraTask.getVideo_id() + " and language " + amaraTask.getLanguage() + " not found in local db");
 
             // but continue anyhow (not fatal) -> create task already
-            task = new nl.vpro.amara_poms.database.task.Task(amaraTask.getVideo_id(), amaraTask.getLanguage(), nl.vpro.amara_poms.database.task.Task.STATUS_NEW_AMARA_SUBTITLES_FOUND);
+            task = new DatabaseTask(amaraTask.getVideo_id(), amaraTask.getLanguage(), DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_FOUND);
             dbManager.addOrUpdateTask(task);
         }
 
@@ -88,7 +89,7 @@ public class PomsPublisher {
         } else {
             LOG.info("No poms mid found in video meta data {}", amaraVideo.getMetadata());
             // try local db
-            nl.vpro.amara_poms.database.task.Task originTask = dbManager.findTask(amaraTask.getVideo_id(), Config.getRequiredConfig("amara.api.primary_audio_language_code"));
+            DatabaseTask originTask = dbManager.findTask(amaraTask.getVideo_id(), Config.getRequiredConfig("amara.api.primary_audio_language_code"));
             if (originTask != null) {
                 pomsMid = originTask.getPomsSourceMid();
             }
@@ -121,7 +122,7 @@ public class PomsPublisher {
                     return;
                 }
                 task.setPomsTargetId(pomsTargetId);
-                task.setStatus(nl.vpro.amara_poms.database.task.Task.STATUS_UPLOADED_TO_POMS);
+                task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
                 dbManager.addOrUpdateTask(task);
                 LOG.info("Poms clip created with poms id " + pomsTargetId);
             } else {
@@ -138,7 +139,7 @@ public class PomsPublisher {
                 }
                 // update version no in local db
                 task.setSubtitlesVersionNo(amaraSubtitles.getVersion_no());
-                task.setStatus(nl.vpro.amara_poms.database.task.Task.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
+                task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
                 dbManager.addOrUpdateTask(task);
             } catch (FileNotFoundException e) {
                 LOG.error(e.getMessage(), e);

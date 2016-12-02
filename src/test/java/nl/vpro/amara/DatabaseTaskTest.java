@@ -17,7 +17,7 @@ import nl.vpro.jackson2.Jackson2Mapper;
 /**
  * @author joost
  */
-public class TaskTest {
+public class DatabaseTaskTest {
 
     private final static Logger LOG = LoggerFactory.getLogger(SubtitlesTest.class);
 

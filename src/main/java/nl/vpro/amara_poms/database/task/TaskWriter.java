@@ -21,7 +21,7 @@ public class TaskWriter {
     private static final String NEW_LINE_SEPARATOR = "\n";
 
 
-    public static void writeCsvFile(String fileName, List<Task> tasks) {
+    public static void writeCsvFile(String fileName, List<DatabaseTask> tasks) {
 
         FileWriter fileWriter = null;
 
@@ -39,10 +39,10 @@ public class TaskWriter {
             csvFilePrinter = new CSVPrinter(fileWriter, csvFileFormat);
 
             // Create CSV file header
-            csvFilePrinter.printRecord(Task.getFileHeader());
+            csvFilePrinter.printRecord(DatabaseTask.getFileHeader());
 
             // Write a new task object list to the CSV file
-            for (Task task : tasks) {
+            for (DatabaseTask task : tasks) {
                 csvFilePrinter.printRecord(task.get());
             }
         } catch (Exception e) {

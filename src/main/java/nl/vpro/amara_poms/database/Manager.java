@@ -12,14 +12,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.database.task.Task;
+import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.database.task.TaskReader;
 import nl.vpro.amara_poms.database.task.TaskWriter;
 
 /**
  * Manager for csv file database
  */
-public class Manager implements Iterable<Task> {
+public class Manager implements Iterable<DatabaseTask> {
 
     private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
@@ -30,13 +30,13 @@ public class Manager implements Iterable<Task> {
     }
 
     private String filenameTasks;
-    private final List<Task> tasks = new ArrayList<>();
+    private final List<DatabaseTask> tasks = new ArrayList<>();
 
     public void setFilenameTasks(String filenameTasks) {
         this.filenameTasks = filenameTasks;
     }
 
-    public List<Task> getTasks() {
+    public List<DatabaseTask> getTasks() {
         return tasks;
     }
 
@@ -65,10 +65,10 @@ public class Manager implements Iterable<Task> {
     /**
      * Add or update task
      */
-    public void addOrUpdateTask(Task task) {
+    public void addOrUpdateTask(DatabaseTask task) {
 
         // check if already exists
-        Task foundTask = findTask(task.getVideoId(), task.getLanguage());
+        DatabaseTask foundTask = findTask(task.getVideoId(), task.getLanguage());
         if (foundTask == null) {
             task.setCreateDateTime(ZonedDateTime.now());
             task.setUpdateDateTime(ZonedDateTime.now());
@@ -87,9 +87,9 @@ public class Manager implements Iterable<Task> {
     /**
      * Find task by videoId and language
      */
-    public Task findTask(String videoId, String language) {
+    public DatabaseTask findTask(String videoId, String language) {
 
-        List<Task> foundTasks = tasks.stream().filter((task) -> task.getVideoId().equals(videoId) &&
+        List<DatabaseTask> foundTasks = tasks.stream().filter((task) -> task.getVideoId().equals(videoId) &&
                                                                 task.getLanguage().equals(language)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
@@ -105,9 +105,9 @@ public class Manager implements Iterable<Task> {
     /**
      * Find task by source mid
      */
-    public Task findTaskByPomsSourceId(String pomsMid) {
+    public DatabaseTask findTaskByPomsSourceId(String pomsMid) {
 
-        List<Task> foundTasks = tasks.stream().filter((task) -> task.getPomsSourceMid().equals(pomsMid)).collect(Collectors.toList());
+        List<DatabaseTask> foundTasks = tasks.stream().filter((task) -> task.getPomsSourceMid().equals(pomsMid)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
             LOG.info("MID {} not found (yet) in db", pomsMid);
@@ -129,7 +129,7 @@ public class Manager implements Iterable<Task> {
 
 
     @Override
-    public Iterator<Task> iterator() {
+    public Iterator<DatabaseTask> iterator() {
         return tasks.iterator();
     }
 }
