@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Task;
+import nl.vpro.amara.domain.User;
 import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
@@ -38,7 +39,7 @@ public class PomsPublisher {
         }
     }
     protected void process(Task amaraTask) {
-        log.info("Start processing video_id " + amaraTask.getVideo_id() + " for language " + amaraTask.getLanguage());
+        log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
 
         // only approved tasks
         if (amaraTask.getApproved() == null || !amaraTask.getApproved().equals(Task.TASK_APPROVED)) {
@@ -51,6 +52,9 @@ public class PomsPublisher {
             log.info("Task (" + amaraTask.getResource_uri() + ") has no language set -> skip");
             return;
         }
+
+        final User user = amaraTask.getAssignee();
+
 
         // only target languages or primary language
         List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
@@ -84,8 +88,9 @@ public class PomsPublisher {
         // find pomsId in local db or from video metadata in Amara
         final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
         String pomsMid = amaraVideo.getMetadata().getLocation();
+
         if (pomsMid != null) {
-            log.info("Poms mid found in video meta data:" + pomsMid);
+            log.info("Poms mid found in video meta data {}", pomsMid);
         } else {
             log.info("No poms mid found in video meta data {}", amaraVideo.getMetadata());
             // try local db
