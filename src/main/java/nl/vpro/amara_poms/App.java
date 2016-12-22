@@ -23,7 +23,6 @@ import nl.vpro.util.CommandExecutorImpl;
 @Slf4j
 public class App  {
     
-
     public static void main(String[] args) throws IOException {
 
         log.info("Started...");
@@ -35,7 +34,10 @@ public class App  {
             Instant lastModified = Files.getLastModifiedTime(path).toInstant();
             if (Instant.now().minus(Duration.ofHours(4)).isAfter(lastModified)) {
                 CommandExecutorImpl env = new CommandExecutorImpl("/usr/bin/env");
-                long running = env.lines("ps", "u").filter(s -> s.contains("amara_poms_publisher")).count();
+                long running = env
+                    .lines("ps", "u")
+                    .filter(line -> line.contains("amara_poms_publisher"))
+                    .count();
                 if (running == 0) {
                     log.warn("Lock file {} still exists (since {}), but no process found. Will proceed anyway", path, lastModified);
                     Files.delete(path);
