@@ -51,6 +51,7 @@
     <media.domain.version>4.8.12</media.domain.version>
     <jackson2.version>2.8.0</jackson2.version>
     <amara-java.version>0.3</amara-java.version>
+    <vpro.shared.version>1.61-SNAPSHOT</vpro.shared.version>
   </properties>
 
 
@@ -69,6 +70,11 @@
       <groupId>nl.vpro.amara</groupId>
       <artifactId>amara-java</artifactId>
       <version>${amara-java.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>nl.vpro.shared</groupId>
+      <artifactId>vpro-shared-util</artifactId>
+      <version>${vpro.shared.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.el</groupId>
@@ -109,13 +115,13 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.10</version>
+      <version>1.16.12</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>1.10.19</version>
+      <artifactId>mockito-core</artifactId>
+      <version>2.3.11</version>
       <scope>test</scope>
     </dependency>
   <!--  <dependency>
