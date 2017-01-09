@@ -114,7 +114,6 @@ public class Config {
             String errors = getRequiredConfig("poms.errors");
 
             pomsClient = MediaRestClient.builder()
-                .trustAll(true)
                 .userName(username)
                 .password(password)
                 .errors(errors)
