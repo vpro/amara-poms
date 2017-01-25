@@ -48,7 +48,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <api.client.version>5.0.3</api.client.version>
-    <media.domain.version>5.0.0</media.domain.version>
+    <media.domain.version>5.0.2</media.domain.version>
     <jackson2.version>2.8.0</jackson2.version>
     <amara-java.version>0.3</amara-java.version>
     <vpro.shared.version>1.62.4</vpro.shared.version>
