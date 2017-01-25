@@ -1,9 +1,8 @@
 package nl.vpro.amara_poms.poms;
 
-import java.util.Iterator;
+import lombok.extern.slf4j.Slf4j;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Iterator;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.update.GroupUpdate;
@@ -14,9 +13,9 @@ import nl.vpro.rs.media.MediaRestClient;
 /**
  * @author joost
  */
+@Slf4j
 public class PomsCollection implements Iterable<MemberUpdate> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PomsCollection.class);
     static final int ERROR_COLLECTION_NOT_FOUND = 1;
     static final int ERROR_BROADCAST_NOT_FOUND = 3;
 

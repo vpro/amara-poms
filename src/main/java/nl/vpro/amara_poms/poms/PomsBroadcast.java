@@ -1,5 +1,7 @@
 package nl.vpro.amara_poms.poms;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -10,8 +12,6 @@ import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.Program;
@@ -22,9 +22,8 @@ import nl.vpro.domain.media.update.ProgramUpdate;
 /**
  * @author joost
  */
+@Slf4j
 public class PomsBroadcast {
-
-    private static final Logger LOG = LoggerFactory.getLogger(PomsBroadcast.class);
 
     private final Program program;
     private final String mid;
@@ -67,7 +66,7 @@ public class PomsBroadcast {
 
 
     public void removeFromCollection(String midCollectionFrom) {
-        LOG.info("Remove {} from collection {}", mid, midCollectionFrom);
+        log.info("Remove {} from collection {}", mid, midCollectionFrom);
         Config.getPomsClient().removeMember(midCollectionFrom, mid, null);
     }
 
@@ -101,7 +100,7 @@ public class PomsBroadcast {
         try {
             url = new URL(urlName);
         } catch (MalformedURLException e) {
-            LOG.error("malformed url " + e.toString());
+            log.error("malformed url " + e.toString());
             return (Config.ERROR_POM_SUBTITLES_MALFORMED_URL);
         }
 
@@ -121,21 +120,21 @@ public class PomsBroadcast {
 
                 // check against 'WEBVTT'
                 if (content.startsWith("WEBVTT")) {
-                    LOG.info("Subtitles downloaded from " + urlName);
-                    LOG.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 100));
+                    log.info("Subtitles downloaded from " + urlName);
+                    log.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 100));
                     subtitles = content;
                 } else {
                     returnValue = Config.ERROR_POM_SUBTITLES_NOT_FOUND;
-                    LOG.info("Subtitle file doesn't start with WEBVTT -> file ignored");
+                    log.info("Subtitle file doesn't start with WEBVTT -> file ignored");
                 }
             } else {
-                LOG.error("No subtitle file (Url=" + urlName + ") to download. Server replied HTTP code: " + responseCode);
+                log.error("No subtitle file (Url=" + urlName + ") to download. Server replied HTTP code: " + responseCode);
                 returnValue = Config.ERROR_POM_SUBTITLES_RESPONSE;
             }
             httpConn.disconnect();
 
         } catch (IOException e) {
-            LOG.error("error opening url " + e.toString());
+            log.error("error opening url " + e.toString());
             return Config.ERROR_POM_SUBTITLES_URL_OPEN;
         }
 
