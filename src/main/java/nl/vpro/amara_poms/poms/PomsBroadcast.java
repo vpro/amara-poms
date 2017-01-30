@@ -125,7 +125,7 @@ public class PomsBroadcast {
                     subtitles = content;
                 } else {
                     returnValue = Config.ERROR_POM_SUBTITLES_NOT_FOUND;
-                    log.info("Subtitle file doesn't start with WEBVTT -> file ignored");
+                    log.error("Subtitle file {} doesn't start with WEBVTT -> file ignored", urlName);
                 }
             } else {
                 log.error("No subtitle file (Url=" + urlName + ") to download. Server replied HTTP code: " + responseCode);
