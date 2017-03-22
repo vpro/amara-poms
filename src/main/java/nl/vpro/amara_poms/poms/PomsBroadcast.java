@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -14,6 +15,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara_poms.Config;
+import nl.vpro.domain.media.MediaObject;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.support.Image;
 import nl.vpro.domain.media.support.Images;
@@ -25,16 +27,21 @@ import nl.vpro.domain.media.update.ProgramUpdate;
 @Slf4j
 public class PomsBroadcast {
 
-    private final Program program;
+    private final MediaObject program;
+    @Getter
     private final String mid;
 
     String subtitles = "";
 
-    public ProgramUpdate getProgramUpdate() {
-        return ProgramUpdate.forAllOwners(program);
+    public ProgramUpdate getUpdate() {
+        if (program instanceof Program) {
+            return ProgramUpdate.forAllOwners((Program) program);
+        } else {
+            return null;
+        }
     }
 
-    public Program getProgram() {
+    public MediaObject getProgram() {
         return program;
     }
 
@@ -59,7 +66,7 @@ public class PomsBroadcast {
         return String.valueOf(program.getDuration().get().getSeconds());
     }
 
-    public PomsBroadcast(String mid, Program  program) {
+    public PomsBroadcast(String mid, MediaObject program) {
         this.mid = mid;
         this.program = program;
     }

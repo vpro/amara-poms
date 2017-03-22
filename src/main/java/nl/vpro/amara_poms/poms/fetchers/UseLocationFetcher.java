@@ -13,7 +13,7 @@ import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 
 /**
  * @author Michiel Meeuwissen
@@ -22,15 +22,15 @@ import nl.vpro.domain.media.Program;
 @Slf4j
 @ToString
 public class UseLocationFetcher implements SourceFetcher {
-    
+
     private final Set<String>       SCHEMES = new HashSet<>(
         Arrays.asList(Config.getRequiredConfigAsArray("use.location.schemes")));
     private final Set<AVFileFormat> FORMATS = new HashSet<>(
         Arrays.stream(Config.getRequiredConfigAsArray("use.location.formats")).map(AVFileFormat::valueOf).collect(Collectors.toList())
     );
-    
+
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         //File dest = new File(Config.getRequiredConfig("videofile.dir"), program.getMid() + ".mp4");
         for (Location location : program.getLocations()) {
             if (location.isPublishable() && FORMATS.contains(location.getAvFileFormat())) {

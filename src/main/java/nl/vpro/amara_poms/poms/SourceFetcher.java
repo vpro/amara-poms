@@ -4,7 +4,7 @@ import lombok.ToString;
 
 import java.net.URI;
 
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 
 /**
  * @author Michiel Meeuwissen
@@ -13,7 +13,7 @@ import nl.vpro.domain.media.Program;
 public interface SourceFetcher {
 
 
-    FetchResult fetch(Program program);
+    FetchResult fetch(MediaObject program);
 
     @ToString
     class FetchResult {

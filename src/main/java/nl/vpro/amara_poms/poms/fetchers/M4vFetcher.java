@@ -9,7 +9,7 @@ import java.io.IOException;
 import com.google.common.io.Files;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 
 /**
  * @author Michiel Meeuwissen
@@ -30,7 +30,7 @@ public class M4vFetcher extends AbstractFileCopyFetcher {
      * Copy source video file to download.omroep.nl to make it accessable for Amara
      */
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         String mid = program.getMid();
         File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));
         log.info("Search files in {}", sourceDir);

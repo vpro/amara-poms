@@ -40,10 +40,14 @@ public class AmaraPublisher {
         PomsCollection collectionToBeTranslated = new PomsCollection(inputCollectionName);
         for (MemberUpdate update : collectionToBeTranslated) {
             String mid = update.getMediaUpdate().getMid();
-            PomsBroadcast pomsBroadcast = new PomsBroadcast(mid, Config.getPomsClient().getFullProgram(mid));
-            if (handle(pomsBroadcast)) {
-                // verwijder uit POMS collectie 'Net in Nederland te vertalen'
-                pomsBroadcast.removeFromCollection(inputCollectionName);
+            try {
+                PomsBroadcast pomsBroadcast = new PomsBroadcast(mid, Config.getPomsClient().getFull(mid));
+                if (handle(pomsBroadcast)) {
+                    // verwijder uit POMS collectie 'Net in Nederland te vertalen'
+                    pomsBroadcast.removeFromCollection(inputCollectionName);
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage());
             }
         }
 
@@ -51,7 +55,7 @@ public class AmaraPublisher {
     }
 
     protected boolean handle(PomsBroadcast pomsBroadcast) {
-        String mid = pomsBroadcast.getProgramUpdate().getMid();
+        String mid = pomsBroadcast.getMid();
         log.info("Start processing broadcast {}: {}", mid, pomsBroadcast.getTitle());
 
         // check if broadcast has already been sent to Amara
@@ -87,7 +91,7 @@ public class AmaraPublisher {
     }
 
     protected Video constructVideo(PomsBroadcast pomsBroadcast, URI uri) {
-        String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
+        String pomsMidBroadcast = pomsBroadcast.getMid();
         // construct title, etc.
         final String videoTitel;
         final String speakerName;
@@ -118,7 +122,7 @@ public class AmaraPublisher {
             log.warn("Could not download subtitles");
             return;
         }
-        String pomsMidBroadcast = pomsBroadcast.getProgramUpdate().getMid();
+        String pomsMidBroadcast = pomsBroadcast.getMid();
         log.info("Uploading subtitles to amara for " + pomsMidBroadcast);
         Subtitles amaraSubtitles = new Subtitles(
             uploadedAmaraVideo.getTitle(),

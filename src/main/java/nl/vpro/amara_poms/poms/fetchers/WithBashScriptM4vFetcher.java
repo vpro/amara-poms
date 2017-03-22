@@ -9,7 +9,7 @@ import java.net.URI;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 
 /**
  * @author Michiel Meeuwissen
@@ -34,7 +34,7 @@ public class WithBashScriptM4vFetcher implements SourceFetcher {
      * It seems odd to require a system call for that!
      */
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         String mid = program.getMid();
         ProcessBuilder pb = new ProcessBuilder(Config.getRequiredConfig("fetch.script"), mid);
         pb.directory(new File("."));
