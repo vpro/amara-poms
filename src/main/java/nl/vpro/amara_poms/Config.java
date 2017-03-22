@@ -119,6 +119,7 @@ public class Config {
                 .errors(errors)
                 .baseUrl(url)
                 .waitForRetry(true)
+                .trustAll(true) // can be removed soon
                 .build()
             ;
 

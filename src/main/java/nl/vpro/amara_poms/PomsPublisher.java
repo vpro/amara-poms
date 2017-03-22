@@ -34,7 +34,11 @@ public class PomsPublisher {
         log.info("Searching for Amara tasks after {}", after);
         List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Config.getRequiredConfig("amara.task.type.out"), after).getTasks();
         for (Task amaraTask : amaraTasks) {
-            process(amaraTask);
+            try {
+                process(amaraTask);
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
 
         }
     }
