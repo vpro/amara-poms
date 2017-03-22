@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 
 /**
  * @author Michiel Meeuwissen
@@ -17,7 +17,7 @@ public class ChainedFetcher implements SourceFetcher, Iterable<SourceFetcher> {
 
     List<SourceFetcher> fetchers = new ArrayList<>();
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         for (SourceFetcher sf : this) {
             FetchResult result = sf.fetch(program);
             if (result.status == Status.SUCCESS) {
