@@ -12,7 +12,7 @@ import nl.vpro.domain.media.update.MemberRefUpdate;
 import nl.vpro.domain.media.update.ProgramUpdate;
 import nl.vpro.rs.media.MediaRestClient;
 
-import static junit.framework.Assert.assertTrue;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Michiel Meeuwissen

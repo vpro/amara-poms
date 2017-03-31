@@ -172,7 +172,7 @@ public class AmaraPublisher {
         String[] targetLanguages = Config.getRequiredConfigAsArray("amara.task.target.languages");
         for (String targetLanguage : targetLanguages) {
             Task amaraTask = new Task(uploadedAmaraVideo.getId(), targetLanguage,
-                Config.getRequiredConfig("amara.task.type.in"),
+                TaskType.Translate,
                 User.builder().username(Config.getRequiredConfig("amara.task.user.default")).build());
 
             log.info("Creating amara task for {}: {}", pomsMidBroadcast, amaraTask);

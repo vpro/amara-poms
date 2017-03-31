@@ -1,5 +1,6 @@
 package nl.vpro.amara;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import nl.vpro.amara.domain.Task;
+import nl.vpro.amara.domain.TaskType;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.jackson2.Jackson2Mapper;
 
@@ -44,9 +46,8 @@ public class DatabaseTaskTest {
 
     @Test
     public void testGet() {
-        long afterTimestampInSeconds = Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds");
-
-        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Task.TYPE_TRANSLATE, Instant.now().minusSeconds(afterTimestampInSeconds)).getTasks();
+        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(TaskType.Translate, 
+            Instant.now().minus(Duration.ofDays(10)), 0, 100).getTasks();
 
         LOG.info("Count:" + amaraTasks.size());
         if (amaraTasks.size() > 0) {

@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
-import nl.vpro.amara.TaskType;
+import nl.vpro.amara.domain.TaskType;
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Task;
 import nl.vpro.amara.domain.User;
