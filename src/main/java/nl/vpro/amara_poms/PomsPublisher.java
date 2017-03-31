@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import nl.vpro.amara.TaskType;
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Task;
 import nl.vpro.amara.domain.User;
@@ -18,26 +19,24 @@ import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.poms.PomsClip;
+import nl.vpro.util.TimeUtils;
 
 /**
  * @author joost
  */
 @Slf4j
 public class PomsPublisher {
-
-
     private Manager dbManager = Config.getDbManager();
 
-
     public void processAmaraTasks() {
-        Instant after = Instant.now().minusSeconds(Config.getRequiredConfigAsLong("amara.task.fetchlastperiod.seconds"));
+        Instant after = Instant.now()
+            .minus(TimeUtils.parseDuration(Config.getRequiredConfig("amara.task.fetchlastperiod"))
+                .orElseThrow(IllegalArgumentException::new));
         log.info("Searching for Amara tasks after {}", after);
-        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(Config.getRequiredConfig("amara.task.type.out"), after).getTasks();
-        for (Task amaraTask : amaraTasks) {
-            process(amaraTask);
-
-        }
+        Config.getAmaraClient().teams().getTasks(TaskType.Approve, after)
+            .forEachRemaining(this::process);
     }
+    
     protected void process(Task amaraTask) {
         log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
 
