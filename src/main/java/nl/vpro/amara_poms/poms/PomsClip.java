@@ -118,7 +118,7 @@ public class PomsClip {
         update.getPortals().add(PORTAL);
         update.getPortalRestrictions().add(PortalRestrictionUpdate.of(PORTAL));
 
-        // set genres
+        // set genres and images
         update.setGenres(sourceProgram.getGenres());
         update.setImages(sourceProgram.getImages());
 

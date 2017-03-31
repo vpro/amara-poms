@@ -30,7 +30,7 @@ import com.google.common.io.Files;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 import nl.vpro.logging.LoggerOutputStream;
 import nl.vpro.util.CommandExecutor;
 import nl.vpro.util.CommandExecutorImpl;
@@ -55,7 +55,7 @@ public class HaspFetcher extends AbstractFileFetcher {
     }
 
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         String mid = program.getMid();
 
         File sourceDir = new File(Config.getRequiredConfig("hasp.source.dir"));

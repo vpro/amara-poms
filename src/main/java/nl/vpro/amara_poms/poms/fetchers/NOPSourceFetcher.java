@@ -5,7 +5,7 @@ import lombok.ToString;
 import java.net.URI;
 
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 
 /**
  * @author Michiel Meeuwissen
@@ -14,7 +14,7 @@ import nl.vpro.domain.media.Program;
 @ToString
 public class NOPSourceFetcher implements SourceFetcher {
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         return FetchResult.succes(URI.create("mock:success"));
     }
 }

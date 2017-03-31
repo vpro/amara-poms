@@ -1,5 +1,7 @@
 package nl.vpro.amara_poms;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -8,8 +10,6 @@ import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara.Client;
 import nl.vpro.amara_poms.database.Manager;
@@ -21,9 +21,9 @@ import nl.vpro.rs.media.MediaRestClient;
 /**
  * @author joost
  */
+@Slf4j
 public class Config {
 
-    private final static Logger LOG = LoggerFactory.getLogger(Config.class);
     private static final Map<String, String> PROPERTIES = new HashMap<>();
 
     public static final int NO_ERROR = 0;
@@ -62,9 +62,9 @@ public class Config {
             if (configFile.canRead()) {
                 inputStream = new FileInputStream(configFile);
                 properties.load(inputStream);
-                LOG.info(configFile + " loaded");
+                log.info(configFile + " loaded");
             } else {
-                LOG.info("Could not read {}", configFile);
+                log.info("Could not read {}", configFile);
             }
             init((Map) properties);
 
@@ -97,7 +97,7 @@ public class Config {
                 .apiKey(getRequiredConfig("amara.api.key"))
                 .team(getRequiredConfig("amara.api.team"))
                 .build();
-            LOG.info("Created amara client {}", amaraClient);
+            log.info("Created amara client {}", amaraClient);
         }
         return amaraClient;
     }
@@ -114,12 +114,12 @@ public class Config {
             String errors = getRequiredConfig("poms.errors");
 
             pomsClient = MediaRestClient.builder()
-                .trustAll(true)
                 .userName(username)
                 .password(password)
                 .errors(errors)
                 .baseUrl(url)
                 .waitForRetry(true)
+                .trustAll(true) // can be removed soon
                 .build()
             ;
 
@@ -229,7 +229,7 @@ public class Config {
         String returnValue = PROPERTIES.get(propertyName);
 
         if (returnValue == null) {
-            LOG.debug(propertyName + " not set in " + configFile);
+            log.debug(propertyName + " not set in " + configFile);
         }
 
         return  returnValue;

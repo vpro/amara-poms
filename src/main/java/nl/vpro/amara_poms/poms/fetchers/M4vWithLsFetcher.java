@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.MediaObject;
 import nl.vpro.util.CommandExecutor;
 import nl.vpro.util.CommandExecutorImpl;
 
@@ -36,7 +36,7 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
      * Copy source video file to download.omroep.nl to make it accessable for Amara
      */
     @Override
-    public FetchResult fetch(Program program) {
+    public FetchResult fetch(MediaObject program) {
         String mid = program.getMid();
         for (String sourceFile : sourceFiles) {
             log.info("Search files in {}", sourceFile);
