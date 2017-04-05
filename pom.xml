@@ -50,7 +50,7 @@
     <api.client.version>5.2.1</api.client.version>
     <media.domain.version>5.2.2</media.domain.version>
     <jackson2.version>2.8.0</jackson2.version>
-    <amara-java.version>0.4-SNAPSHOT</amara-java.version>
+    <amara-java.version>0.4</amara-java.version>
     <vpro.shared.version>1.67.0</vpro.shared.version>
   </properties>
 
