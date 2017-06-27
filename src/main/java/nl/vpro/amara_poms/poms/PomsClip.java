@@ -2,6 +2,7 @@ package nl.vpro.amara_poms.poms;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -120,7 +121,9 @@ public class PomsClip {
 
         // set genres and images
         update.setGenres(sourceProgram.getGenres());
-        update.setImages(sourceProgram.getImages());
+        List<ImageUpdate> images = sourceProgram.getImages();
+        images.forEach(iu -> iu.setId(null));
+        update.setImages(images);
 
         //JAXB.marshal(update, System.out);
         // update
