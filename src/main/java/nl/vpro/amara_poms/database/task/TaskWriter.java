@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
 */
 public class TaskWriter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(TaskWriter.class);
+    private final static Logger log = LoggerFactory.getLogger(TaskWriter.class);
 
     //Delimiter used in CSV file
     private static final String NEW_LINE_SEPARATOR = "\n";
@@ -46,7 +46,7 @@ public class TaskWriter {
                 csvFilePrinter.printRecord(task.get());
             }
         } catch (Exception e) {
-            LOG.error("Error in CsvFileWriter !!! " + e.getMessage(), e);
+            log.error("Error in CsvFileWriter !!! " + e.getMessage(), e);
         } finally {
             try {
                 fileWriter.flush();

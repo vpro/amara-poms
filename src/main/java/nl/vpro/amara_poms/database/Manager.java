@@ -1,5 +1,7 @@
 package nl.vpro.amara_poms.database;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.ZonedDateTime;
@@ -7,9 +9,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
@@ -19,9 +18,8 @@ import nl.vpro.amara_poms.database.task.TaskWriter;
 /**
  * Manager for csv file database
  */
+@Slf4j
 public class Manager implements Iterable<DatabaseTask> {
-
-    private final static Logger LOG = LoggerFactory.getLogger(TaskReader.class);
 
     private static final Manager INSTANCE = new Manager();
 
@@ -93,10 +91,10 @@ public class Manager implements Iterable<DatabaseTask> {
                                                                 task.getLanguage().equals(language)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
-            LOG.info("videoid {}/{} not found (yet) in db", videoId, language);
+            log.info("videoid {}/{} not found (yet) in db", videoId, language);
             return null;
         } else if (foundTasks.size() > 1) {
-            LOG.error("videoId {}/{} found more than 1 time in db", videoId, language);
+            log.error("videoId {}/{} found more than 1 time in db", videoId, language);
         }
 
         return  foundTasks.get(0);
@@ -110,10 +108,10 @@ public class Manager implements Iterable<DatabaseTask> {
         List<DatabaseTask> foundTasks = tasks.stream().filter((task) -> task.getPomsSourceMid().equals(pomsMid)).collect(Collectors.toList());
 
         if (foundTasks.size() == 0) {
-            LOG.info("MID {} not found (yet) in db", pomsMid);
+            log.info("MID {} not found (yet) in db", pomsMid);
             return null;
         } else if (foundTasks.size() > 1) {
-            LOG.error("MID {} found more than 1 time in db", pomsMid);
+            log.error("MID {} found more than 1 time in db", pomsMid);
         }
 
         return  foundTasks.get(0);
@@ -123,7 +121,7 @@ public class Manager implements Iterable<DatabaseTask> {
      * Remove task by videoId
      */
     public void removeTaskByVideoId(String videoId, String language) {
-        LOG.info("Task with videoId {}/{} has been removed", videoId, language);
+        log.info("Task with videoId {}/{} has been removed", videoId, language);
         tasks.removeIf((task) -> task.getVideoId().equals(videoId) && task.getLanguage().equals(language));
     }
 

@@ -1,19 +1,18 @@
 package nl.vpro.amara_poms.database.task;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVRecord;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author joost
  */
+@Slf4j
 public class DatabaseTask {
-    private final static Logger LOG = LoggerFactory.getLogger(DatabaseTask.class);
-
     public static final String STATUS_UPLOADED_VIDEO_TO_AMARA = "0";
     public static final String STATUS_UPLOADED_SUBTITLE_TO_AMARA = "1";
     public static final String STATUS_APPROVED_SUBTITLE_IN_AMARA = "2";
@@ -79,7 +78,7 @@ public class DatabaseTask {
                     isNewer = true;
                 }
             } catch (Exception e) {
-                LOG.error("Error converting subtitle version number to int (" + subtitleVersionToCompareWith + "/" + subtitlesVersionNo + ")");
+                log.error("Error converting subtitle version number to int (" + subtitleVersionToCompareWith + "/" + subtitlesVersionNo + ")");
             }
         }
 
