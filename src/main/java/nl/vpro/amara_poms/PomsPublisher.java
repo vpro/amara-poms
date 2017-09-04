@@ -36,7 +36,7 @@ public class PomsPublisher {
         Config.getAmaraClient().teams().getTasks(TaskType.Approve, after)
             .forEachRemaining(this::process);
     }
-    
+
     protected void process(Task amaraTask) {
         try {
             log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
@@ -71,7 +71,7 @@ public class PomsPublisher {
                 log.error("Subtitle for language " + amaraTask.getLanguage() + " and video_id " + amaraTask.getVideo_id() + " not found -> skip");
                 return;
             }
-            log.info("Fetched subtitle " + StringUtils.abbreviate(amaraSubtitles.getSubtitles().replaceAll("(\\r|\\n)", ""), 80));
+            log.info("Fetched subtitle " + StringUtils.abbreviate(amaraSubtitles.getSubtitles().replaceAll("([\\r\\n])", ""), 80));
 
             // check video_id/language/version in local db
             DatabaseTask task = dbManager.findTask(amaraTask.getVideo_id(), amaraTask.getLanguage());
