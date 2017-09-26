@@ -52,6 +52,10 @@
     <jackson2.version>2.8.8</jackson2.version>
     <amara-java.version>0.5-SNAPSHOT</amara-java.version>
     <vpro.shared.version>1.71.0</vpro.shared.version>
+    <slf4j.version>1.7.25</slf4j.version>
+    <lombok.version>1.16.18</lombok.version>
+    <assertj.version>3.8.0</assertj.version>
+    <mockito.version>2.9.0</mockito.version>
   </properties>
 
 
@@ -89,7 +93,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-      <version>1.7.21</version>
+      <version>${slf4j.version}</version>
     </dependency>
 
 
@@ -108,20 +112,20 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.4.0</version>
+      <version>${assertj.version}</version>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.16</version>
+      <version>${lombok.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>2.3.11</version>
+      <version>${mockito.version}</version>
       <scope>test</scope>
     </dependency>
   <!--  <dependency>

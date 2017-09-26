@@ -147,10 +147,11 @@ public class AmaraPublisher {
             );
             log.info("Subtitle uploaded to Amara with id " + uploadedAmaraVideo.getId());
 
-            // nl subtitles status is now complete, has to be aproved (can only be done in 2 steps)
+            // nl subtitles status is now complete, has to be approved (can only be done in 2 steps)
             SubtitleAction amaraSubtitleAction = new SubtitleAction(SubtitleAction.ACTION_APPROVE);
 
-            SubtitleAction amaraSubtitleActionOut = Config.getAmaraClient().videos().post(amaraSubtitleAction,
+            SubtitleAction amaraSubtitleActionOut = Config.getAmaraClient().videos().post(
+                amaraSubtitleAction,
                 uploadedAmaraVideo.getId(),
                 Config.getRequiredConfig("amara.api.primary_audio_language_code"));
 
@@ -168,6 +169,8 @@ public class AmaraPublisher {
     }
 
 
+    /**
+    */
     protected void createTasks(Video uploadedAmaraVideo, String pomsMidBroadcast) {
         String[] targetLanguages = Config.getRequiredConfigAsArray("amara.task.target.languages");
         for (String targetLanguage : targetLanguages) {
