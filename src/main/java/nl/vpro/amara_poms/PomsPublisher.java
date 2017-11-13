@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -171,15 +172,17 @@ public class PomsPublisher {
 
     protected nl.vpro.domain.subtitles.Subtitles amaraToPomsSubtitles(Subtitles subtitles, String mid) throws IOException {
         nl.vpro.domain.subtitles.Subtitles pomsSubtitles = new nl.vpro.domain.subtitles.Subtitles();
-        String subtitleFormat = subtitles.getSub_format();
-        if (subtitleFormat.equals("vtt")) {
-            pomsSubtitles.setContent(new SubtitlesContent(SubtitlesFormat.WEBVTT, subtitles.getSubtitles()));
-            pomsSubtitles.setLanguage(subtitles.getLanguage().toLocale());
-            pomsSubtitles.setCreationDate(Instant.now());
+        pomsSubtitles.setType(SubtitlesType.TRANSLATION);
+        if (isMid(mid)) {
             pomsSubtitles.setMid(mid);
-            pomsSubtitles.setType(SubtitlesType.TRANSLATION);
-            return pomsSubtitles;
-        } else return null;
+        }
+        if (subtitles.getLanguage().toLocale() != null) {
+            pomsSubtitles.setLanguage(subtitles.getLanguage().toLocale());
+        }
+        if (subtitles.getSubtitles() != null) {
+            pomsSubtitles.setContent(new SubtitlesContent(SubtitlesFormat.WEBVTT, subtitles.getSubtitles()));
+        }
+        return pomsSubtitles;
     }
 
 

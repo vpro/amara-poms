@@ -2,6 +2,7 @@ package nl.vpro.amara_poms.poms;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -17,7 +18,7 @@ public class ChainedFetcher implements SourceFetcher, Iterable<SourceFetcher> {
 
     List<SourceFetcher> fetchers = new ArrayList<>();
     @Override
-    public FetchResult fetch(MediaObject program) {
+    public FetchResult fetch(MediaObject program) throws IOException, InterruptedException {
         for (SourceFetcher sf : this) {
             FetchResult result = sf.fetch(program);
             if (result.status == Status.SUCCESS) {
@@ -25,7 +26,7 @@ public class ChainedFetcher implements SourceFetcher, Iterable<SourceFetcher> {
                 return result;
             }
         }
-        return FetchResult.notable();
+        return FetchResult.notAble();
 
     }
 
