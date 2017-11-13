@@ -106,7 +106,7 @@ public class HaspFetcher extends AbstractFileFetcher {
                 }
             }
         }
-        return FetchResult.notable();
+        return FetchResult.notAble();
 
     }
 
