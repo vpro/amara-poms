@@ -2,6 +2,7 @@ package nl.vpro.amara_poms;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.net.URI;
 
 import nl.vpro.amara.domain.*;
@@ -54,7 +55,7 @@ public class AmaraPublisher {
         dbManager.writeFile();
     }
 
-    protected boolean handle(PomsBroadcast pomsBroadcast) {
+    protected boolean handle(PomsBroadcast pomsBroadcast) throws IOException, InterruptedException {
         String mid = pomsBroadcast.getMid();
         log.info("Start processing broadcast {}: {}", mid, pomsBroadcast.getTitle());
 
