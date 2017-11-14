@@ -48,6 +48,6 @@ public class M4vFetcher extends AbstractFileCopyFetcher {
                 }
             }
         }
-        return FetchResult.notable();
+        return FetchResult.notAble();
     }
 }
