@@ -2,6 +2,7 @@ package nl.vpro.amara_poms.poms;
 
 import lombok.ToString;
 
+import java.io.IOException;
 import java.net.URI;
 
 import nl.vpro.domain.media.MediaObject;
@@ -13,7 +14,7 @@ import nl.vpro.domain.media.MediaObject;
 public interface SourceFetcher {
 
 
-    FetchResult fetch(MediaObject program);
+    FetchResult fetch(MediaObject program) throws IOException, InterruptedException;
 
     @ToString
     class FetchResult {
@@ -27,7 +28,7 @@ public interface SourceFetcher {
         public static FetchResult error() {
             return new FetchResult(null, Status.ERROR);
         }
-        public static FetchResult notable() {
+        public static FetchResult notAble() {
             return new FetchResult(null, Status.NOTABLE);
         }
 
