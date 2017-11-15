@@ -11,6 +11,7 @@ import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 import nl.vpro.amara_poms.poms.PomsCollection;
 import nl.vpro.amara_poms.poms.SourceFetcher;
+import nl.vpro.amara_poms.poms.fetchers.NEPFetcher;
 import nl.vpro.domain.media.update.MemberUpdate;
 
 /**
@@ -66,7 +67,7 @@ public class AmaraPublisher {
             log.info("Poms broadcast with poms mid " + mid + " already sent to Amara -> skip");
             return false;
         }
-        //
+
         SourceFetcher.FetchResult result = fetcher.fetch(pomsBroadcast.getProgram());
         if (result.status != SourceFetcher.Status.SUCCESS) {
             log.error("Downloading subtitles to server failed :{}", result);
