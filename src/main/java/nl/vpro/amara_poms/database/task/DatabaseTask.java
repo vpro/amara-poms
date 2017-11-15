@@ -21,6 +21,9 @@ public class DatabaseTask {
     public static final String STATUS_UPLOADED_TO_POMS = "5";
     public static final String STATUS_NEW_AMARA_SUBTITLES_WRITTEN = "6";
 
+    public static final String NEPSTATUS_UPLOADEDTOFTPSERVER = "11";
+    public static final String NEPSTATUS_COPIEDFROMFTPSERVERTOFILES = "12";
+
     private String videoId;
     private String language;
     private String status;

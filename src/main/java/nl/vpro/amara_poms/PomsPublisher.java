@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -33,7 +32,6 @@ public class PomsPublisher {
     private static final Manager dbManager = Config.getDbManager();
     private static final MediaRestClient backend = Config.getPomsClient();
     private final List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
-
 
 
     public void processAmaraTasks() throws IOException {
@@ -81,10 +79,8 @@ public class PomsPublisher {
                     out.println(getSubtitles(amaraTask).getSubtitles());
                 }
             }
-
         }
     }
-
 
     protected DatabaseTask identifyTaskinDatabase (Task amaraTask) {
         DatabaseTask task = dbManager.findTask(amaraTask.getVideo_id(), amaraTask.getLanguage());
@@ -98,7 +94,6 @@ public class PomsPublisher {
         }
         return task;
     }
-
 
     protected boolean isValid(Task amaraTask) {
         if (amaraTask.getApproved() == null || !amaraTask.getApproved().equals(Task.TASK_APPROVED) || !hasValidLanguage(amaraTask)) {
@@ -134,7 +129,7 @@ public class PomsPublisher {
         }
     }
 
-    public String getPomsSourceMid(Task amaraTask) {
+    protected String getPomsSourceMid(Task amaraTask) {
         final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
         if (amaraVideo.getMetadata().getLocation() != null && isMid(amaraVideo.getMetadata().getLocation())) {
             return amaraVideo.getMetadata().getLocation();
@@ -149,8 +144,7 @@ public class PomsPublisher {
         }
     }
 
-
-    public String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) {
+    protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) {
         if (isMid(task.getPomsTargetId())) {
             return null;
         } else {
@@ -158,17 +152,14 @@ public class PomsPublisher {
         }
     }
 
-
-    public boolean isMid(String mid) {
+    protected boolean isMid(String mid) {
         return mid != "" && mid != null;
     }
 
-
-    public void addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {
+    protected void addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {
         backend.setSubtitles(amaraToPomsSubtitles(subs, mid));
 
     }
-
 
     protected nl.vpro.domain.subtitles.Subtitles amaraToPomsSubtitles(Subtitles subtitles, String mid) throws IOException {
         nl.vpro.domain.subtitles.Subtitles pomsSubtitles = new nl.vpro.domain.subtitles.Subtitles();
@@ -184,7 +175,6 @@ public class PomsPublisher {
         }
         return pomsSubtitles;
     }
-
 
     private File getSubtitleFile(String filename, Subtitles subtitles) {
         String basePath = Config.getRequiredConfig("subtitle.basepath");
