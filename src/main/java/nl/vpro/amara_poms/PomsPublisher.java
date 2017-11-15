@@ -32,7 +32,7 @@ public class PomsPublisher {
     private static final Manager dbManager = Config.getDbManager();
     private static final MediaRestClient backend = Config.getPomsClient();
     private final List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
-    
+
 
     public void processAmaraTasks() throws IOException {
         Instant after = Instant.now()
