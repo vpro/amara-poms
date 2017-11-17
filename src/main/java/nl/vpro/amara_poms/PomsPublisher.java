@@ -153,7 +153,7 @@ public class PomsPublisher {
     }
 
     protected boolean isMid(String mid) {
-        return mid != "" && mid != null;
+        return ! StringUtils.isBlank(mid);
     }
 
     protected void addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {

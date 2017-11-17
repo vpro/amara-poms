@@ -36,6 +36,10 @@ public abstract class AbstractFileFetcher implements  SourceFetcher {
         return SourceFetcher.FetchResult.succes(URI.create(downloadUrlBase + "/" + destFile.getName()).normalize());
     }
 
+    /**
+     * Destination file name
+     * @param file
+     */
     protected abstract File produce(File file, String mid) throws IOException;
 
 }

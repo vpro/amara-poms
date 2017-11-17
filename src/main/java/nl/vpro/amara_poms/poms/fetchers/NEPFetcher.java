@@ -2,7 +2,6 @@ package nl.vpro.amara_poms.poms.fetchers;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import net.fortuna.ical4j.model.Dur;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.OpenMode;
 import net.schmizz.sshj.sftp.RemoteFile;
@@ -48,8 +47,8 @@ public class NEPFetcher extends AbstractFileFetcher {
     private String password = Config.getRequiredConfig("nep.sftp.password");
     private String hostKey = Config.getRequiredConfig("nep.sftp.hostkey");
 
-    private static final String starttime = "000000000";
-    private static final String endtime = "000007200";
+    private static final String starttime = "00:00:00.000";
+    private static final String endtime = "02:00:00.000";
 
 
     public NEPFetcher() {
@@ -64,11 +63,12 @@ public class NEPFetcher extends AbstractFileFetcher {
     public FetchResult fetch(MediaObject program) throws IOException, InterruptedException {
         Duration MAX_DURATION = Duration.ofMinutes(10);
         String mid = program.getMid();
-        String outputFileName = null;
+        String outputFileName;
 
         for (Location location : program.getLocations()) {
 
             if (location.getOwner() == OwnerType.AUTHORITY && location.getPlatform() == Platform.INTERNETVOD) {
+                File file;
                 try {
                     //call to NEP
                     ItemizeRequest request = new ItemizeRequest(mid, starttime, endtime);
@@ -94,12 +94,13 @@ public class NEPFetcher extends AbstractFileFetcher {
                     log.info("File appeared {} in {}, now copying.", outputFileName, Duration.between(start, Instant.now()));
                     Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_UPLOADEDTOFTPSERVER));
 
-                    File file = new File(Config.getRequiredConfig("nep.videofile.dir"),  outputFileName + ".mp4");
-                    OutputStream output = new FileOutputStream(file);
+
+                    File outputFile = produce(null, mid);
+                    OutputStream output = new FileOutputStream(outputFile);
                     IOUtils.copy(in, output);
                     output.close();
 
-                    log.info("Copied to {}", file);
+                    log.info("Copied to {}", outputFile);
                     Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_COPIEDFROMFTPSERVERTOFILES));
 
                     try {
@@ -112,12 +113,11 @@ public class NEPFetcher extends AbstractFileFetcher {
                     } catch (IOException e) {
                         log.error(e.getMessage(), e);
                     }
-
+                    return success(outputFile, mid);
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
+                    return FetchResult.error();
                 }
-
-                return FetchResult.succes(URI.create(Config.getRequiredConfig("nep.videofile.dir")));
             }
         }
         return FetchResult.notAble();
@@ -148,8 +148,7 @@ public class NEPFetcher extends AbstractFileFetcher {
 
     @Override
     protected File produce(File file, String mid) throws IOException {
-        // copier van FTP naar files. ??
-        return new File("file");
+        return new File(destDirectory, mid + ".mp4");
     }
 
 }
