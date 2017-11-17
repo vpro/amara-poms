@@ -11,7 +11,6 @@ import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 import nl.vpro.amara_poms.poms.PomsCollection;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.amara_poms.poms.fetchers.NEPFetcher;
 import nl.vpro.domain.media.update.MemberUpdate;
 
 /**
