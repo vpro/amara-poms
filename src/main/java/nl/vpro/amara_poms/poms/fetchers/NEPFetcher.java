@@ -2,6 +2,7 @@ package nl.vpro.amara_poms.poms.fetchers;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import net.fortuna.ical4j.model.Dur;
 import net.schmizz.sshj.SSHClient;
 import net.schmizz.sshj.sftp.OpenMode;
 import net.schmizz.sshj.sftp.RemoteFile;
@@ -15,12 +16,12 @@ import java.time.Instant;
 import java.util.EnumSet;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import nl.vpro.amara_poms.Config;
+import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.MediaObject;
 import nl.vpro.domain.media.Platform;
@@ -39,9 +40,16 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 public class NEPFetcher extends AbstractFileFetcher {
 
     private final RestTemplate http = new RestTemplate();
+    private String nepUrl = Config.getRequiredConfig("nep.player.itemize.url");
+    private String nepKey = Config.getRequiredConfig("nep.player.itemize.key");
 
-    private String amaraUrl = Config.getRequiredConfig("nep.player.itemize.url");
-    private String amaraKey = Config.getRequiredConfig("nep.player.itemize.key");
+    private String ftpUrl = Config.getRequiredConfig("nep.sftp.url");
+    private String username = Config.getRequiredConfig("nep.sftp.username");
+    private String password = Config.getRequiredConfig("nep.sftp.password");
+    private String hostKey = Config.getRequiredConfig("nep.sftp.hostkey");
+
+    private static final String starttime = "000000000";
+    private static final String endtime = "000007200";
 
 
     public NEPFetcher() {
@@ -58,52 +66,68 @@ public class NEPFetcher extends AbstractFileFetcher {
         String mid = program.getMid();
         String outputFileName = null;
 
-
         for (Location location : program.getLocations()) {
 
-            if (location.getOwner() == OwnerType.AUTHORITY && location.getPlatform() == Platform.INTERNETVOD)
-                //call to NEP
-                outputFileName = requestItem(ItemizeRequest.builder().identifier(mid).build());
-
-            //wait for availability on FTP
-            final SSHClient sessionFactory = createSessionFactory(amaraKey, amaraUrl);
-            final SFTPClient sftp = sessionFactory.newSFTPClient();
-            Instant start = Instant.now();
-            InputStream remoteFile;
-            while(true) {
+            if (location.getOwner() == OwnerType.AUTHORITY && location.getPlatform() == Platform.INTERNETVOD) {
                 try {
-                    final RemoteFile handle = sftp.open(mid, EnumSet.of(OpenMode.READ));
-                    remoteFile = handle.new RemoteFileInputStream();
-                    break;
-                } catch (SFTPException sftpe) {
-                    if (Duration.between(start, Instant.now()).compareTo(MAX_DURATION) > 0) {
-                        throw new IllegalStateException("File " + outputFileName + " didn't appear in " + MAX_DURATION);
+                    //call to NEP
+                    ItemizeRequest request = new ItemizeRequest(mid, starttime, endtime);
+                    outputFileName = requestItem(request);
+                    final SSHClient sessionFactory = createSessionFactory(hostKey, ftpUrl, username, password);
+                    final SFTPClient sftp = sessionFactory.newSFTPClient();
+                    Instant start = Instant.now();
+                    InputStream in;
+                    //wait for availability on the FTP server
+                    while (true) {
+                        try {
+                            final RemoteFile handle = sftp.open(outputFileName, EnumSet.of(OpenMode.READ));
+                            in = handle.new RemoteFileInputStream();
+                            break;
+                        } catch (SFTPException sftpe) {
+                            if (Duration.between(start, Instant.now()).compareTo(MAX_DURATION) > 0) {
+                                throw new IllegalStateException("File " + outputFileName + " didn't appear in " + MAX_DURATION);
+                            }
+                            Thread.sleep(Duration.ofSeconds(10).toMillis());
+                        }
                     }
-                    Thread.sleep(Duration.ofSeconds(10).toMillis());
+
+                    log.info("File appeared {} in {}, now copying.", outputFileName, Duration.between(start, Instant.now()));
+                    Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_UPLOADEDTOFTPSERVER));
+
+                    File file = new File(Config.getRequiredConfig("nep.videofile.dir"),  outputFileName + ".mp4");
+                    OutputStream output = new FileOutputStream(file);
+                    IOUtils.copy(in, output);
+                    output.close();
+
+                    log.info("Copied to {}", file);
+                    Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_COPIEDFROMFTPSERVERTOFILES));
+
+                    try {
+                        sftp.close();
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                    try {
+                        sessionFactory.close();
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                    }
+
+                } catch (Exception e) {
+                    log.error(e.getMessage(), e);
                 }
+
+                return FetchResult.succes(URI.create(Config.getRequiredConfig("nep.videofile.dir")));
             }
-
-            // copy from FTP server to files. -- even lokaal een directory maken. Voor test is het die op de server
-            File destFile = new File(destDirectory, mid + ".mp4");
-            IOUtils.copy(remoteFile, new FileOutputStream(destFile));
-            remoteFile.close();
-
-            // verwijder van FTP
-            sftp.rm(outputFileName);
-
-            // bedenk daarvoor uri
-            return success(destFile, mid);
         }
         return FetchResult.notAble();
     }
 
-
-
     protected String requestItem(ItemizeRequest request) {
         RequestEntity<ItemizeRequest> req = RequestEntity
-            .post(URI.create(amaraUrl))
+            .post(URI.create(nepUrl))
             .accept(APPLICATION_JSON_UTF8)
-            .header(AUTHORIZATION, amaraKey)
+            .header(AUTHORIZATION, nepKey)
             .body(request);
         ResponseEntity<ItemizeResponse> response = http.exchange(req, ItemizeResponse.class);
         if (! response.getStatusCode().is2xxSuccessful()) {
@@ -111,23 +135,21 @@ public class NEPFetcher extends AbstractFileFetcher {
         }
         String outputFileName = response.getBody().getOutput_filename();
         return outputFileName;
-
     }
 
-    private static SSHClient createSessionFactory(String hostKey, String ftpUrl) throws IOException {
+    private static SSHClient createSessionFactory(String hostKey, String ftpUrl, String username, String password) throws IOException {
         final SSHClient ssh = new SSHClient();
         ssh.addHostKeyVerifier(hostKey);
         ssh.loadKnownHosts();
         ssh.connect(ftpUrl);
+        ssh.authPassword(username, password);
         return ssh;
     }
-
 
     @Override
     protected File produce(File file, String mid) throws IOException {
         // copier van FTP naar files. ??
         return new File("file");
-
     }
 
 }
