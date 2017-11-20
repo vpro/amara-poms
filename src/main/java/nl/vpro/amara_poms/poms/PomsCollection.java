@@ -6,6 +6,7 @@ import java.util.Iterator;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.update.GroupUpdate;
+import nl.vpro.domain.media.update.MediaUpdateList;
 import nl.vpro.domain.media.update.MemberUpdate;
 import nl.vpro.rs.media.MediaRestClient;
 
@@ -15,20 +16,20 @@ import nl.vpro.rs.media.MediaRestClient;
  */
 @Slf4j
 public class PomsCollection implements Iterable<MemberUpdate> {
-
-    static final int ERROR_COLLECTION_NOT_FOUND = 1;
-    static final int ERROR_BROADCAST_NOT_FOUND = 3;
-
-    private String collectionName;
-
-    private GroupUpdate group;
-
-    private Iterable<MemberUpdate> memberUpdateArrayList;
-    private final int errorCode;
+    private final GroupUpdate group;
+    private final MediaUpdateList<MemberUpdate> memberUpdateArrayList;
 
     public PomsCollection(String collectionName) {
-        this.collectionName = collectionName;
-        this.errorCode = getBroadcastsFromPOMS();
+        MediaRestClient client = Config.getPomsClient();
+        group = client.getGroup(collectionName); // get meta info for collection
+        if (group == null) {
+            throw new IllegalStateException("The group " + collectionName + " could not be found");
+        } else {
+            memberUpdateArrayList = client.getGroupMembers(collectionName); // get group numbers
+            if (memberUpdateArrayList.getList() != null) {
+                log.info("Found {} members to translate", memberUpdateArrayList.size());
+            }
+        }
     }
 
 
@@ -40,30 +41,6 @@ public class PomsCollection implements Iterable<MemberUpdate> {
     public Iterator<MemberUpdate> iterator() {
         return memberUpdateArrayList.iterator();
 
-    }
-
-    public int getErrorCode() {
-        return errorCode;
-    }
-
-    /**
-     * Get collection from POMS
-     *
-     * @return 0 if found, error code != 0  if not found
-     */
-    private int getBroadcastsFromPOMS() {
-        int returnValue = 0;
-        MediaRestClient client = Config.getPomsClient();
-
-        group = client.getGroup(collectionName); // get meta info for collection
-
-        if (group == null) {
-            returnValue = ERROR_COLLECTION_NOT_FOUND;
-        } else {
-            memberUpdateArrayList = client.getGroupMembers(collectionName); // get group numbers
-        }
-
-        return returnValue;
     }
 
 

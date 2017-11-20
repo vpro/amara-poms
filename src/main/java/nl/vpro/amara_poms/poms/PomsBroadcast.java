@@ -20,6 +20,9 @@ import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.support.Image;
 import nl.vpro.domain.media.support.Images;
 import nl.vpro.domain.media.update.ProgramUpdate;
+import nl.vpro.domain.subtitles.Subtitles;
+import nl.vpro.domain.subtitles.SubtitlesType;
+import nl.vpro.i18n.Locales;
 
 /**
  * @author joost
@@ -28,6 +31,7 @@ import nl.vpro.domain.media.update.ProgramUpdate;
 public class PomsBroadcast {
 
     private final MediaObject program;
+
     @Getter
     private final String mid;
 
@@ -83,7 +87,18 @@ public class PomsBroadcast {
      *
      * @return NO_ERROR if successfull, otherwise errorcode
      */
-    public int downloadSubtitles() {
+    public int downloadSubtitles() throws IOException {
+        try {
+
+            Subtitles subtitlesObject = Config.getPomsClient().getBackendRestService().getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true);
+            if (subtitlesObject != null) {
+                this.subtitles = subtitlesObject.getContent().toString();
+                return Config.NO_ERROR;
+            }
+        } catch (Exception e) {
+            // TODO Heap space exception on poms-dev?
+            log.error(e.getMessage());
+        }
         String subtitleUrl = Config.getRequiredConfig("subtitle.url");
         String subtitleUrlBackup = Config.getConfig("subtitle.url.backup"); // optional
 

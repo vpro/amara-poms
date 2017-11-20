@@ -7,10 +7,16 @@
     <param name="File" value="./amara_poms_publisher.log"/>
     <param name="Append" value="true"/>
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{ISO8601} %-5p %c{1} - %m%n"/>
+      <param name="ConversionPattern" value="%d{ISO8601} %-5p %c{1} %M.%L - %m%n"/>
     </layout>
   </appender>
 
+  <logger name="net.schmizz.sshj.DefaultConfig">
+    <level value="ERROR" />
+  </logger>
+  <logger name="net.schmizz.sshj.transport.verification.OpenSSHKnownHosts">
+    <level value="FATAL"/>
+  </logger>
   <root>
     <level value="INFO"/>
     <appender-ref ref="file"/>

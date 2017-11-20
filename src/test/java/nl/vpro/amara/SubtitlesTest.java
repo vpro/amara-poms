@@ -1,5 +1,6 @@
 package nl.vpro.amara;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -58,7 +59,7 @@ public class SubtitlesTest {
         System.out.println("" + actions);
     }
     @Test
-    public void amarapoms3() {
+    public void amarapoms3() throws IOException {
         String video_id = "Ep1jZa6c2NRt";
 
         PomsBroadcast pomsBroadcast = new PomsBroadcast("VPWON_1256298", null);

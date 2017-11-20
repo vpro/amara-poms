@@ -77,11 +77,14 @@ public class NEPFetcher extends AbstractFileFetcher {
                     final SFTPClient sftp = sessionFactory.newSFTPClient();
                     Instant start = Instant.now();
                     InputStream in;
+                    long remoteLength = -1;
                     //wait for availability on the FTP server
                     while (true) {
                         try {
                             final RemoteFile handle = sftp.open(outputFileName, EnumSet.of(OpenMode.READ));
+                            remoteLength = handle.length();
                             in = handle.new RemoteFileInputStream();
+
                             break;
                         } catch (SFTPException sftpe) {
                             if (Duration.between(start, Instant.now()).compareTo(MAX_DURATION) > 0) {
@@ -90,17 +93,26 @@ public class NEPFetcher extends AbstractFileFetcher {
                             Thread.sleep(Duration.ofSeconds(10).toMillis());
                         }
                     }
-
-                    log.info("File appeared {} in {}, now copying.", outputFileName, Duration.between(start, Instant.now()));
-                    Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_UPLOADEDTOFTPSERVER));
-
-
                     File outputFile = produce(null, mid);
-                    OutputStream output = new FileOutputStream(outputFile);
-                    IOUtils.copy(in, output);
-                    output.close();
 
-                    log.info("Copied to {}", outputFile);
+                    if (! outputFile.exists() || outputFile.length() != remoteLength) {
+                        if (outputFile.exists()) {
+                            log.info("Target file {} already exists, but doesn't have correct size {} != {}", outputFile.length(), remoteLength);
+                        }
+                        log.info("File  {} ({} bytes) appeared in {}, now copying to {}", outputFileName, remoteLength, Duration.between(start, Instant.now()), outputFile);
+                        Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_UPLOADEDTOFTPSERVER));
+                        Instant copyStart = Instant.now();
+
+                        OutputStream output = new FileOutputStream(outputFile);
+                        IOUtils.copyLarge(in, output);
+                        output.close();
+
+                        Duration duration = Duration.between(copyStart, Instant.now());
+                        log.info("Copied to {} in {} ({} MiB/s)", outputFile, duration,
+                            (1000000L * outputFile.length() / (duration.toMillis() * 1024 * 1024)) / 1000f);
+                    } else {
+                        log.info("File {} already exists", outputFile);
+                    }
                     Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_COPIEDFROMFTPSERVERTOFILES));
 
                     try {

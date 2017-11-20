@@ -63,7 +63,7 @@ public class AmaraPublisher {
         DatabaseTask task = dbManager.findTaskByPomsSourceId(mid);
         if (task != null) {
             // task exists, so at least video is uploaded
-            log.info("Poms broadcast with poms mid " + mid + " already sent to Amara -> skip");
+            log.info("Poms broadcast with poms mid {} already sent to Amara (id {})-> skip", mid, task.getVideoId());
             return false;
         }
 
@@ -73,7 +73,7 @@ public class AmaraPublisher {
             return false;
         }
 
-        Video amaraVideo = constructVideo(pomsBroadcast, result.destination);
+        Video amaraVideo = constructVideo(pomsBroadcast, URI.create(result.destination.toString() + "?" + System.currentTimeMillis()));
         Video uploadedAmaraVideo = Config.getAmaraClient().videos().post(amaraVideo);
         if (uploadedAmaraVideo == null) {
             log.info("No amara video uploaded for {}", amaraVideo);
@@ -118,7 +118,7 @@ public class AmaraPublisher {
         return amaraVideo;
     }
 
-    protected void uploadSubtitles(Video uploadedAmaraVideo, PomsBroadcast pomsBroadcast) {
+    protected void uploadSubtitles(Video uploadedAmaraVideo, PomsBroadcast pomsBroadcast) throws IOException {
         if (pomsBroadcast.downloadSubtitles() != Config.NO_ERROR) {
             log.warn("Could not download subtitles");
             return;
