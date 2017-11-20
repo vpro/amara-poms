@@ -41,7 +41,7 @@ public class UseLocationFetcher implements SourceFetcher {
                 }
             }
         }
-        return FetchResult.notable();
+        return FetchResult.notAble();
 
     }
 }

@@ -65,6 +65,6 @@ public class M4vWithLsFetcher extends AbstractFileCopyFetcher {
                 log.info("No files found in {}", sourceFile);
             }
         }
-        return FetchResult.notable();
+        return FetchResult.notAble();
     }
 }

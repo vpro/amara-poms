@@ -49,6 +49,7 @@ public class Manager implements Iterable<DatabaseTask> {
             tasks.clear();
             tasks.addAll(TaskReader.readCsvFile(filenameTasks));
         } else {
+            // TODO create empty file ?
             throw new Config.Error("The database file " + filenameTasks + " cannot be opened", Config.ERROR_DB_NOT_READABLE);
         }
     }
