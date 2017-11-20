@@ -83,7 +83,7 @@ public class PomsBroadcast {
 
 
     /**
-     * Download subtitle from omroep.nl, otherwise try vpro.nl
+     * Download subtitle from omroep.nl, otherwise try vpro.nl test
      *
      * @return NO_ERROR if successfull, otherwise errorcode
      */
