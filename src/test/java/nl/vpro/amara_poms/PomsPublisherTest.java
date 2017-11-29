@@ -1,7 +1,6 @@
 package nl.vpro.amara_poms;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,7 +8,6 @@ import org.junit.Test;
 
 import nl.vpro.amara.domain.*;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
-import nl.vpro.domain.subtitles.SubtitlesFormat;
 
 
 public class PomsPublisherTest {

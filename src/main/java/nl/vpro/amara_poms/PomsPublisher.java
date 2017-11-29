@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,6 +24,7 @@ import nl.vpro.amara_poms.poms.PomsClip;
 import nl.vpro.domain.subtitles.SubtitlesContent;
 import nl.vpro.domain.subtitles.SubtitlesFormat;
 import nl.vpro.domain.subtitles.SubtitlesType;
+import nl.vpro.domain.subtitles.SubtitlesUtil;
 import nl.vpro.rs.media.MediaRestClient;
 import nl.vpro.util.TimeUtils;
 
@@ -36,7 +38,7 @@ public class PomsPublisher {
     private final List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
 
 
-    public void processAmaraTasks() throws IOException {
+    public void processAmaraTasks() throws IOException, InterruptedException {
         Instant after = Instant.now()
             .minus(TimeUtils.parseDuration(Config.getRequiredConfig("amara.task.fetchlastperiod"))
                 .orElseThrow(IllegalArgumentException::new));
@@ -47,17 +49,18 @@ public class PomsPublisher {
         }
     }
 
-    public void process(Task amaraTask) throws IOException {
+    public void process(Task amaraTask) throws IOException, InterruptedException {
         //find existing task or create one
         DatabaseTask task = identifyTaskinDatabase(amaraTask);
         //valid amaraTask? Then start processing
         if (isValid(amaraTask) && getSubtitles(amaraTask) != null) {
             log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
             //add subtitles to pomsSourceMid
-            if (getPomsSourceMid(amaraTask) != null) {
-                addSubtitlesToPoms(getPomsSourceMid(amaraTask), getSubtitles(amaraTask));
-
+            Optional<String> sourceMid = getPomsSourceMid(amaraTask);
+            if (sourceMid.isPresent()) {
+                addSubtitlesToPoms(sourceMid.get(), getSubtitles(amaraTask));
             }
+
 
             //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
             if (task.getSubtitlesVersionNo() == null || task.isNewer(getSubtitles(amaraTask).getVersion_no())) {
@@ -141,26 +144,30 @@ public class PomsPublisher {
         }
     }
 
-    protected String getPomsSourceMid(Task amaraTask) {
+    protected Optional<String> getPomsSourceMid(Task amaraTask) {
         final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
         if (amaraVideo.getMetadata().getLocation() != null && isMid(amaraVideo.getMetadata().getLocation())) {
-            return amaraVideo.getMetadata().getLocation();
+            return Optional.of(amaraVideo.getMetadata().getLocation());
         } else if (amaraVideo.getPomsMidFromVideoUrl() != null && isMid(amaraVideo.getPomsMidFromVideoUrl())) {
-            return amaraVideo.getPomsMidFromVideoUrl();
+            return Optional.of(amaraVideo.getPomsMidFromVideoUrl());
         } else if (identifyTaskinDatabase(amaraTask).getPomsSourceMid() != null && isMid(identifyTaskinDatabase(amaraTask).getPomsSourceMid())) {
-            return identifyTaskinDatabase(amaraTask).getPomsSourceMid();
+            return Optional.of(identifyTaskinDatabase(amaraTask).getPomsSourceMid());
         } else {
             log.info("no poms source mid found");
-            return null;
+            return Optional.empty();
 
         }
     }
 
-    protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) {
-        if (isMid(task.getPomsTargetId())) {
+    protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException {
+        if (StringUtils.isNotEmpty(task.getPomsTargetId())) {
             return null;
         } else {
-            return PomsClip.create(backend, getPomsSourceMid(amaraTask), amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription());
+            return PomsClip.create(backend,
+                getPomsSourceMid(amaraTask)
+                    .orElseThrow(IllegalStateException::new),
+                amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription()
+            );
         }
     }
 
@@ -169,23 +176,33 @@ public class PomsPublisher {
     }
 
     protected void addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {
-        backend.setSubtitles(amaraToPomsSubtitles(subs, mid));
+        nl.vpro.domain.subtitles.Subtitles subtitles = amaraToPomsSubtitles(subs, mid);
+        log.info("Creating {} in {}", subtitles.getId(), backend);
+        backend.setSubtitles(subtitles);
 
     }
 
     protected nl.vpro.domain.subtitles.Subtitles amaraToPomsSubtitles(Subtitles subtitles, String mid) throws IOException {
         nl.vpro.domain.subtitles.Subtitles pomsSubtitles = new nl.vpro.domain.subtitles.Subtitles();
         pomsSubtitles.setType(SubtitlesType.TRANSLATION);
-        if (isMid(mid)) {
-            pomsSubtitles.setMid(mid);
+        if (!isMid(mid)) {
+            throw new IllegalStateException();
         }
-        if (subtitles.getLanguage().toLocale() != null) {
-            pomsSubtitles.setLanguage(subtitles.getLanguage().toLocale());
+        pomsSubtitles.setMid(mid);
+        if (subtitles.getLanguage().toLocale() == null) {
+            throw new IllegalStateException();
         }
-        if (subtitles.getSubtitles() != null) {
-            pomsSubtitles.setContent(new SubtitlesContent(SubtitlesFormat.WEBVTT, subtitles.getSubtitles()));
+        pomsSubtitles.setLanguage(subtitles.getLanguage().toLocale());
+        if (subtitles.getSubtitles() == null) {
+            throw new IllegalStateException();
         }
-        return pomsSubtitles;
+        pomsSubtitles.setContent(new SubtitlesContent(SubtitlesFormat.WEBVTT, subtitles.getSubtitles()));
+
+        // There is a bug in poms 5.5: it can't except subtitles without cue numbers.
+        nl.vpro.domain.subtitles.Subtitles corrected = nl.vpro.domain.subtitles.Subtitles.from(pomsSubtitles.getId(), SubtitlesUtil.fillCueNumber(SubtitlesUtil.parse(pomsSubtitles, false)).iterator());
+
+
+        return corrected;
     }
 
     private File getSubtitleFile(String filename, Subtitles subtitles) {

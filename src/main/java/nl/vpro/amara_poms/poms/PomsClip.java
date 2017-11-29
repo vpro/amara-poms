@@ -2,6 +2,8 @@ package nl.vpro.amara_poms.poms;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -33,9 +35,10 @@ public class PomsClip {
      * @param title - title from Amara (serie // translated titel or translated title)
      * @param description - translated description from Amara
      */
-    public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description) {
+    public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description) throws InterruptedException {
 
         // get source broadcast
+        log.info("Getting {} from {}", sourcePomsMid, client);
         ProgramUpdate sourceProgram = ProgramUpdate.forAllOwners(client.getFullProgram(sourcePomsMid));
         //  full program
         //ProgramUpdate sourceProgram = client.getProgram(sourcePomsMid);
@@ -130,6 +133,16 @@ public class PomsClip {
         String newPomsMid = client.set(update);
 
         log.debug("Found new poms mid {} ({} translation for {}}", newPomsMid, language, sourcePomsMid);
+        // waiting for it to exists
+        Instant start = Instant.now();
+        while(Duration.between(start, Instant.now()).compareTo(Duration.ofMinutes(2)) < 0) {
+            if (client.get(newPomsMid) != null) {
+                break;
+            }
+            log.info("Didn't find {} yet. Waiting another 10 seconds");
+            Thread.sleep(10000);;
+        }
+
 
         return newPomsMid;
     }
