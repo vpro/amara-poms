@@ -3,6 +3,7 @@ package nl.vpro.amara_poms.poms;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -20,9 +21,9 @@ import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.support.Image;
 import nl.vpro.domain.media.support.Images;
 import nl.vpro.domain.media.update.ProgramUpdate;
-import nl.vpro.domain.subtitles.Subtitles;
-import nl.vpro.domain.subtitles.SubtitlesType;
+import nl.vpro.domain.subtitles.*;
 import nl.vpro.i18n.Locales;
+import nl.vpro.util.CountedIterator;
 
 /**
  * @author joost
@@ -48,7 +49,6 @@ public class PomsBroadcast {
     public MediaObject getProgram() {
         return program;
     }
-
 
     public String getTitle() {
         return StringUtils.trim(program.getMainTitle());
@@ -92,7 +92,10 @@ public class PomsBroadcast {
 
             Subtitles subtitlesObject = Config.getPomsClient().getBackendRestService().getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true);
             if (subtitlesObject != null) {
-                this.subtitles = subtitlesObject.getContent().toString();
+                CountedIterator<StandaloneCue> parsed = SubtitlesUtil.standaloneIterator(subtitlesObject, false, true);
+                ByteArrayOutputStream subtitleBytes = new ByteArrayOutputStream();
+                SubtitlesUtil.stream(parsed, SubtitlesFormat.WEBVTT, subtitleBytes);
+                this.subtitles = new String(subtitleBytes.toByteArray(),  SubtitlesFormat.WEBVTT.getCharset());
                 return Config.NO_ERROR;
             }
         } catch (Exception e) {

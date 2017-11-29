@@ -100,7 +100,6 @@ public class NEPFetcher extends AbstractFileFetcher {
                             log.info("Target file {} already exists, but doesn't have correct size {} != {}", outputFile.length(), remoteLength);
                         }
                         log.info("File  {} ({} bytes) appeared in {}, now copying to {}", outputFileName, remoteLength, Duration.between(start, Instant.now()), outputFile);
-                        Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_UPLOADEDTOFTPSERVER));
                         Instant copyStart = Instant.now();
 
                         OutputStream output = new FileOutputStream(outputFile);
@@ -113,8 +112,6 @@ public class NEPFetcher extends AbstractFileFetcher {
                     } else {
                         log.info("File {} already exists", outputFile);
                     }
-                    Config.getDbManager().addOrUpdateTask(new DatabaseTask(mid, program.getLanguage().getLanguage(), DatabaseTask.NEPSTATUS_COPIEDFROMFTPSERVERTOFILES));
-
                     try {
                         sftp.close();
                     } catch (IOException e) {

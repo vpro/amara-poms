@@ -186,7 +186,7 @@ public class AmaraPublisher {
                 log.info("Task (" + uploadedAmaraTask.getResource_uri() + ") created for language " + targetLanguage + " to Amara with video id " + uploadedAmaraVideo.getId());
                 dbManager.addOrUpdateTask(new DatabaseTask(uploadedAmaraVideo.getId(),
                     targetLanguage,
-                    DatabaseTask.STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION, pomsMidBroadcast));
+                    DatabaseTask.STATUS_CREATED_AMARA_TASK_FOR_TRANSLATION, pomsMidBroadcast));
             } else {
                 log.error("No uploaded amara task received for {}", amaraTask);
             }

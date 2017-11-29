@@ -4,11 +4,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.swing.text.DateFormatter;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
@@ -28,6 +32,7 @@ public class Manager implements Iterable<DatabaseTask> {
     }
 
     private String filenameTasks;
+
     private final List<DatabaseTask> tasks = new ArrayList<>();
 
     public void setFilenameTasks(String filenameTasks) {
@@ -37,6 +42,7 @@ public class Manager implements Iterable<DatabaseTask> {
     public List<DatabaseTask> getTasks() {
         return tasks;
     }
+
 
     /**
      * writing and reading
@@ -69,12 +75,12 @@ public class Manager implements Iterable<DatabaseTask> {
         // check if already exists
         DatabaseTask foundTask = findTask(task.getVideoId(), task.getLanguage());
         if (foundTask == null) {
-            task.setCreateDateTime(ZonedDateTime.now());
-            task.setUpdateDateTime(ZonedDateTime.now());
+            task.setCreateDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm").format(ZonedDateTime.now()));
+            task.setUpdateDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm").format(ZonedDateTime.now()));
         } else {
             // already found so merge
             task.setCreateDateTime(foundTask.getCreateDateTime());
-            task.setUpdateDateTime(ZonedDateTime.now());
+            task.setUpdateDateTime(DateTimeFormatter.ofPattern("dd/MM/yyyy - hh:mm").format(ZonedDateTime.now()));
             removeTaskByVideoId(task.getVideoId(), task.getLanguage());
         }
 

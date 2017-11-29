@@ -3,6 +3,7 @@ package nl.vpro.amara_poms;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
@@ -55,15 +56,15 @@ public class PomsPublisher {
             //add subtitles to pomsSourceMid
             if (getPomsSourceMid(amaraTask) != null) {
                 addSubtitlesToPoms(getPomsSourceMid(amaraTask), getSubtitles(amaraTask));
+
             }
 
             //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
-
             if (task.getSubtitlesVersionNo() == null || task.isNewer(getSubtitles(amaraTask).getVersion_no())) {
                 log.info("New subtitle version detected:" + getSubtitles(amaraTask).getVersion_no());
                 String pomsTargetId = identifyPomsTargetId(task, amaraTask, getSubtitles(amaraTask));
 
-                if (pomsTargetId != null){
+                if (pomsTargetId != null) {
                     task.setPomsTargetId(pomsTargetId);
                     task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
                     task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
@@ -78,7 +79,17 @@ public class PomsPublisher {
                 try (PrintWriter out = new PrintWriter(file)) {
                     log.info("Writing subtitles to {}", file);
                     out.println(getSubtitles(amaraTask).getSubtitles());
+                } catch (FileNotFoundException e) {
+                    log.error(e.getMessage(), e);
                 }
+
+                // update version no in local db
+                task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
+                task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
+
+                //remove task if completed
+                dbManager.addOrUpdateTask(task);
+
             }
         }
     }
