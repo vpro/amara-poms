@@ -126,7 +126,7 @@ public class PomsBroadcast {
             url = new URL(urlName);
         } catch (MalformedURLException e) {
             log.error("malformed url " + e.toString());
-            return (Config.ERROR_POM_SUBTITLES_MALFORMED_URL);
+            return Config.ERROR_POM_SUBTITLES_MALFORMED_URL;
         }
 
         try {
