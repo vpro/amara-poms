@@ -3,6 +3,7 @@ package nl.vpro.amara_poms;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
@@ -46,128 +47,137 @@ public class PomsPublisher {
         }
     }
 
-    public void process(Task amaraTask) throws IOException {
-        //find existing task or create one
-        DatabaseTask task = identifyTaskinDatabase(amaraTask);
-        //valid amaraTask? Then start processing
-        if (isValid(amaraTask) && getSubtitles(amaraTask) != null) {
+    protected void process(Task amaraTask) {
+        try {
             log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
-            //add subtitles to pomsSourceMid
-            if (getPomsSourceMid(amaraTask) != null) {
-                addSubtitlesToPoms(getPomsSourceMid(amaraTask), getSubtitles(amaraTask));
+
+            // only approved tasks
+            if (amaraTask.getApproved() == null || !amaraTask.getApproved().equals(Task.TASK_APPROVED)) {
+                log.info("Task (" + amaraTask.getResource_uri() + ") not approved yet -> skip");
+                return;
             }
 
-            //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
+            // skip tasks without language
+            if (amaraTask.getLanguage() == null) {
+                log.info("Task (" + amaraTask.getResource_uri() + ") has no language set -> skip");
+                return;
+            }
 
-            if (task.getSubtitlesVersionNo() == null || task.isNewer(getSubtitles(amaraTask).getVersion_no())) {
-                log.info("New subtitle version detected:" + getSubtitles(amaraTask).getVersion_no());
-                String pomsTargetId = identifyPomsTargetId(task, amaraTask, getSubtitles(amaraTask));
+            // only target languages or primary language
+            List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
+            if (!targetLanguages.contains(amaraTask.getLanguage()) &&
+                !amaraTask.getLanguage().equals(Config.getRequiredConfig("amara.api.primary_audio_language_code"))) {
+                log.info("Task (" + amaraTask.getResource_uri() + ") has not target language and is not primary language " + amaraTask.getLanguage() + " -> skip");
+                return;
+            }
 
-                if (pomsTargetId != null){
+            // fetch subtitles from Amara
+            Subtitles amaraSubtitles = Config.getAmaraClient().videos().getSubtitles(amaraTask.getVideo_id(), amaraTask.getLanguage(), Config.getRequiredConfig("amara.subtitles.format"));
+
+            if (amaraSubtitles == null) {
+                log.error("Subtitle for language " + amaraTask.getLanguage() + " and video_id " + amaraTask.getVideo_id() + " not found -> skip");
+                return;
+            }
+            log.info("Fetched subtitle " + StringUtils.abbreviate(amaraSubtitles.getSubtitles().replaceAll("([\\r\\n])", ""), 80));
+
+
+            // check video_id/language/version in local db
+            DatabaseTask task = dbManager.findTask(amaraTask.getVideo_id(), amaraTask.getLanguage());
+
+            // task not found -> error
+            if (task == null) {
+                log.error("Task for videoId " + amaraTask.getVideo_id() + " and language " + amaraTask.getLanguage() + " not found in local db");
+
+                // but continue anyhow (not fatal) -> create task already
+                task = new DatabaseTask(amaraTask.getVideo_id(), amaraTask.getLanguage(), DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_FOUND);
+                dbManager.addOrUpdateTask(task);
+            }
+
+            // find pomsId in local db or from video metadata in Amara
+            final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
+            String pomsMid = amaraVideo.getMetadata().getLocation();
+
+            if (pomsMid != null) {
+                log.info("Poms mid found in video meta data {}", pomsMid);
+            } else {
+                log.info("No poms mid found in video meta data {}", amaraVideo.getMetadata());
+                // try local db
+                DatabaseTask originTask = dbManager.findTask(amaraTask.getVideo_id(), Config.getRequiredConfig("amara.api.primary_audio_language_code"));
+                if (originTask != null) {
+                    pomsMid = originTask.getPomsSourceMid();
+                }
+                if (pomsMid == null || pomsMid.equals("")) {
+                    log.info("No original Poms broadcast found in local db for video_id " + amaraTask.getVideo_id());
+                    pomsMid = amaraVideo.getPomsMidFromVideoUrl();
+                    if (pomsMid == null) {
+                        log.error(("Also no Poms id found in video url(" + amaraVideo.getVideoUrlFromAllUrls() + ") for video id" + amaraTask.getVideo_id() + " -> skip record"));
+                        return;
+                    } else {
+                        log.info("Poms mid " + pomsMid + " found in video url " + amaraVideo.getVideoUrlFromAllUrls());
+                    }
+                } else {
+                    log.info("Poms mid found in local db:" + pomsMid);
+                }
+            }
+
+            // compare version of Amara and local db
+            if (task.getSubtitlesVersionNo() == null || task.isNewer(amaraSubtitles.getVersion_no())) {
+                log.info("New subtitle version detected:" + amaraSubtitles.getVersion_no());
+
+                String pomsTargetId = task.getPomsTargetId();
+                if (pomsTargetId == null || pomsTargetId.equals("")) {
+                    // no poms target id, so create new Poms Clip
+                    try {
+                        pomsTargetId = PomsClip.create(Config.getPomsClient(), pomsMid, amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription());
+                    } catch (Exception exception) {
+                        log.error("Error creating clip for poms mid " + pomsMid + ", language " + amaraTask.getLanguage());
+                        log.error(exception.toString());
+                        return;
+                    }
                     task.setPomsTargetId(pomsTargetId);
                     task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
-                    task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
-                    task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
                     dbManager.addOrUpdateTask(task);
                     log.info("Poms clip created with poms id " + pomsTargetId);
-                    addSubtitlesToPoms(pomsTargetId, getSubtitles(amaraTask));
+                    addSubtitlesToPoms(pomsTargetId, amaraSubtitles);
+                    addSubtitlesToPoms(pomsMid, amaraSubtitles);
+                    log.info("Translation in language '{}' added to POMS clip {} and POMS mid", amaraTask.getLanguage(), pomsTargetId, pomsMid);
+
+                } else {
+                    // Poms clip already exists, do nothing
+                    log.info("Poms clip already exists -> do nothing " + task.toString());
                 }
 
-                //write subtitles to file
-                File file = getSubtitleFile(pomsTargetId, getSubtitles(amaraTask));
-                try (PrintWriter out = new PrintWriter(file)) {
-                    log.info("Writing subtitles to {}", file);
-                    out.println(getSubtitles(amaraTask).getSubtitles());
+                // write subtitles to file
+                try {
+                    File file = getSubtitleFile(pomsTargetId, amaraSubtitles);
+                    try (PrintWriter out = new PrintWriter(file)) {
+                        log.info("Writing subtitles to {}", file);
+                        out.println(amaraSubtitles.getSubtitles());
+                    }
+                    // update version no in local db
+                    task.setSubtitlesVersionNo(amaraSubtitles.getVersion_no());
+                    task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
+                    dbManager.addOrUpdateTask(task);
+                } catch (FileNotFoundException e) {
+                    log.error(e.getMessage(), e);
                 }
+            } else {
+                log.info("Subtitle version {} already exists in Poms for video_id {}", amaraSubtitles.getVersion_no(), task.getVideoId());
             }
+            log.info("Finished processing video_id " + amaraTask.getVideo_id() + " for language " + amaraTask.getLanguage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
         }
-    }
-
-    protected DatabaseTask identifyTaskinDatabase (Task amaraTask) {
-        DatabaseTask task = dbManager.findTask(amaraTask.getVideo_id(), amaraTask.getLanguage());
-        if (task == null) {
-            log.error("Task for videoId " + amaraTask.getVideo_id() + " and language " + amaraTask.getLanguage() + " not found in local db");
-
-            // but continue anyhow (not fatal) -> create task already
-            task = new DatabaseTask(amaraTask.getVideo_id(), amaraTask.getLanguage(), DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_FOUND);
-            dbManager.addOrUpdateTask(task);
-            return task;
-        }
-        return task;
-    }
-
-    protected boolean isValid(Task amaraTask) {
-        if (amaraTask.getApproved() == null || !amaraTask.getApproved().equals(Task.TASK_APPROVED) || !hasValidLanguage(amaraTask)) {
-            log.info("Task (" + amaraTask.getResource_uri() + ") has not been approved or has no language set  -> skip");
-            return false;
-        }
-        return true;
-    }
-
-    protected boolean hasValidLanguage(Task amaraTask) {
-        if (amaraTask.getLanguage() == null) {
-            log.info("Task (" + amaraTask.getResource_uri() + ") has no language set -> skip");
-            return false;
-        }
-
-        if (!targetLanguages.contains(amaraTask.getLanguage()) &&
-            !amaraTask.getLanguage().equals(Config.getRequiredConfig("amara.api.primary_audio_language_code"))) {
-            log.info("Task (" + amaraTask.getResource_uri() + ") has not target language and is not primary language " + amaraTask.getLanguage() + " -> skip");
-            return false;
-        }
-        return true;
-    }
-
-    protected Subtitles getSubtitles(Task amaraTask) {
-        Subtitles subtitles = Config.getAmaraClient().videos().getSubtitles(amaraTask.getVideo_id(), amaraTask.getLanguage(), Config.getRequiredConfig("amara.subtitles.format"));
-
-        if (subtitles == null) {
-            log.error("Subtitle for language " + amaraTask.getLanguage() + " and video_id " + amaraTask.getVideo_id() + " not found -> skip");
-            return null;
-        } else {
-            log.info("Fetched subtitle " + StringUtils.abbreviate(subtitles.getSubtitles().replaceAll("([\\r\\n])", ""), 80));
-            return subtitles;
-        }
-    }
-
-    protected String getPomsSourceMid(Task amaraTask) {
-        final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
-        if (amaraVideo.getMetadata().getLocation() != null && isMid(amaraVideo.getMetadata().getLocation())) {
-            return amaraVideo.getMetadata().getLocation();
-        } else if (amaraVideo.getPomsMidFromVideoUrl() != null && isMid(amaraVideo.getPomsMidFromVideoUrl())) {
-            return amaraVideo.getPomsMidFromVideoUrl();
-        } else if (identifyTaskinDatabase(amaraTask).getPomsSourceMid() != null && isMid(identifyTaskinDatabase(amaraTask).getPomsSourceMid())) {
-            return identifyTaskinDatabase(amaraTask).getPomsSourceMid();
-        } else {
-            log.info("no poms source mid found");
-            return null;
-
-        }
-    }
-
-    protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) {
-        if (isMid(task.getPomsTargetId())) {
-            return null;
-        } else {
-            return PomsClip.create(backend, getPomsSourceMid(amaraTask), amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription());
-        }
-    }
-
-    protected boolean isMid(String mid) {
-        return ! StringUtils.isBlank(mid);
     }
 
     protected void addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {
         backend.setSubtitles(amaraToPomsSubtitles(subs, mid));
-
     }
 
     protected nl.vpro.domain.subtitles.Subtitles amaraToPomsSubtitles(Subtitles subtitles, String mid) throws IOException {
         nl.vpro.domain.subtitles.Subtitles pomsSubtitles = new nl.vpro.domain.subtitles.Subtitles();
         pomsSubtitles.setType(SubtitlesType.TRANSLATION);
-        if (isMid(mid)) {
-            pomsSubtitles.setMid(mid);
-        }
+        pomsSubtitles.setMid(mid);
         if (subtitles.getLanguage().toLocale() != null) {
             pomsSubtitles.setLanguage(subtitles.getLanguage().toLocale());
         }
