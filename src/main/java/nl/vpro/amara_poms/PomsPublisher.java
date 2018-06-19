@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -21,6 +22,7 @@ import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.poms.PomsClip;
+import nl.vpro.domain.media.update.MediaUpdate;
 import nl.vpro.domain.subtitles.SubtitlesContent;
 import nl.vpro.domain.subtitles.SubtitlesFormat;
 import nl.vpro.domain.subtitles.SubtitlesType;
@@ -159,16 +161,47 @@ public class PomsPublisher {
         }
     }
 
-    protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException {
+    protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException, IOException {
         if (StringUtils.isNotEmpty(task.getPomsTargetId())) {
             return null;
         } else {
-            return PomsClip.create(backend,
-                getPomsSourceMid(amaraTask)
-                    .orElseThrow(IllegalStateException::new),
-                amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription()
-            );
+            return createClipAndAddSubtitles(task.getPomsSourceMid(), amaraTask, amaraSubtitles, task);
         }
+    }
+
+    protected String createClipAndAddSubtitles(String pomsMid, Task amaraTask, Subtitles amaraSubtitles, DatabaseTask task) throws InterruptedException, IOException {
+        // no poms target id, so create new Poms Clip
+        String pomsTargetId;
+        try {
+            pomsTargetId = PomsClip.create(Config.getPomsClient(), pomsMid, amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription());
+        } catch (Exception exception) {
+            log.error("Error creating clip for poms mid " + pomsMid + ", language " + amaraTask.getLanguage());
+            log.error(exception.toString());
+            return null;
+        }
+        Instant start = Instant.now();
+        MediaUpdate found = null;
+        while (Duration.between(start, Instant.now()).compareTo(Duration.ofSeconds(30)) < 0) {
+            found = backend.get(pomsTargetId);
+            Thread.sleep(50000);
+            if (found != null) {
+                break;
+            }
+
+        }
+        if (found == null) {
+            log.warn("Didn't find just created object");
+        }
+        task.setPomsTargetId(pomsTargetId);
+        task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
+        dbManager.addOrUpdateTask(task);
+        log.info("Poms clip created with poms id " + pomsTargetId);
+        addSubtitlesToPoms(pomsTargetId, amaraSubtitles);
+        addSubtitlesToPoms(pomsMid, amaraSubtitles);
+        log.info("Translation in language '{}' added to POMS clip {} and POMS mid", amaraTask.getLanguage(), pomsTargetId, pomsMid);
+        return pomsTargetId;
+
+
     }
 
     protected boolean isMid(String mid) {
