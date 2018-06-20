@@ -20,13 +20,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.MediaObject;
 import nl.vpro.domain.media.Platform;
 import nl.vpro.domain.media.support.OwnerType;
-import nl.vpro.nep.ItemizeRequest;
-import nl.vpro.nep.ItemizeResponse;
+import nl.vpro.nep.domain.NEPItemizeRequest;
+import nl.vpro.nep.domain.NEPItemizeResponse;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
@@ -71,7 +70,11 @@ public class NEPFetcher extends AbstractFileFetcher {
                 File file;
                 try {
                     //call to NEP
-                    ItemizeRequest request = new ItemizeRequest(mid, starttime, endtime);
+                    NEPItemizeRequest request = NEPItemizeRequest.builder()
+                        .identifier(mid)
+                        .starttime(starttime)
+                        .endtime(endtime)
+                        .build();
                     outputFileName = requestItem(request);
                     final SSHClient sessionFactory = createSessionFactory(hostKey, ftpUrl, username, password);
                     final SFTPClient sftp = sessionFactory.newSFTPClient();
@@ -132,13 +135,13 @@ public class NEPFetcher extends AbstractFileFetcher {
         return FetchResult.notAble();
     }
 
-    protected String requestItem(ItemizeRequest request) {
-        RequestEntity<ItemizeRequest> req = RequestEntity
+    protected String requestItem(NEPItemizeRequest request) {
+        RequestEntity<NEPItemizeRequest> req = RequestEntity
             .post(URI.create(nepUrl))
             .accept(APPLICATION_JSON_UTF8)
             .header(AUTHORIZATION, nepKey)
             .body(request);
-        ResponseEntity<ItemizeResponse> response = http.exchange(req, ItemizeResponse.class);
+        ResponseEntity<NEPItemizeResponse> response = http.exchange(req, NEPItemizeResponse.class);
         if (! response.getStatusCode().is2xxSuccessful()) {
             //throw exception
         }

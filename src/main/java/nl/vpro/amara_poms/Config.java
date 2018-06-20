@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.lang3.text.StrSubstitutor;
+import org.apache.commons.text.StringSubstitutor;
 
 import nl.vpro.amara.Client;
 import nl.vpro.amara_poms.database.Manager;
@@ -82,7 +82,7 @@ public class Config {
 
     public static void init(Map<String, String> props) {
         PROPERTIES.putAll(props);
-        StrSubstitutor subst = new StrSubstitutor(PROPERTIES);
+        StringSubstitutor subst = new StringSubstitutor(PROPERTIES);
         for (Map.Entry<String, String> e : PROPERTIES.entrySet()) {
             e.setValue(subst.replace(e.getValue()));
         }

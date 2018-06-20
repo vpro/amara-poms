@@ -41,7 +41,7 @@ public class HaspFetcherTest {
         Config.init(props);
     }
     @Test
-    public void fetch() throws Exception {
+    public void fetch() {
 
 
 
@@ -60,9 +60,9 @@ public class HaspFetcherTest {
 
     @Test
     @Ignore
-    public void testDamnJava() throws IOException {
+    public void testDamnJava() {
         File rootDir = new File("/tmp");
-        for (File f : Files.fileTreeTraverser().preOrderTraversal(rootDir)) {
+        for (File f : Files.fileTraverser().depthFirstPreOrder(rootDir)) {
             if (f.isDirectory()) {
                 // do whatever you need with the file/directory
                 System.out.println(f);
