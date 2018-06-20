@@ -12,7 +12,6 @@ import nl.vpro.amara_poms.database.task.DatabaseTask;
 public class PomsPublisherITest {
 
     static {
-
         Config.init();
         Config.getDbManager().clear();
     }
@@ -28,7 +27,7 @@ public class PomsPublisherITest {
             "\n" +
             "2\n" +
             "00:00:05.012 --> 00:00:07.018\n" +
-            "TUNE VAN DWDD\n", "test description", "complete");
+            "SUBTITLES FOR HET GEHEIM VAN LUBBERS\n", "test description", "complete");
 
     {Language language = new Language();
         language.setCode("en");
@@ -37,19 +36,19 @@ public class PomsPublisherITest {
 
 
     @Test
-    public void createClipAndAddSubs() throws IOException, InterruptedException {
+    public void createClipAndAddTranslation() throws IOException, InterruptedException {
         Task amaraTask = new Task();
         amaraTask.setLanguage("en");
-
         DatabaseTask dbt = new DatabaseTask();
-        pomsPublisher.createClipAndAddSubtitles("WO_NTR_428626", amaraTask, amaraSubtitles, dbt);
-
+        pomsPublisher.createClipAndAddSubtitles("WO_NTR_11722521", amaraTask, amaraSubtitles, dbt);
     }
 
     @Test
-    public void addASubtitlesToPoms() throws IOException {
+    public void addSubtitlesToPoms() throws IOException {
+        pomsPublisher.addSubtitlesToPoms("WO_NTR_11722521", amaraSubtitles);
+    }
 
-        pomsPublisher.addSubtitlesToPoms("WO_NTR_428626", amaraSubtitles);
-
+    @Test
+    public void getPomsSourceMid() {
     }
 }

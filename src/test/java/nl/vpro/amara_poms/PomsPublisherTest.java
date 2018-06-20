@@ -1,6 +1,8 @@
 package nl.vpro.amara_poms;
 
 import java.io.IOException;
+import java.util.Locale;
+import java.util.Optional;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,9 +14,10 @@ import nl.vpro.amara_poms.database.task.DatabaseTask;
 
 public class PomsPublisherTest {
 
+
+
     @Before
     public void init() {
-
         Config.init();
         Config.getDbManager().clear();
     }
@@ -22,9 +25,14 @@ public class PomsPublisherTest {
     @Test
     public void testSubtitleConversion() throws IOException {
         PomsPublisher pomsPublisher = new PomsPublisher();
-        Subtitles amaraSubs = Config.getAmaraClient().videos().getSubtitles("yiAGdgwxlD3J", "nl", "vtt");
-        nl.vpro.domain.subtitles.Subtitles pomsSubs = pomsPublisher.amaraToPomsSubtitles(amaraSubs, "POW_02988308");
-        Assert.assertEquals(pomsSubs.getLanguage().toString(), amaraSubs.getLanguage().getCode());
+        Subtitles amaraSubtitles = new Subtitles("NOS Journaal Engels", "vtt", "Bla bla bla bla", "translation NOS Journaal", "no action");
+        Language language = new Language();
+        language.setLtr("english");
+        language.setCode("en");
+        amaraSubtitles.setLanguage(language);
+        nl.vpro.domain.subtitles.Subtitles pomsSubtitles = pomsPublisher.amaraToPomsSubtitles(amaraSubtitles, "mid");
+        Assert.assertEquals(pomsSubtitles.getLanguage(), Locale.ENGLISH);
+
     }
 
     @Test
@@ -36,32 +44,23 @@ public class PomsPublisherTest {
         Task amaraTask = new Task("yiAGdgwxlD3J", "nl", TaskType.Translate, new User());
         pomsPublisher.identifyTaskinDatabase(amaraTask);
         Assert.assertEquals(1, Config.getDbManager().getTasks().size());
+        Assert.assertEquals("yiAGdgwxlD3J", Config.getDbManager().getTasks().get(0).getVideoId());
     }
 
     @Test
     public void testGetPomsSourceMid() {
         PomsPublisher pomsPublisher = new PomsPublisher();
-        Task amaraTask = new Task("yiAGdgwxlD3J", "nl", TaskType.Translate, new User());
-        Assert.assertEquals("POW_02988308", pomsPublisher.getPomsSourceMid(amaraTask));
+        Task amaraTask = new Task("mRHfHebcJlnp", "nl", TaskType.Translate, new User());
+        Assert.assertEquals(Optional.of("POW_02990422"), pomsPublisher.getPomsSourceMid(amaraTask));
     }
 
-    @Test
-    public void testIsMid() {
-        PomsPublisher pomsPublisher = new PomsPublisher();
-        String mid1 = "VARA_101379305";
-        String mid2 = "";
-        String mid3 = null;
-        Assert.assertEquals(true, pomsPublisher.isMid(mid1));
-        Assert.assertEquals(false, pomsPublisher.isMid(mid2));
-        Assert.assertEquals(false, pomsPublisher.isMid(mid3));
-    }
 
     @Test
     public void testGetSubtitles() {
         PomsPublisher pomsPublisher = new PomsPublisher();
-        Task amaraTask = new Task("yiAGdgwxlD3J", "nl", TaskType.Translate, new User());
-        DatabaseTask databaseTask = new DatabaseTask(amaraTask.getVideo_id(), amaraTask.getLanguage(), "3");
-        Config.getDbManager().addOrUpdateTask(databaseTask);
+        Task amaraTask = new Task();
+        amaraTask.setVideo_id("9mAKaADTV0XX");
+        amaraTask.setLanguage("nl");
         Assert.assertNotNull(pomsPublisher.getSubtitles(amaraTask));
 
     }
@@ -94,33 +93,6 @@ public class PomsPublisherTest {
         Assert.assertFalse(pomsPublisher.isValid(amaraTask3));
     }
 
-    @Test
-    public void testAmaraToPomsSubtitles() throws IOException {
-
-        Subtitles amaraSubtitles = new Subtitles("test subtitles", "vtt",
-            "WEBVTT\n" +
-                "\n" +
-                "1\n" +
-                "00:00:02.018 --> 00:00:05.007\n" +
-                "888\n" +
-                "\n" +
-                "2\n" +
-                "00:00:05.012 --> 00:00:07.018\n" +
-                "TUNE VAN DWDD\n", "test description", "complete");
-
-        PomsPublisher pomsPublisher = new PomsPublisher();
-
-        Language language = new Language();
-        language.setCode("en");
-        amaraSubtitles.setLanguage(language);
-
-        nl.vpro.domain.subtitles.Subtitles pomsSubtitles = pomsPublisher.amaraToPomsSubtitles(amaraSubtitles, "WO_VPRO_3244288");
-        Assert.assertEquals(amaraSubtitles.getLanguage().getCode(), pomsSubtitles.getLanguage().toString());
-        System.out.println(pomsSubtitles.getContent().toString());
-
-
-
-    }
 
 
 
