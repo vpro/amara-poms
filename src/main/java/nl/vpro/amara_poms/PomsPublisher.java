@@ -26,7 +26,6 @@ import nl.vpro.domain.media.update.MediaUpdate;
 import nl.vpro.domain.subtitles.SubtitlesContent;
 import nl.vpro.domain.subtitles.SubtitlesFormat;
 import nl.vpro.domain.subtitles.SubtitlesType;
-import nl.vpro.domain.subtitles.SubtitlesUtil;
 import nl.vpro.rs.media.MediaRestClient;
 import nl.vpro.util.TimeUtils;
 
