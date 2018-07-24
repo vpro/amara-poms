@@ -8,8 +8,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.update.MemberRefUpdate;
-import nl.vpro.domain.media.update.ProgramUpdate;
+import nl.vpro.domain.media.update.*;
 import nl.vpro.rs.media.MediaRestClient;
 
 import static org.junit.Assert.assertTrue;
@@ -42,6 +41,18 @@ public class IntegratiePomsTest {
         }
 
         System.out.println(result);
+    }
+
+
+    @Test
+    public void testPomsGroup() throws IOException {
+
+        MediaRestClient client = Config.getPomsClient();
+
+
+        MediaUpdateList<MemberUpdate> group = client.getGroupMembers("POMS_S_VPRO_3762086");
+
+        System.out.println(group);
     }
 
     @Test

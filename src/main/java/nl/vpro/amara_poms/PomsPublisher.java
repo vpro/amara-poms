@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -39,8 +40,9 @@ public class PomsPublisher {
             .minus(TimeUtils.parseDuration(Config.getRequiredConfig("amara.task.fetchlastperiod"))
                 .orElseThrow(IllegalArgumentException::new));
         log.info("Searching for Amara tasks after {}", after);
-        List<Task> amaraTasks = (List)(Config.getAmaraClient().teams().getTasks(TaskType.Approve, after));
-        for (Task task: amaraTasks) {
+        Iterator<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(TaskType.Approve, after);
+        while(amaraTasks.hasNext()) {
+            Task task = amaraTasks.next();
             process(task);
         }
     }
