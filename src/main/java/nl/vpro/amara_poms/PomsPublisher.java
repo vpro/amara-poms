@@ -210,7 +210,7 @@ public class PomsPublisher {
 
     }
 
-    protected nl.vpro.domain.subtitles.Subtitles amaraToPomsSubtitles(Subtitles subtitles, String mid) throws IOException {
+    protected nl.vpro.domain.subtitles.Subtitles amaraToPomsSubtitles(Subtitles subtitles, String mid) {
 
         nl.vpro.domain.subtitles.Subtitles pomsSubtitles = new nl.vpro.domain.subtitles.Subtitles();
         pomsSubtitles.setType(SubtitlesType.TRANSLATION);
