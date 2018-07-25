@@ -1,21 +1,20 @@
 package nl.vpro.amara_poms.database.task;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
 * @author joost
 */
+@Slf4j
 public class TaskWriter {
-
-    private final static Logger log = LoggerFactory.getLogger(TaskWriter.class);
 
     //Delimiter used in CSV file
     private static final String NEW_LINE_SEPARATOR = "\n";
@@ -53,8 +52,7 @@ public class TaskWriter {
                 fileWriter.close();
                 csvFilePrinter.close();
             } catch (IOException e) {
-                System.out.println("Error while flushing/closing fileWriter/csvPrinter !!!");
-                e.printStackTrace();
+                log.error("Error while flushing/closing fileWriter/csvPrinter !!!", e);
             }
         }
     }

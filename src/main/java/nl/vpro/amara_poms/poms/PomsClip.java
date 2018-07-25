@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import javax.xml.bind.JAXB;
+
 import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara_poms.Config;
@@ -17,6 +19,7 @@ import nl.vpro.domain.media.RelationDefinition;
 import nl.vpro.domain.media.exceptions.ModificationException;
 import nl.vpro.domain.media.support.TextualType;
 import nl.vpro.domain.media.update.*;
+import nl.vpro.logging.LoggerOutputStream;
 import nl.vpro.rs.media.MediaRestClient;
 
 /**
@@ -138,7 +141,7 @@ public class PomsClip {
             }
         }
 
-        //JAXB.marshal(update, System.out);
+        JAXB.marshal(update, LoggerOutputStream.info(log));
         // update
         String newPomsMid = client.set(update);
 
