@@ -128,6 +128,16 @@ public class PomsClip {
         images.forEach(iu -> iu.setId(null));
         update.setImages(images);
 
+        // Work around misery with invalid images
+        for (ImageUpdate u : images) {
+            if (u.getWidth() != null && u.getWidth() == 0) {
+                u.setWidth(null);
+            }
+            if (u.getHeight() != null && u.getHeight() == 0) {
+                u.setHeight(null);
+            }
+        }
+
         //JAXB.marshal(update, System.out);
         // update
         String newPomsMid = client.set(update);
