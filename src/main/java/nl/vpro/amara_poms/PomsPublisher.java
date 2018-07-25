@@ -55,7 +55,8 @@ public class PomsPublisher {
             log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
             //add subtitles to pomsSourceMid
             if (getPomsSourceMid(amaraTask) != null) {
-                addSubtitlesToPoms(getPomsSourceMid(amaraTask), getSubtitles(amaraTask));
+                // We don't have the rights because of the fact the NPO ICT is obstructing this.
+                //addSubtitlesToPoms(getPomsSourceMid(amaraTask), getSubtitles(amaraTask));
             }
 
             //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
