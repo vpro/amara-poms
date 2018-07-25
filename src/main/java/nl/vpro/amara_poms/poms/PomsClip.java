@@ -129,10 +129,10 @@ public class PomsClip {
         update.setImages(images);
 
         for (ImageUpdate u : images) {
-            if (u.getWidth() != null && u.getWidth() == 0) {
+            if (u.getWidth() != null && u.getWidth() <= 0) {
                 u.setWidth(null);
             }
-            if (u.getHeight() != null && u.getHeight() == 0) {
+            if (u.getHeight() != null && u.getHeight() <= 0) {
                 u.setHeight(null);
             }
         }
