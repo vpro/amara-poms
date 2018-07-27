@@ -199,6 +199,18 @@ public class Config {
      }
 
 
+      /**
+     * Get required config and exit if not found
+     */
+    public static boolean getRequiredConfigAsBoolean(String propertyName) {
+        String propertyValue = PROPERTIES.get(propertyName);
+
+        exitNotSet(propertyName, propertyValue);
+
+        return Boolean.parseBoolean(propertyValue);
+     }
+
+
     /**
      * Get required config as array and exit if not found
      *

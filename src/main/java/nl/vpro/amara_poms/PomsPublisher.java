@@ -34,6 +34,9 @@ public class PomsPublisher {
     private static final MediaRestClient backend = Config.getPomsClient();
     private final List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
 
+    private final boolean checkVersion = Config.getRequiredConfigAsBoolean("pomspublisher.checkversion");
+
+
 
     public void processAmaraTasks() throws IOException {
         Instant after = Instant.now()
@@ -60,12 +63,12 @@ public class PomsPublisher {
             }
 
             //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
-
-            if (task.getSubtitlesVersionNo() == null || task.isNewer(getSubtitles(amaraTask).getVersion_no())) {
+            Subtitles subtitles = getSubtitles(amaraTask);
+            if (task.getSubtitlesVersionNo() == null || task.isNewer(subtitles.getVersion_no()) || ! checkVersion) {
                 log.info("New subtitle version detected:" + getSubtitles(amaraTask).getVersion_no());
                 String pomsTargetId = identifyPomsTargetId(task, amaraTask, getSubtitles(amaraTask));
 
-                if (pomsTargetId != null){
+                if (pomsTargetId != null) {
                     task.setPomsTargetId(pomsTargetId);
                     task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
                     task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
@@ -73,6 +76,8 @@ public class PomsPublisher {
                     dbManager.addOrUpdateTask(task);
                     log.info("Poms clip created with poms id " + pomsTargetId);
                     addSubtitlesToPoms(pomsTargetId, getSubtitles(amaraTask));
+                } else {
+                    log.error("No poms id created!");
                 }
 
                 //write subtitles to file
@@ -81,6 +86,8 @@ public class PomsPublisher {
                     log.info("Writing subtitles to {}", file);
                     out.println(getSubtitles(amaraTask).getSubtitles());
                 }
+            } else {
+                log.info("Skipping because {} is not newer then {}", task.getSubtitlesVersionNo(), subtitles.getVersion_no());
             }
         }
     }
@@ -151,8 +158,12 @@ public class PomsPublisher {
         if (isMid(task.getPomsTargetId())) {
             return null;
         } else {
-            return PomsClip.create(backend, getPomsSourceMid(amaraTask), amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription());
+            return PomsClip.create(backend, getPomsSourceMid(amaraTask), amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription(), getCridForTask(amaraTask));
         }
+    }
+
+    private String getCridForTask(Task task) {
+        return "crid://amara.translation/"  + task.getVideo_id() + "/" + task.getLanguage();
     }
 
     protected boolean isMid(String mid) {
