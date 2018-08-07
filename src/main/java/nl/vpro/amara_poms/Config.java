@@ -119,7 +119,7 @@ public class Config {
                 .errors(errors)
                 .baseUrl(url)
                 .waitForRetry(true)
-                .trustAll(true) // can be removed soon
+                .lookupCrids(false)
                 .build()
             ;
 
@@ -220,6 +220,23 @@ public class Config {
 
         return propertyValue.split(split);
     }
+
+
+
+    /**
+     * Get required config and exit if not found
+     */
+    public static boolean getRequiredConfigAsBoolean(String propertyName) {
+        String propertyValue = PROPERTIES.get(propertyName);
+
+        exitNotSet(propertyName, propertyValue);
+
+        try {
+            return Boolean.parseBoolean(propertyValue);
+        } catch (NumberFormatException e)  {
+            throw new Error(propertyName + "-> not long", ERROR_CONFIG_ERROR);
+        }
+     }
 
 
     /**

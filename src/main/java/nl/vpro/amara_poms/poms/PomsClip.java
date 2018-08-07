@@ -1,9 +1,11 @@
 package nl.vpro.amara_poms.poms;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Arrays;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -16,7 +18,6 @@ import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.ProgramType;
 import nl.vpro.domain.media.RelationDefinition;
-import nl.vpro.domain.media.exceptions.ModificationException;
 import nl.vpro.domain.media.support.TextualType;
 import nl.vpro.domain.media.update.*;
 import nl.vpro.logging.LoggerOutputStream;
@@ -38,19 +39,22 @@ public class PomsClip {
      * @param title - title from Amara (serie // translated titel or translated title)
      * @param description - translated description from Amara
      */
-    public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description) throws InterruptedException {
+    @SneakyThrows
+    public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description, String crid) {
 
         // get source broadcast
         log.info("Getting {} from {}", sourcePomsMid, client);
-        ProgramUpdate sourceProgram = ProgramUpdate.forAllOwners(client.getFullProgram(sourcePomsMid));
-        //  full program
-        //ProgramUpdate sourceProgram = client.getProgram(sourcePomsMid);
-
-        //JAXB.marshal(sourceProgram, System.out);
-        // todo - error handling
+        ProgramUpdate sourceProgram = ProgramUpdate.create(client.getFullProgram(sourcePomsMid));
 
         // construct new CLIP
-        ProgramUpdate update = ProgramUpdate.create(ProgramType.CLIP);
+        ProgramUpdate update = ProgramUpdate.create();
+        update.setType(ProgramType.CLIP);
+        update.setAgeRating(sourceProgram.getAgeRating());
+
+        if (crid != null) {
+            update.setCrids(Arrays.asList(crid));
+        }
+
 
         // Parse title/subtitle from amara (extract series name if there)
         final String[] splitTitle = title.split("//");
@@ -89,13 +93,8 @@ public class PomsClip {
         }
 
         // set duration
-        try {
-            update.setDuration(sourceProgram.getDuration());
-        } catch (ModificationException e) {
-            // ignore
-            log.error("Error setting duration for source POM Mid " + sourcePomsMid);
+        update.setDuration(sourceProgram.getDuration());
 
-        }
         update.setBroadcasters(sourceProgram.getBroadcasters());
         update.setAVType(sourceProgram.getAVType());
 
@@ -152,7 +151,7 @@ public class PomsClip {
             if (client.get(newPomsMid) != null) {
                 break;
             }
-            log.info("Didn't find {} yet. Waiting another 10 seconds");
+            log.info("Didn't find {} yet. Waiting another 10 seconds",  newPomsMid);
             Thread.sleep(10000);;
         }
 

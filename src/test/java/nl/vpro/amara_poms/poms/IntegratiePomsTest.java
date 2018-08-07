@@ -1,6 +1,7 @@
 package nl.vpro.amara_poms.poms;
 
-import java.io.IOException;
+import lombok.extern.slf4j.Slf4j;
+
 import java.util.SortedSet;
 
 import org.junit.Before;
@@ -12,13 +13,12 @@ import nl.vpro.domain.media.update.MemberRefUpdate;
 import nl.vpro.domain.media.update.ProgramUpdate;
 import nl.vpro.rs.media.MediaRestClient;
 
-import static org.junit.Assert.assertTrue;
-
 /**
  * @author Michiel Meeuwissen
  * @since 1.0
  */
 @Ignore("This is an integration test connecting to an actual server")
+@Slf4j
 public class IntegratiePomsTest {
 
     String pomsMidBroadcast = "VPWON_1250959";
@@ -30,19 +30,17 @@ public class IntegratiePomsTest {
     }
 
     @Test
-    public void testPomsClipCreate() throws IOException {
+    public void testPomsClipCreate() {
 
         MediaRestClient client = Config.getPomsClient();
+        log.info("Using {}", client);
 
-        String result = "";
-        try {
-            result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description");
-        } catch (Exception exception) {
-            assertTrue(exception.toString(), false);
-        }
+        String result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description", "crid://integratiepomstest/" + System.currentTimeMillis());
 
-        System.out.println(result);
+        log.info(result);
     }
+
+
 
     @Test
     public void testAddProgramToCollection() {
@@ -60,7 +58,7 @@ public class IntegratiePomsTest {
         // update
 //        update.setMemberOf(memberUpdate);
         String result = client.set(update);
-        System.out.println(result);
+        log.info(result);
     }
 
     @Test
@@ -80,11 +78,11 @@ public class IntegratiePomsTest {
 
         long duration = pomsBroadcast.getUpdate().getDuration().getSeconds();
 
-        System.out.println("Duration:" + Long.toString(duration));
-        System.out.println("Image url: " + pomsBroadcast.getThumbNailUrl());
-        System.out.println("Title:" + pomsBroadcast.getTitle());
-        System.out.println("Subtitle:" + pomsBroadcast.getSubTitle());
-        System.out.println("Description:" + pomsBroadcast.getDescription());
+        log.info("Duration:" + Long.toString(duration));
+        log.info("Image url: " + pomsBroadcast.getThumbNailUrl());
+        log.info("Title:" + pomsBroadcast.getTitle());
+        log.info("Subtitle:" + pomsBroadcast.getSubTitle());
+        log.info("Description:" + pomsBroadcast.getDescription());
 
     }
 

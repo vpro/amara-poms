@@ -174,7 +174,7 @@ public class PomsPublisher {
         // no poms target id, so create new Poms Clip
         String pomsTargetId;
         try {
-            pomsTargetId = PomsClip.create(Config.getPomsClient(), pomsMid, amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription());
+            pomsTargetId = PomsClip.create(Config.getPomsClient(), pomsMid, amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription(), getCridForTask(amaraTask));
             log.info("Poms clip created with poms id " + pomsTargetId);
         } catch (Exception exception) {
             log.error("Error creating clip for poms mid " + pomsMid + ", language " + amaraTask.getLanguage());
@@ -238,5 +238,11 @@ public class PomsPublisher {
         }
         return new File(dir, filename);
     }
+
+
+    private String getCridForTask(Task task) {
+        return "crid://amara.translation/"  + task.getVideo_id() + "/" + task.getLanguage();
+    }
+
 
 }

@@ -40,7 +40,7 @@ public class PomsBroadcast {
 
     public ProgramUpdate getUpdate() {
         if (program instanceof Program) {
-            return ProgramUpdate.forAllOwners((Program) program);
+            return ProgramUpdate.create((Program) program);
         } else {
             return null;
         }

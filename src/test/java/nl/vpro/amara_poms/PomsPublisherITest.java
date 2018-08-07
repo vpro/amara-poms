@@ -1,17 +1,25 @@
 package nl.vpro.amara_poms;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.io.File;
 import java.io.IOException;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import nl.vpro.amara.domain.Language;
 import nl.vpro.amara.domain.Task;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
 
+@Slf4j
 public class PomsPublisherITest {
 
     static {
+        try {
+            new File("/tmp/amara.db").createNewFile();
+        } catch (IOException e) {
+            log.error(e.getMessage(), e);
+        }
         Config.init();
         Config.getDbManager().clear();
     }
@@ -40,12 +48,12 @@ public class PomsPublisherITest {
         Task amaraTask = new Task();
         amaraTask.setLanguage("en");
         DatabaseTask dbt = new DatabaseTask();
-        pomsPublisher.createClipAndAddSubtitles("WO_NTR_11722521", amaraTask, amaraSubtitles, dbt);
+        pomsPublisher.createClipAndAddSubtitles("VPWON_1269516", amaraTask, amaraSubtitles, dbt);
     }
 
     @Test
     public void addSubtitlesToPoms() throws IOException {
-        pomsPublisher.addSubtitlesToPoms("WO_NTR_11722521", amaraSubtitles);
+        pomsPublisher.addSubtitlesToPoms("VPWON_1269516", amaraSubtitles);
     }
 
     @Test
