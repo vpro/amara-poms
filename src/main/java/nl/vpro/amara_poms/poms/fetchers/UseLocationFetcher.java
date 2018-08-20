@@ -34,7 +34,12 @@ public class UseLocationFetcher implements SourceFetcher {
         //File dest = new File(Config.getRequiredConfig("videofile.dir"), program.getMid() + ".mp4");
         for (Location location : program.getLocations()) {
             if (location.isPublishable() && FORMATS.contains(location.getAvFileFormat())) {
-                URI uri = URI.create(location.getProgramUrl());
+                URI uri;
+                try {
+                    uri = URI.create(location.getProgramUrl());
+                } catch (IllegalArgumentException iae) {
+                    uri = URI.create(location.getProgramUrl().replaceAll(" ", "%20"));
+                }
                 if (SCHEMES.contains(uri.getScheme())) {
                     //IOUtils.copy(url.openStream(), new FileOutputStream(dest));
                     return FetchResult.succes(uri);

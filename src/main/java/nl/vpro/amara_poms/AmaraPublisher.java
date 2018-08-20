@@ -48,7 +48,7 @@ public class AmaraPublisher {
                     pomsBroadcast.removeFromCollection(inputCollectionName);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage());
+                log.error(e.getClass() + " " + e.getMessage(), e);
             }
         }
 
