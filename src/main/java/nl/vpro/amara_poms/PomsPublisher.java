@@ -155,7 +155,7 @@ public class PomsPublisher {
     }
 
     protected String identifyPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) {
-        if (isMid(task.getPomsTargetId())) {
+        if (! isMid(task.getPomsTargetId())) {
             return null;
         } else {
             return PomsClip.create(backend, getPomsSourceMid(amaraTask), amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription(), getCridForTask(amaraTask));
