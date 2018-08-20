@@ -35,7 +35,7 @@ public class IntegratiePomsTest {
 
         String result = "";
         try {
-            result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description");
+            result = PomsClip.create(client, "VPWON_1250959", "en", "serie//test vertaalde titel", "test vertaalde description", null);
         } catch (Exception exception) {
             assertTrue(exception.toString(), false);
         }
