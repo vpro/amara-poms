@@ -67,23 +67,25 @@ public class PomsPublisher {
             //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
             if (task.getSubtitlesVersionNo() == null || task.isNewer(getSubtitles(amaraTask).getVersion_no())) {
                 log.info("New subtitle version detected:" + getSubtitles(amaraTask).getVersion_no());
-                String pomsTargetId = createPomsTargetId(task, amaraTask, getSubtitles(amaraTask));
+                String pomsTargetId = createPomsTargetIdIfNeeded(task, amaraTask, getSubtitles(amaraTask));
 
                 if (pomsTargetId != null) {
+                    // This means that it was just created.
+
                     task.setPomsTargetId(pomsTargetId);
                     task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
                     task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
                     task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
                     dbManager.addOrUpdateTask(task);
-                }
 
-                //write subtitles to file
-                File file = getSubtitleFile(pomsTargetId, getSubtitles(amaraTask));
-                try (PrintWriter out = new PrintWriter(file)) {
-                    log.info("Writing subtitles to {}", file);
-                    out.println(getSubtitles(amaraTask).getSubtitles());
-                } catch (FileNotFoundException e) {
-                    log.error(e.getMessage(), e);
+                    //write subtitles to file
+                    File file = getSubtitleFile(pomsTargetId, getSubtitles(amaraTask));
+                    try (PrintWriter out = new PrintWriter(file)) {
+                        log.info("Writing subtitles to {}", file);
+                        out.println(getSubtitles(amaraTask).getSubtitles());
+                    } catch (FileNotFoundException e) {
+                        log.error(e.getMessage(), e);
+                    }
                 }
 
                 // update version no in local db
@@ -162,8 +164,9 @@ public class PomsPublisher {
         }
     }
 
-    protected String createPomsTargetId(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException, IOException {
+    protected String createPomsTargetIdIfNeeded(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException, IOException {
         if (StringUtils.isNotEmpty(task.getPomsTargetId())) {
+            // already has a target mid. So nothing needs to be done.
             return null;
         } else {
             return createClipAndAddSubtitles(task.getPomsSourceMid(), amaraTask, amaraSubtitles, task);
