@@ -76,16 +76,22 @@ public class PomsPublisher {
                     dbManager.addOrUpdateTask(task);
                     log.info("Poms clip created with poms id " + pomsTargetId);
                     addSubtitlesToPoms(pomsTargetId, getSubtitles(amaraTask));
+
+                    //write subtitles to file
+                    Subtitles st = getSubtitles(amaraTask);
+                    if (st != null) {
+                        File file = getSubtitleFile(pomsTargetId, st);
+                        try (PrintWriter out = new PrintWriter(file)) {
+                            log.info("Writing subtitles to {}", file);
+                            out.println(getSubtitles(amaraTask).getSubtitles());
+                        }
+                    }
                 } else {
                     log.error("No poms id created!");
+
                 }
 
-                //write subtitles to file
-                File file = getSubtitleFile(pomsTargetId, getSubtitles(amaraTask));
-                try (PrintWriter out = new PrintWriter(file)) {
-                    log.info("Writing subtitles to {}", file);
-                    out.println(getSubtitles(amaraTask).getSubtitles());
-                }
+
             } else {
                 log.info("Skipping because {} is not newer then {}", task.getSubtitlesVersionNo(), subtitles.getVersion_no());
             }
