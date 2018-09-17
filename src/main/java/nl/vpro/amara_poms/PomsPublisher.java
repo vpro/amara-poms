@@ -147,7 +147,7 @@ public class PomsPublisher {
     }
 
     protected Optional<String> getPomsSourceMid(Task amaraTask) {
-        final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id() + "/");
+        final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
         if (amaraVideo.getMetadata().getLocation() != null) {
             log.info("poms source mid found in video metadata");
             return Optional.of(amaraVideo.getMetadata().getLocation());
