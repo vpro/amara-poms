@@ -15,7 +15,6 @@ import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
 import nl.vpro.domain.media.ProgramType;
 import nl.vpro.domain.media.RelationDefinition;
-import nl.vpro.domain.media.exceptions.ModificationException;
 import nl.vpro.domain.media.support.TextualType;
 import nl.vpro.domain.media.update.*;
 import nl.vpro.logging.LoggerOutputStream;
@@ -40,7 +39,7 @@ public class PomsClip {
     public static String create(MediaRestClient client, String sourcePomsMid, String language, String title, String description, String crid) {
 
         // get source broadcast
-        ProgramUpdate sourceProgram = ProgramUpdate.forAllOwners(client.getFullProgram(sourcePomsMid));
+        ProgramUpdate sourceProgram = ProgramUpdate.create(client.getFullProgram(sourcePomsMid));
         //  full program
         //ProgramUpdate sourceProgram = client.getProgram(sourcePomsMid);
 
@@ -48,7 +47,8 @@ public class PomsClip {
         // todo - error handling
 
         // construct new CLIP
-        ProgramUpdate update = ProgramUpdate.create(ProgramType.CLIP);
+        ProgramUpdate update = ProgramUpdate.create();
+        update.setType(ProgramType.CLIP);
 
         update.setCrids(Arrays.asList(crid));
 
@@ -89,13 +89,8 @@ public class PomsClip {
         }
 
         // set duration
-        try {
-            update.setDuration(sourceProgram.getDuration());
-        } catch (ModificationException e) {
-            // ignore
-            log.error("Error setting duration for source POM Mid " + sourcePomsMid);
+        update.setDuration(sourceProgram.getDuration());
 
-        }
         update.setBroadcasters(sourceProgram.getBroadcasters());
         update.setAVType(sourceProgram.getAVType());
 

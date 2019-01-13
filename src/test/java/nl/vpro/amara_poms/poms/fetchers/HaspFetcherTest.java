@@ -62,7 +62,7 @@ public class HaspFetcherTest {
     @Ignore
     public void testDamnJava() throws IOException {
         File rootDir = new File("/tmp");
-        for (File f : Files.fileTreeTraverser().preOrderTraversal(rootDir)) {
+        for (File f : Files.fileTraverser().depthFirstPreOrder(rootDir)) {
             if (f.isDirectory()) {
                 // do whatever you need with the file/directory
                 System.out.println(f);

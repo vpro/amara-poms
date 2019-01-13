@@ -72,7 +72,7 @@ public class HaspFetcher extends AbstractFileFetcher {
 
                 // this is easier
                 log.info("Search files in {}", sourceDir);
-                for (File f : Files.fileTreeTraverser().preOrderTraversal(sourceDir)) {
+                for (File f : Files.fileTraverser().depthFirstPreOrder(sourceDir)) {
                     if (f.isDirectory() && f.getName().equals(mid)) {
                         String[] fileNames = {mid + ".ism", fileName + ".ism"};
                         for (String fn : fileNames) {

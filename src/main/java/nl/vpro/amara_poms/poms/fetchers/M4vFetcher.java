@@ -35,7 +35,7 @@ public class M4vFetcher extends AbstractFileCopyFetcher {
         File sourceDir = new File(Config.getRequiredConfig("h264.source.dir"));
         log.info("Search files in {}", sourceDir);
         // DOESN'T PERFORM AT ALL!
-        for (File f : Files.fileTreeTraverser().preOrderTraversal(sourceDir)) {
+        for (File f : Files.fileTraverser().depthFirstPreOrder(sourceDir)) {
             if (f.isDirectory() && f.getName().equals(mid)) {
                 for (File candidate : f.listFiles()) {
                     try {
