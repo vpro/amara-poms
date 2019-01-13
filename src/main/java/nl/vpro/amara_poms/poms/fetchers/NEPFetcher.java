@@ -25,8 +25,8 @@ import nl.vpro.domain.media.Location;
 import nl.vpro.domain.media.MediaObject;
 import nl.vpro.domain.media.Platform;
 import nl.vpro.domain.media.support.OwnerType;
-import nl.vpro.nep.ItemizeRequest;
-import nl.vpro.nep.ItemizeResponse;
+import nl.vpro.domain.media.update.ItemizeRequest;
+import nl.vpro.domain.media.update.ItemizeResponse;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
@@ -47,8 +47,8 @@ public class NEPFetcher extends AbstractFileFetcher {
     private String password = Config.getRequiredConfig("nep.sftp.password");
     private String hostKey = Config.getRequiredConfig("nep.sftp.hostkey");
 
-    private static final String starttime = "00:00:00.000";
-    private static final String endtime = "02:00:00.000";
+    private static final Duration  starttime = Duration.ZERO;
+    private static final Duration endtime = Duration.ofHours(2);
 
 
     public NEPFetcher() {
@@ -71,7 +71,12 @@ public class NEPFetcher extends AbstractFileFetcher {
                 File file;
                 try {
                     //call to NEP
-                    ItemizeRequest request = new ItemizeRequest(mid, starttime, endtime);
+                    ItemizeRequest request = ItemizeRequest.builder()
+                        .start(starttime)
+                        .stop(endtime)
+                        .mid(mid)
+                        .build();
+
                     outputFileName = requestItem(request);
                     final SSHClient sessionFactory = createSessionFactory(hostKey, ftpUrl, username, password);
                     final SFTPClient sftp = sessionFactory.newSFTPClient();
@@ -133,7 +138,7 @@ public class NEPFetcher extends AbstractFileFetcher {
         if (! response.getStatusCode().is2xxSuccessful()) {
             //throw exception
         }
-        String outputFileName = response.getBody().getOutput_filename();
+        String outputFileName = response.getBody().getId();
         return outputFileName;
     }
 

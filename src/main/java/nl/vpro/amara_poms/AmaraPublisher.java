@@ -69,7 +69,7 @@ public class AmaraPublisher {
 
         SourceFetcher.FetchResult result = fetcher.fetch(pomsBroadcast.getProgram());
         if (result.status != SourceFetcher.Status.SUCCESS) {
-            log.error("Downloading subtitles to server failed :{}", result);
+            log.error("Downloading video file to server failed :{}", result);
             return false;
         }
 
