@@ -1,8 +1,6 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
-import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
@@ -36,9 +34,9 @@ public class NEPFetcherTest {
         NEPFetcher fetcher = new NEPFetcher();
         URI dest = new URI (Config.getRequiredConfig("nep.videofile.dir"));
 
-        Location location = new Location("npo://internetvod.omroep.nl/POW_03372983", OwnerType.AUTHORITY, Platform.INTERNETVOD);
+        Location location = new Location("npo://internetvod.omroep.nl/VPWON_1297797", OwnerType.AUTHORITY, Platform.INTERNETVOD);
 
-        Program program = MediaBuilder.program().mid("POW_03372983").locations(location).duration(Duration.ofHours(1)).build();
+        Program program = MediaBuilder.program().mid("VPWON_1297797").locations(location).duration(Duration.ofHours(1)).build();
 
         SourceFetcher.FetchResult result = fetcher.fetch(program);
 
