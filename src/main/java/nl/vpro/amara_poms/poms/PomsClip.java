@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.xml.bind.JAXB;
 
@@ -16,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.AVFileFormat;
+import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.ProgramType;
 import nl.vpro.domain.media.RelationDefinition;
 import nl.vpro.domain.media.support.TextualType;
@@ -44,15 +43,16 @@ public class PomsClip {
 
         // get source broadcast
         log.info("Getting {} from {}", sourcePomsMid, client);
-        ProgramUpdate sourceProgram = ProgramUpdate.create(client.getFullProgram(sourcePomsMid));
+        Program fullProgram = client.getFullProgram(sourcePomsMid);
+        ProgramUpdate sourceProgramUpdate = ProgramUpdate.create(fullProgram);
 
         // construct new CLIP
         ProgramUpdate update = ProgramUpdate.create();
         update.setType(ProgramType.CLIP);
-        update.setAgeRating(sourceProgram.getAgeRating());
+        update.setAgeRating(sourceProgramUpdate.getAgeRating());
 
         if (crid != null) {
-            update.setCrids(Arrays.asList(crid));
+            update.setCrids(Collections.singletonList(crid));
         }
 
 
@@ -73,7 +73,7 @@ public class PomsClip {
 
         if (StringUtils.isBlank(newTitle)) {
             log.debug("No title find in translation, using the title of the original broadcast");
-            titleUpdate.add(sourceProgram.getTitles().first());
+            titleUpdate.add(sourceProgramUpdate.getTitles().first());
         } else {
             titleUpdate.add(new TitleUpdate(newTitle, TextualType.MAIN));
         }
@@ -89,14 +89,14 @@ public class PomsClip {
             DescriptionUpdate descriptionUpdate = new DescriptionUpdate(description, TextualType.MAIN);
             update.setDescriptions(descriptionUpdate);
         } else {
-            update.setDescriptions(sourceProgram.getDescriptions());
+            update.setDescriptions(sourceProgramUpdate.getDescriptions());
         }
 
         // set duration
-        update.setDuration(sourceProgram.getDuration());
+        update.setDuration(sourceProgramUpdate.getDuration());
 
-        update.setBroadcasters(sourceProgram.getBroadcasters());
-        update.setAVType(sourceProgram.getAVType());
+        update.setBroadcasters(sourceProgramUpdate.getBroadcasters());
+        update.setAVType(sourceProgramUpdate.getAVType());
 
         // set location
         LocationUpdate locationUpdate = new LocationUpdate();
@@ -105,7 +105,7 @@ public class PomsClip {
         update.setLocations(locationUpdate); // source
 
         // create relation with source program
-        RelationUpdate relationUpdate = RelationUpdate.text(ORIGINAL, sourceProgram.getMid());
+        RelationUpdate relationUpdate = RelationUpdate.text(ORIGINAL, sourceProgramUpdate.getMid());
 
         SortedSet<RelationUpdate> relationUpdateSortedSet = update.getRelations();
         relationUpdateSortedSet.add(relationUpdate);
@@ -125,20 +125,21 @@ public class PomsClip {
         update.getPortalRestrictions().add(PortalRestrictionUpdate.of(PORTAL));
 
         // set genres and images
-        update.setGenres(sourceProgram.getGenres());
-        List<ImageUpdate> images = sourceProgram.getImages();
-        images.forEach(iu -> iu.setId(null));
-        update.setImages(images);
-
-        // Work around misery with invalid images
-        for (ImageUpdate u : images) {
+        update.setGenres(sourceProgramUpdate.getGenres());
+        List<ImageUpdate> images = fullProgram.getImages().stream()
+            .map(ImageUpdate::new)
+            .collect(Collectors.toList());
+        images.forEach(u -> {
+            u.setId(null);
+            // Work around misery with invalid images
             if (u.getWidth() != null && u.getWidth() <= 0) {
                 u.setWidth(null);
             }
             if (u.getHeight() != null && u.getHeight() <= 0) {
                 u.setHeight(null);
             }
-        }
+        });
+        update.setImages(images);
 
         JAXB.marshal(update, LoggerOutputStream.info(log));
         // update
