@@ -87,7 +87,7 @@ public class PomsBroadcast {
      *
      * @return NO_ERROR if successfull, otherwise errorcode
      */
-    public int downloadSubtitles() throws IOException {
+    public int downloadSubtitles() {
         try {
 
             Subtitles subtitlesObject = Config.getPomsClient().getBackendRestService().getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true);

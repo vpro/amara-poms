@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import nl.vpro.amara.domain.Language;
 import nl.vpro.amara.domain.Task;
+import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
 
 @Slf4j
@@ -58,5 +59,13 @@ public class PomsPublisherITest {
 
     @Test
     public void getPomsSourceMid() {
+    }
+
+    @Test
+    public void testVideo() {
+        final Video amaraVideo = Config.getAmaraClient().videos().get("99gUNxCv8nkr");
+        log.info("{}", amaraVideo);
+
+
     }
 }

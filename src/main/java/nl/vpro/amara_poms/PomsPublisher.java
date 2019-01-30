@@ -206,7 +206,7 @@ public class PomsPublisher {
         return pomsTargetId;
     }
 
-    protected void addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {
+    protected void addSubtitlesToPoms(String mid, Subtitles subs) {
         nl.vpro.domain.subtitles.Subtitles subtitles = amaraToPomsSubtitles(subs, mid);
         log.info("Creating {} in {}", subtitles.getId(), backend);
         backend.setSubtitles(subtitles);
@@ -225,7 +225,7 @@ public class PomsPublisher {
             pomsSubtitles.setContent(new SubtitlesContent(SubtitlesFormat.WEBVTT, subtitles.getSubtitles()));
         }
 
-        // There is a bug in poms 5.5: it can't except subtitles without cue numbers.
+        // There is a bug in poms 5.5: it can't accept subtitles without cue numbers.
         //nl.vpro.domain.subtitles.Subtitles corrected = nl.vpro.domain.subtitles.Subtitles.from(pomsSubtitles.getId(), SubtitlesUtil.fillCueNumber(SubtitlesUtil.parse(pomsSubtitles, false)).iterator());
 
         return pomsSubtitles;
