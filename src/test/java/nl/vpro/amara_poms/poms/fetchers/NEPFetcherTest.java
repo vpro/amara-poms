@@ -1,11 +1,12 @@
 package nl.vpro.amara_poms.poms.fetchers;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.URI;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -17,6 +18,9 @@ import nl.vpro.domain.media.Platform;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.support.OwnerType;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+@Slf4j
 public class NEPFetcherTest {
 
 
@@ -40,7 +44,7 @@ public class NEPFetcherTest {
 
         SourceFetcher.FetchResult result = fetcher.fetch(program);
 
-        Assert.assertEquals(result.toString(), SourceFetcher.FetchResult.succes(dest).toString());
+        assertThat(result.toString()).isEqualTo(SourceFetcher.FetchResult.succes(dest).toString());
 
     }
 

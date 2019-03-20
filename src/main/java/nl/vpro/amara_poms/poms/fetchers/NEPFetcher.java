@@ -56,6 +56,7 @@ public class NEPFetcher extends AbstractFileFetcher {
         nepItemizeService = new NEPItemizeServiceImpl(nepUrl, nepKey);
 
         nepDownloadService = new NEPScpDownloadServiceImpl(ftpUrl, username, password, hostKey,
+              false,
               Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
         Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"));
     }
@@ -82,6 +83,7 @@ public class NEPFetcher extends AbstractFileFetcher {
 
                     File outputFile = produce(null, mid);
                     final Instant start = Instant.now();
+                    log.info("Writing to {}", outputFile);
                     nepDownloadService.download(outputFileName, () -> {
                         try {
                             return new FileOutputStream(outputFile);
