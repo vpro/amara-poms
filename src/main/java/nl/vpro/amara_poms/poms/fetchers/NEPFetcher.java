@@ -55,9 +55,12 @@ public class NEPFetcher extends AbstractFileFetcher {
             Config.getRequiredConfig("nep.download.url.base"));
         nepItemizeService = new NEPItemizeServiceImpl(nepUrl, nepKey);
 
-        nepDownloadService = new NEPScpDownloadServiceImpl(ftpUrl, username, password, hostKey,
-              false,
-              Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
+        nepDownloadService = new NEPScpDownloadServiceImpl(
+            ftpUrl,
+            username,
+            password,
+            hostKey,
+            Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
         Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"));
     }
 

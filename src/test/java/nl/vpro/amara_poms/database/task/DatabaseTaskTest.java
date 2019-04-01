@@ -1,14 +1,14 @@
-package nl.vpro.amara;
+package nl.vpro.amara_poms.database.task;
+
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import nl.vpro.amara.domain.Task;
@@ -16,12 +16,14 @@ import nl.vpro.amara.domain.TaskType;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.jackson2.Jackson2Mapper;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 /**
  * @author joost
  */
-public class DatabaseTaskTest {
 
-    private final static Logger LOG = LoggerFactory.getLogger(SubtitlesTest.class);
+@Slf4j
+public class DatabaseTaskTest {
 
     @Before
     public void setUp() {
@@ -46,14 +48,21 @@ public class DatabaseTaskTest {
 
     @Test
     public void testGet() {
-        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(TaskType.Translate, 
+        List<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(TaskType.Translate,
             Instant.now().minus(Duration.ofDays(10)), 0, 100).getTasks();
 
-        LOG.info("Count:" + amaraTasks.size());
+        log.info("Count:" + amaraTasks.size());
         if (amaraTasks.size() > 0) {
-            LOG.info(amaraTasks.get(0).toString());
+            log.info(amaraTasks.get(0).toString());
         }
-        LOG.info(amaraTasks.toString());
+        log.info(amaraTasks.toString());
+
+    }
+
+    @Test
+    public void test() {
+        assertThat(DatabaseTask.parse("13/03/2019 - 12:00")).isEqualTo(ZonedDateTime.parse("2019-03-13T12:00+01:00[Europe/Amsterdam]"));
+
 
     }
 

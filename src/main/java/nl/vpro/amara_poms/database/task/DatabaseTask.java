@@ -2,11 +2,16 @@ package nl.vpro.amara_poms.database.task;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.csv.CSVRecord;
+
+import nl.vpro.domain.media.Schedule;
 
 /**
  * @author joost
@@ -55,10 +60,19 @@ public class DatabaseTask {
         task.pomsSourceMid = csvRecord.get("pomsSourceMid");
         task.pomsTargetId = csvRecord.get("pomsTargetMid");
         task.subtitlesVersionNo = csvRecord.get("subtitlesVersionNo");
-        task.createDateTime = ZonedDateTime.parse(csvRecord.get("createDateTime"));
-        task.updateDateTime = ZonedDateTime.parse(csvRecord.get("updateDateTime"));
+        task.createDateTime = parse(csvRecord.get("createDateTime"));
+        task.updateDateTime = parse(csvRecord.get("updateDateTime"));
 
         return task;
+    }
+
+    static ZonedDateTime parse(String s) {
+        try {
+            return ZonedDateTime.parse(s);
+        } catch (DateTimeParseException dtf) {
+            log.warn(dtf.getMessage());
+            return LocalDateTime.parse(s, DateTimeFormatter.ofPattern("dd/MM/yyyy - HH:mm")).atZone(Schedule.ZONE_ID);
+        }
     }
 
     /**
