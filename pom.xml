@@ -63,7 +63,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <api.client.version>5.10.0</api.client.version>
-    <poms.shared.version>5.10.1</poms.shared.version>
+    <poms.shared.version>5.10.2-SNAPSHOT</poms.shared.version>
 
     <jackson2.version>2.9.8</jackson2.version>
     <amara-java.version>0.8</amara-java.version>

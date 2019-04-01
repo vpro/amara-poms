@@ -60,6 +60,7 @@ public class NEPFetcher extends AbstractFileFetcher {
             username,
             password,
             hostKey,
+            false,
             Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
         Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"));
     }
