@@ -134,6 +134,7 @@ public class Manager implements Iterable<DatabaseTask> {
 
 
     @Override
+    @Nonnull
     public Iterator<DatabaseTask> iterator() {
         return tasks.iterator();
     }

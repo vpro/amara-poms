@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.lang.Object.*;
 
 import org.apache.commons.csv.CSVRecord;
 
@@ -17,7 +16,7 @@ public class DatabaseTask {
     public static final String STATUS_UPLOADED_VIDEO_TO_AMARA = "0";
     public static final String STATUS_UPLOADED_SUBTITLE_TO_AMARA = "1";
     public static final String STATUS_APPROVED_SUBTITLE_IN_AMARA = "2";
-    public static final String STATUS_CREATED_AMARA_TASK_FOR_TRANSLATION = "3";
+    public static final String STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION = "3";
     public static final String STATUS_NEW_AMARA_SUBTITLES_FOUND = "4";
     public static final String STATUS_UPLOADED_TO_POMS = "5";
     public static final String STATUS_NEW_AMARA_SUBTITLES_WRITTEN = "6";
@@ -28,8 +27,8 @@ public class DatabaseTask {
     private String pomsSourceMid;
     private String pomsTargetId;
     private String subtitlesVersionNo;
-    private String createDateTime;
-    private String updateDateTime;
+    private ZonedDateTime createDateTime;
+    private ZonedDateTime updateDateTime;
 
     public DatabaseTask() {
     }
@@ -56,8 +55,8 @@ public class DatabaseTask {
         task.pomsSourceMid = csvRecord.get("pomsSourceMid");
         task.pomsTargetId = csvRecord.get("pomsTargetMid");
         task.subtitlesVersionNo = csvRecord.get("subtitlesVersionNo");
-        task.createDateTime = csvRecord.get("createDateTime");
-        task.updateDateTime = (csvRecord.get("updateDateTime"));
+        task.createDateTime = ZonedDateTime.parse(csvRecord.get("createDateTime"));
+        task.updateDateTime = ZonedDateTime.parse(csvRecord.get("updateDateTime"));
 
         return task;
     }
@@ -110,19 +109,19 @@ public class DatabaseTask {
         this.status = status;
     }
 
-    public String getCreateDateTime() {
+    public ZonedDateTime getCreateDateTime() {
         return createDateTime;
     }
 
-    public void setCreateDateTime(String createDateTime) {
+    public void setCreateDateTime(ZonedDateTime createDateTime) {
         this.createDateTime = createDateTime;
     }
 
-    public String getUpdateDateTime() {
+    public ZonedDateTime getUpdateDateTime() {
         return updateDateTime;
     }
 
-    public void setUpdateDateTime(String updateDateTime) {
+    public void setUpdateDateTime(ZonedDateTime updateDateTime) {
         this.updateDateTime = updateDateTime;
     }
 
