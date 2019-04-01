@@ -63,7 +63,14 @@ public class PomsPublisher {
                 Subtitles subtitles = getSubtitles(amaraTask);
                 if ("nl".equals(subtitles.getLanguage().toLocale().getLanguage())) {
                     Program program =  backend.getFullProgram(sourceMid.get());
-                    Optional<AvailableSubtitles> nlCaption = program.getAvailableSubtitles().stream().filter(av -> "nl".equals(av.getLanguage().getLanguage()) && av.getType() == SubtitlesType.CAPTION).findFirst();
+                    if (program == null) {
+                        log.error("No program found with mid {}", sourceMid.get());
+                        return;
+                    }
+                    Optional<AvailableSubtitles> nlCaption = program.getAvailableSubtitles()
+                        .stream()
+                        .filter(av -> "nl".equals(av.getLanguage().getLanguage()) && av.getType() == SubtitlesType.CAPTION)
+                        .findFirst();
                     if (nlCaption.isPresent()) {
                         log.debug("Not adding dutch subtitles since dutchs captions are available");
                     } else {
