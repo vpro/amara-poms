@@ -3,7 +3,7 @@
 
   <groupId>nl.vpro.amara_poms</groupId>
   <artifactId>amara_poms_publisher</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.9-SNAPSHOT</version>
 
   <packaging>jar</packaging>
 
@@ -41,7 +41,7 @@
     <connection>scm:git:git://git@github.com/vpro/amara-poms.git</connection>
     <developerConnection>scm:git:git@github.com:vpro/amara-poms.git</developerConnection>
     <url>https://github.com/vpro/amara-poms</url>
-    <tag>REL-1.8-SNAPSHOT</tag>
+    <tag>HEAD</tag>
   </scm>
 
 
