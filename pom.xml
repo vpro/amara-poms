@@ -62,12 +62,12 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <api.client.version>5.10-SNAPSHOT</api.client.version>
-    <poms.shared.version>5.11-SNAPSHOT</poms.shared.version>
+    <api.client.version>5.10.0</api.client.version>
+    <poms.shared.version>5.10.1</poms.shared.version>
 
     <jackson2.version>2.9.8</jackson2.version>
     <amara-java.version>0.8</amara-java.version>
-    <vpro.shared.version>2.6-SNAPSHOT</vpro.shared.version>
+    <vpro.shared.version>2.6.0</vpro.shared.version>
     <slf4j.version>1.7.25</slf4j.version>
     <lombok.version>1.18.6</lombok.version>
     <assertj.version>3.12.2</assertj.version>
