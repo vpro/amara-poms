@@ -16,7 +16,7 @@ public class DatabaseTask {
     public static final String STATUS_UPLOADED_VIDEO_TO_AMARA = "0";
     public static final String STATUS_UPLOADED_SUBTITLE_TO_AMARA = "1";
     public static final String STATUS_APPROVED_SUBTITLE_IN_AMARA = "2";
-    public static final String STATUS_CREATE_AMARA_TASK_FOR_TRANSLATION = "3";
+    public static final String STATUS_CREATED_AMARA_TASK_FOR_TRANSLATION = "3";
     public static final String STATUS_NEW_AMARA_SUBTITLES_FOUND = "4";
     public static final String STATUS_UPLOADED_TO_POMS = "5";
     public static final String STATUS_NEW_AMARA_SUBTITLES_WRITTEN = "6";
