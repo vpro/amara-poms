@@ -64,9 +64,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <api.client.version>5.10.0</api.client.version>
     <poms.shared.version>5.10.10</poms.shared.version>
-
-    <jackson2.version>2.9.8</jackson2.version>
-    <amara-java.version>0.9-SNAPSHOT</amara-java.version>
+    <amara-java.version>0.9</amara-java.version>
     <vpro.shared.version>2.7.0</vpro.shared.version>
     <slf4j.version>1.7.25</slf4j.version>
     <lombok.version>1.18.8</lombok.version>
