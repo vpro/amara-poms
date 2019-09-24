@@ -4,14 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.SortedSet;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 
 import nl.vpro.amara_poms.Config;
+import nl.vpro.api.client.media.MediaRestClient;
 import nl.vpro.domain.media.update.MemberRefUpdate;
 import nl.vpro.domain.media.update.ProgramUpdate;
-import nl.vpro.rs.media.MediaRestClient;
 
 /**
  * @author Michiel Meeuwissen

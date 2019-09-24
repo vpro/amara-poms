@@ -5,10 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Iterator;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.update.GroupUpdate;
-import nl.vpro.domain.media.update.MediaUpdateList;
-import nl.vpro.domain.media.update.MemberUpdate;
-import nl.vpro.rs.media.MediaRestClient;
+import nl.vpro.api.client.media.MediaRestClient;
+import nl.vpro.domain.media.update.*;
 
 
 /**

@@ -2,12 +2,8 @@ package nl.vpro.amara_poms;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.io.*;
+import java.util.*;
 
 import org.apache.commons.text.StringSubstitutor;
 
@@ -15,8 +11,8 @@ import nl.vpro.amara.Client;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.poms.ChainedFetcher;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.domain.media.support.Images;
-import nl.vpro.rs.media.MediaRestClient;
+import nl.vpro.api.client.media.MediaRestClient;
+import nl.vpro.domain.media.support.*;
 
 /**
  * @author joost
@@ -86,7 +82,7 @@ public class Config {
         for (Map.Entry<String, String> e : PROPERTIES.entrySet()) {
             e.setValue(subst.replace(e.getValue()));
         }
-        Images.setImageHost(getRequiredConfig("poms.image_url"));
+        ImageUrlServiceHolder.setInstance(() -> getRequiredConfig("poms.image_url"));
     }
 
     public static Client getAmaraClient() {

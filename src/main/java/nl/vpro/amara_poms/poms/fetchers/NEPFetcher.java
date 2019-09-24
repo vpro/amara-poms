@@ -53,7 +53,7 @@ public class NEPFetcher extends AbstractFileFetcher {
             new File(Config.getRequiredConfig("nep.videofile.dir")),
             "mp4",
             Config.getRequiredConfig("nep.download.url.base"));
-        nepItemizeService = new NEPItemizeServiceImpl(nepUrl, nepKey);
+        nepItemizeService = new NEPItemizeServiceImpl(nepUrl, () -> nepKey);
 
         nepDownloadService = new NEPScpDownloadServiceImpl(
             ftpUrl,
@@ -62,7 +62,9 @@ public class NEPFetcher extends AbstractFileFetcher {
             hostKey,
             false,
             Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
-        Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"));
+        Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"),
+            5, false
+            );
     }
 
 

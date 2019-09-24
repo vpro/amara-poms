@@ -6,27 +6,20 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara.domain.Subtitles;
-import nl.vpro.amara.domain.Task;
-import nl.vpro.amara.domain.TaskType;
-import nl.vpro.amara.domain.Video;
+import nl.vpro.amara.domain.*;
 import nl.vpro.amara_poms.database.Manager;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
 import nl.vpro.amara_poms.poms.PomsClip;
+import nl.vpro.api.client.media.MediaRestClient;
 import nl.vpro.domain.media.AvailableSubtitles;
 import nl.vpro.domain.media.Program;
 import nl.vpro.domain.media.update.MediaUpdate;
-import nl.vpro.domain.subtitles.SubtitlesContent;
-import nl.vpro.domain.subtitles.SubtitlesFormat;
-import nl.vpro.domain.subtitles.SubtitlesType;
-import nl.vpro.rs.media.MediaRestClient;
+import nl.vpro.domain.subtitles.*;
 import nl.vpro.util.TimeUtils;
 
 /**

@@ -10,7 +10,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
+
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.database.task.DatabaseTask;
@@ -130,7 +131,7 @@ public class Manager implements Iterable<DatabaseTask> {
 
 
     @Override
-    @Nonnull
+    @NonNull
     public Iterator<DatabaseTask> iterator() {
         return tasks.iterator();
     }

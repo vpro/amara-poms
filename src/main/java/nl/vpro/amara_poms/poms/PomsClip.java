@@ -13,14 +13,11 @@ import javax.xml.bind.JAXB;
 import org.apache.commons.lang3.StringUtils;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.AVFileFormat;
-import nl.vpro.domain.media.Program;
-import nl.vpro.domain.media.ProgramType;
-import nl.vpro.domain.media.RelationDefinition;
+import nl.vpro.api.client.media.MediaRestClient;
+import nl.vpro.domain.media.*;
 import nl.vpro.domain.media.support.TextualType;
 import nl.vpro.domain.media.update.*;
 import nl.vpro.logging.LoggerOutputStream;
-import nl.vpro.rs.media.MediaRestClient;
 
 /**
  * @author Joost Aafjes
