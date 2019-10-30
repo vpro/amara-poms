@@ -2,8 +2,8 @@ package nl.vpro.amara_poms.poms;
 
 import lombok.extern.slf4j.Slf4j;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara_poms.Config;
 
@@ -14,7 +14,7 @@ import nl.vpro.amara_poms.Config;
 public class PomsCollectionTest  {
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Config.init();
     }

@@ -1,7 +1,7 @@
 package nl.vpro.amara_poms.poms;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.image.ImageType;
@@ -10,15 +10,15 @@ import nl.vpro.domain.media.support.Image;
 import nl.vpro.domain.media.support.OwnerType;
 
 import static org.assertj.core.api.Java6Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 /**
  * @author joost
  */
 public class PomsBroadcastTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         Config.init();
     }

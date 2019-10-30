@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara.domain.Language;
 import nl.vpro.amara.domain.Task;

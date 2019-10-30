@@ -3,8 +3,8 @@ package nl.vpro.amara_poms.poms.fetchers;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.domain.media.MediaBuilder;
@@ -15,7 +15,7 @@ import nl.vpro.domain.media.MediaBuilder;
  */
 public class M4vWithLsFetcherTest {
 
-    @Before
+    @BeforeEach
     public void init() {
         Map<String, String> config = new HashMap<>();
         config.put("h264.source.dir", "/tmp");

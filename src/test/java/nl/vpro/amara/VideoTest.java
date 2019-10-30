@@ -1,7 +1,7 @@
 package nl.vpro.amara;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -9,8 +9,8 @@ import nl.vpro.amara.domain.Video;
 import nl.vpro.amara.domain.VideoMetadata;
 import nl.vpro.amara_poms.Config;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * @author Joost
@@ -19,7 +19,7 @@ public class VideoTest {
 
     private final static Logger LOG = LoggerFactory.getLogger(VideoTest.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
 
         Config.init();

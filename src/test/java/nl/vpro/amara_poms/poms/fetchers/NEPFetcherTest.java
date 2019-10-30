@@ -7,15 +7,12 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.MediaBuilder;
-import nl.vpro.domain.media.Platform;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.*;
 import nl.vpro.domain.media.support.OwnerType;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NEPFetcherTest {
 
 
-    @Before
+    @BeforeEach
     public void init() {
         Map<String, String> config = new HashMap<>();
         config.put("nep.source.dir", "/tmp");

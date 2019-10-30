@@ -2,26 +2,19 @@ package nl.vpro.amara_poms.poms.fetchers;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPathExpressionException;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.*;
 import org.xml.sax.SAXException;
 
 import com.google.common.io.Files;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.domain.media.AVFileFormat;
-import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.MediaBuilder;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.*;
 import nl.vpro.domain.media.support.OwnerType;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -32,7 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class HaspFetcherTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         Map<String, String> props = new HashMap<>();
         props.put("videofile.dir", "/e/ap/video.dir");
@@ -59,7 +52,7 @@ public class HaspFetcherTest {
     }
 
     @Test
-    @Ignore
+    @Disabled
     public void testDamnJava() {
         File rootDir = new File("/tmp");
         for (File f : Files.fileTraverser().depthFirstPreOrder(rootDir)) {

@@ -2,14 +2,12 @@ package nl.vpro.amara_poms.poms.fetchers;
 
 import java.net.URI;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.domain.media.AVFileFormat;
-import nl.vpro.domain.media.MediaTestDataBuilder;
-import nl.vpro.domain.media.Program;
+import nl.vpro.domain.media.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class UseLocationFetcherTest {
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         Config.init();
     }

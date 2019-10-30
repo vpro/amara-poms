@@ -1,22 +1,12 @@
 package nl.vpro.amara_poms;
 
-import java.io.IOException;
-import java.time.Duration;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara.domain.Video;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 import nl.vpro.amara_poms.poms.SourceFetcher;
-import nl.vpro.amara_poms.poms.fetchers.NEPFetcher;
-import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.MediaBuilder;
-import nl.vpro.domain.media.Platform;
-import nl.vpro.domain.media.Program;
-import nl.vpro.domain.media.support.OwnerType;
 
 import static org.mockito.Mockito.mock;
 
@@ -26,7 +16,7 @@ import static org.mockito.Mockito.mock;
  */
 public class AmaraPublisherTest {
 
-    @Before
+    @BeforeEach
     public void init() {
         Config.init();
     }

@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.SortedSet;
 
-import org.junit.*;
+import org.junit.jupiter.api.*;
 
 import nl.vpro.amara_poms.Config;
 import nl.vpro.api.client.media.MediaRestClient;
@@ -15,14 +15,14 @@ import nl.vpro.domain.media.update.ProgramUpdate;
  * @author Michiel Meeuwissen
  * @since 1.0
  */
-@Ignore("This is an integration test connecting to an actual server")
+@Disabled("This is an integration test connecting to an actual server")
 @Slf4j
 public class IntegratiePomsTest {
 
     String pomsMidBroadcast = "VPWON_1250959";
     String midCollectionFrom = "POMS_S_VPRO_1416538"; // NetInNederland - te vertalen;
 
-    @Before
+    @BeforeEach
     public void init() {
         Config.init();
     }

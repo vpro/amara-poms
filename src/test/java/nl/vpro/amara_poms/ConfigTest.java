@@ -1,7 +1,7 @@
 package nl.vpro.amara_poms;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class ConfigTest {
 
-    @Before
+    @BeforeEach
     public void setup() {
         Config.init();
     }

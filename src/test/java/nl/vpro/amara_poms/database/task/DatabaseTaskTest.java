@@ -2,13 +2,12 @@ package nl.vpro.amara_poms.database.task;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.Duration;
-import java.time.Instant;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import nl.vpro.amara.domain.Task;
@@ -25,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public class DatabaseTaskTest {
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Config.init();
     }

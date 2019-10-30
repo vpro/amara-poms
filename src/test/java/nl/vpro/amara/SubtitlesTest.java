@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +14,8 @@ import nl.vpro.amara.domain.Subtitles;
 import nl.vpro.amara_poms.Config;
 import nl.vpro.amara_poms.poms.PomsBroadcast;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author joost
@@ -24,7 +24,7 @@ public class SubtitlesTest {
 
     final static Logger LOG = LoggerFactory.getLogger(SubtitlesTest.class);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         Config.init();
     }

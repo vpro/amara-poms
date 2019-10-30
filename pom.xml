@@ -62,40 +62,71 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <api.client.version>5.11.0</api.client.version>
-    <poms.shared.version>5.11.0</poms.shared.version>
+    <poms.version>5.12-SNAPSHOT</poms.version>
 
-    <jackson2.version>2.9.10</jackson2.version>
-    <amara-java.version>0.8</amara-java.version>
-    <vpro.shared.version>2.8.0</vpro.shared.version>
+    <jackson2.version>2.10.0</jackson2.version>
+    <amara-java.version>0.10-SNAPSHOT</amara-java.version>
+    <vpro.shared.version>2.9-SNAPSHOT</vpro.shared.version>
     <slf4j.version>1.7.25</slf4j.version>
     <lombok.version>1.18.10</lombok.version>
-    <assertj.version>3.13.2</assertj.version>
-    <mockito.version>3.0.0</mockito.version>
+    <assertj.version>3.14.0</assertj.version>
+    <mockito.version>3.1.0</mockito.version>
+    <junit.version>5.5.2</junit.version>
+
   </properties>
 
+
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.junit</groupId>
+        <artifactId>junit-bom</artifactId>
+        <type>pom</type>
+        <version>${junit.version}</version>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${jackson2.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+       <dependency>
+        <groupId>nl.vpro.shared</groupId>
+        <artifactId>vpro-shared-bom</artifactId>
+        <version>${vpro.shared.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+       <dependency>
+        <groupId>nl.vpro.poms</groupId>
+        <artifactId>poms-bom</artifactId>
+        <version>${poms.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <dependency>
       <groupId>nl.vpro.poms.api-clients</groupId>
       <artifactId>media-backend-api-client</artifactId>
-      <version>${api.client.version}</version>
     </dependency>
     <dependency>
       <groupId>nl.vpro.media</groupId>
       <artifactId>media-test</artifactId>
-      <version>${poms.shared.version}</version>
     </dependency>
     <dependency>
       <groupId>nl.vpro.media</groupId>
       <artifactId>media-nep</artifactId>
-      <version>${poms.shared.version}</version>
     </dependency>
      <dependency>
       <groupId>nl.vpro.subtitles</groupId>
       <artifactId>subtitles-domain</artifactId>
-      <version>${poms.shared.version}</version>
-    </dependency>
+     </dependency>
     <dependency>
       <groupId>nl.vpro.amara</groupId>
       <artifactId>amara-java</artifactId>
@@ -104,7 +135,6 @@
     <dependency>
       <groupId>nl.vpro.shared</groupId>
       <artifactId>vpro-shared-util</artifactId>
-      <version>${vpro.shared.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.el</groupId>
@@ -142,9 +172,8 @@
     </dependency>
 
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
