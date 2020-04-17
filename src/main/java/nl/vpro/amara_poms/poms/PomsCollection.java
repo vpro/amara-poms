@@ -1,5 +1,6 @@
 package nl.vpro.amara_poms.poms;
 
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import nl.vpro.domain.media.update.*;
  * @author joost
  */
 @Slf4j
+@ToString
 public class PomsCollection implements Iterable<MemberUpdate> {
     private final GroupUpdate group;
     private final MediaUpdateList<MemberUpdate> memberUpdateArrayList;
@@ -38,8 +40,9 @@ public class PomsCollection implements Iterable<MemberUpdate> {
     @Override
     public Iterator<MemberUpdate> iterator() {
         return memberUpdateArrayList.iterator();
-
     }
+
+
 
 
 

@@ -56,5 +56,15 @@ public class PomsBroadcastTest {
 
     }
 
+    @Test
+    public void AMARAPOMS63() throws Exception {
+        PomsBroadcast pomsBroadcast = new PomsBroadcast("POMS_S_VPRO_3762086", null);
+
+        assertEquals(0, pomsBroadcast.downloadSubtitles());
+
+        System.out.println(pomsBroadcast.getSubtitles());
+    }
+
+
 
 }

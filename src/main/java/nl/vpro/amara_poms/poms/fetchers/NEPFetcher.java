@@ -3,19 +3,14 @@ package nl.vpro.amara_poms.poms.fetchers;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.*;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
 
 import nl.vpro.amara_poms.Config;
-import nl.vpro.domain.media.Location;
-import nl.vpro.domain.media.MediaObject;
-import nl.vpro.domain.media.Platform;
+import nl.vpro.domain.media.*;
 import nl.vpro.domain.media.support.OwnerType;
-import nl.vpro.nep.domain.NEPItemizeRequest;
 import nl.vpro.nep.domain.NEPItemizeResponse;
 import nl.vpro.nep.service.NEPDownloadService;
 import nl.vpro.nep.service.NEPItemizeService;
@@ -44,8 +39,8 @@ public class NEPFetcher extends AbstractFileFetcher {
 
 
 
-    private static final String starttime = "00:00:00.000";
-    private static final String endtime = "02:00:00.000";
+    private static final Duration starttime = Duration.ZERO;
+    private static final Duration endtime = Duration.ofHours(2);
 
 
     public NEPFetcher() {
@@ -53,7 +48,7 @@ public class NEPFetcher extends AbstractFileFetcher {
             new File(Config.getRequiredConfig("nep.videofile.dir")),
             "mp4",
             Config.getRequiredConfig("nep.download.url.base"));
-        nepItemizeService = new NEPItemizeServiceImpl(nepUrl, () -> nepKey);
+        nepItemizeService = new NEPItemizeServiceImpl(nepUrl, nepKey);
 
         nepDownloadService = new NEPScpDownloadServiceImpl(
             ftpUrl,
@@ -79,13 +74,7 @@ public class NEPFetcher extends AbstractFileFetcher {
             if (location.getOwner() == OwnerType.AUTHORITY && location.getPlatform() == Platform.INTERNETVOD) {
                 try {
                     //call to NEP
-                    NEPItemizeRequest request = NEPItemizeRequest.builder()
-                        .identifier(mid)
-                        .starttime(starttime)
-                        .endtime(endtime)
-                        .max_bitrate(nepBitRate)
-                        .build();
-                    outputFileName = requestItem(request);
+                    outputFileName = requestItem(mid);
 
                     File outputFile = produce(null, mid);
                     final Instant start = Instant.now();
@@ -112,8 +101,8 @@ public class NEPFetcher extends AbstractFileFetcher {
         return FetchResult.notAble();
     }
 
-    protected String requestItem(NEPItemizeRequest request) {
-        NEPItemizeResponse response = nepItemizeService.itemize(request);
+    protected String requestItem(String mid) {
+        NEPItemizeResponse response = nepItemizeService.itemize(mid, starttime,  endtime, nepBitRate);
         String outputFileName = response.getOutput_filename();
         return outputFileName;
     }

@@ -32,6 +32,11 @@ public class PomsCollectionTest  {
         PomsCollection pomsCollection = new PomsCollection("ABC");
     }
 
-
+ @Test
+    public void testGetCollectionnWithdeleted() {
+        // load collection
+        PomsCollection pomsCollection = new PomsCollection("POMS_S_VPRO_3762086");
+        log.info("{}", pomsCollection);
+    }
 
 }
