@@ -66,10 +66,6 @@ public class PomsBroadcast {
         return subtitles;
     }
 
-    public String getDuration() {
-        return String.valueOf(program.getDuration().get().getSeconds());
-    }
-
     public PomsBroadcast(String mid, MediaObject program) {
         this.mid = mid;
         this.program = program;
@@ -87,7 +83,7 @@ public class PomsBroadcast {
      *
      * @return NO_ERROR if successfull, otherwise errorcode
      */
-    public int downloadSubtitles() throws IOException {
+    public int downloadSubtitles() {
         try {
 
             Subtitles subtitlesObject = Config.getPomsClient().getBackendRestService()
@@ -147,7 +143,7 @@ public class PomsBroadcast {
                 // check against 'WEBVTT'
                 if (content.startsWith("WEBVTT")) {
                     log.info("Subtitles downloaded from " + urlName);
-                    log.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("(\\r|\\n)", ""), 100));
+                    log.info("Subtitle content:" + StringUtils.abbreviate(content.replaceAll("([\\r\\n])", ""), 100));
                     subtitles = content;
                 } else {
                     returnValue = Config.ERROR_POM_SUBTITLES_NOT_FOUND;

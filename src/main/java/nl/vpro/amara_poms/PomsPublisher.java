@@ -199,7 +199,7 @@ public class PomsPublisher {
             return null;
         }
         Instant start = Instant.now();
-        MediaUpdate found = null;
+        MediaUpdate<?> found = null;
         while (Duration.between(start, Instant.now()).compareTo(Duration.ofSeconds(30)) < 0) {
             found = backend.get(pomsClipId);
             Thread.sleep(50000);
@@ -220,7 +220,7 @@ public class PomsPublisher {
         return pomsClipId;
     }
 
-    protected nl.vpro.domain.subtitles.Subtitles addSubtitlesToPoms(String mid, Subtitles subs) throws IOException {
+    protected nl.vpro.domain.subtitles.Subtitles addSubtitlesToPoms(String mid, Subtitles subs) {
         nl.vpro.domain.subtitles.Subtitles subtitles = amaraToPomsSubtitles(subs, mid);
         log.info("Creating {} in {}", subtitles.getId(), backend);
         backend.setSubtitles(subtitles);

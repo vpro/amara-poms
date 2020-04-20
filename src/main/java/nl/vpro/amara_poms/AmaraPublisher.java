@@ -21,7 +21,7 @@ import nl.vpro.domain.media.update.MemberUpdate;
 @Slf4j
 public class AmaraPublisher {
 
-    private Manager dbManager = Config.getDbManager();
+    private final Manager dbManager = Config.getDbManager();
 
     private final SourceFetcher fetcher;
 

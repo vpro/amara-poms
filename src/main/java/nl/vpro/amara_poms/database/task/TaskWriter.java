@@ -48,9 +48,13 @@ public class TaskWriter {
             log.error("Error in CsvFileWriter !!! " + e.getMessage(), e);
         } finally {
             try {
-                fileWriter.flush();
-                fileWriter.close();
-                csvFilePrinter.close();
+                if (fileWriter != null) {
+                    fileWriter.flush();
+                    fileWriter.close();
+                }
+                if (csvFilePrinter != null) {
+                    csvFilePrinter.close();
+                }
             } catch (IOException e) {
                 log.error("Error while flushing/closing fileWriter/csvPrinter !!!", e);
             }

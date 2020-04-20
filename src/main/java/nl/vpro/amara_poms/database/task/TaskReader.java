@@ -27,7 +27,7 @@ public class TaskReader {
 
         try (
             FileReader fileReader  = new FileReader(fileName);
-            CSVParser csvFileParser= new CSVParser(fileReader,csvFileFormat) ;
+            CSVParser csvFileParser= new CSVParser(fileReader,csvFileFormat)
         ) {
             Iterator<CSVRecord> iterator = csvFileParser.iterator();
 
