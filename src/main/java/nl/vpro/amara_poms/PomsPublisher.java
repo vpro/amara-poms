@@ -44,7 +44,7 @@ public class PomsPublisher {
         }
     }
 
-    public void process(Task amaraTask) throws IOException, InterruptedException {
+    private void process(Task amaraTask) throws IOException, InterruptedException {
         //find existing task or create one
         DatabaseTask task = identifyTaskinDatabase(amaraTask);
         //valid amaraTask? Then start processing
