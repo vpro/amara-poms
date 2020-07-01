@@ -87,7 +87,7 @@ public class PomsBroadcast {
         try {
 
             Subtitles subtitlesObject = Config.getPomsClient().getBackendRestService()
-                .getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true, false);
+                .getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true);
             if (subtitlesObject != null) {
                 CountedIterator<StandaloneCue> parsed = SubtitlesUtil.standaloneIterator(subtitlesObject, false, true);
                 ByteArrayOutputStream subtitleBytes = new ByteArrayOutputStream();
@@ -132,13 +132,12 @@ public class PomsBroadcast {
 
             // always check HTTP response code first
             if (responseCode == HttpURLConnection.HTTP_OK) {
-                InputStream inputStream = httpConn.getInputStream();
-
-                StringWriter writer = new StringWriter();
-                IOUtils.copy(inputStream, writer, "UTF-8");
-                String content = writer.toString();
-
-                inputStream.close();
+                String content;
+                try (InputStream inputStream = httpConn.getInputStream()) {
+                    StringWriter writer = new StringWriter();
+                    IOUtils.copy(inputStream, writer, "UTF-8");
+                    content = writer.toString();
+                }
 
                 // check against 'WEBVTT'
                 if (content.startsWith("WEBVTT")) {

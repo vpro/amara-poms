@@ -76,7 +76,7 @@ public class IntegratiePomsTest {
 
         long duration = pomsBroadcast.getUpdate().getDuration().getSeconds();
 
-        log.info("Duration:" + Long.toString(duration));
+        log.info("Duration:" + duration);
         log.info("Image url: " + pomsBroadcast.getThumbNailUrl());
         log.info("Title:" + pomsBroadcast.getTitle());
         log.info("Subtitle:" + pomsBroadcast.getSubTitle());
