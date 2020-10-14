@@ -40,7 +40,11 @@ public class PomsPublisher {
         Iterator<Task> amaraTasks = Config.getAmaraClient().teams().getTasks(TaskType.Approve, after);
         while(amaraTasks.hasNext()) {
             Task task = amaraTasks.next();
-            process(task);
+            try {
+                process(task);
+            } catch (Exception e) {
+                log.error("Failure for {}: {}. Continuing with the next one", e.getMessage(), e);
+            }
         }
     }
 
