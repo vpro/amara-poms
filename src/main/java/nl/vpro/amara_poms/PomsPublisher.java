@@ -163,14 +163,17 @@ public class PomsPublisher {
     protected Optional<String> getPomsSourceMid(Task amaraTask) {
         final Video amaraVideo = Config.getAmaraClient().videos().get(amaraTask.getVideo_id());
         if (amaraVideo.getMetadata().getLocation() != null) {
-            log.info("poms source mid found in video metadata");
-            return Optional.of(amaraVideo.getMetadata().getLocation());
+            String location = amaraVideo.getMetadata().getLocation();
+            log.info("poms source mid (location: {}) found in video metadata. For video id: {}", location, amaraTask.getVideo_id());
+            return Optional.of(location);
         } else if (amaraVideo.getPomsMidFromVideoUrl() != null) {
-            log.info("poms source mid found in video url");
-            return Optional.of(amaraVideo.getPomsMidFromVideoUrl());
+            String pomsMidFromVideoUrl = amaraVideo.getPomsMidFromVideoUrl();
+            log.info("poms source mid: {} found in video url {}. For video id:  {}", pomsMidFromVideoUrl, amaraVideo.getVideo_url(), amaraTask.getVideo_id());
+            return Optional.of(pomsMidFromVideoUrl);
         } else if (identifyTaskinDatabase(amaraTask).getPomsSourceMid() != null) {
-            log.info("poms source mid found in database");
-            return Optional.of(identifyTaskinDatabase(amaraTask).getPomsSourceMid());
+            String pomsSourceMid = identifyTaskinDatabase(amaraTask).getPomsSourceMid();
+            log.info("poms source mid {} found in database. For video id: {}", pomsSourceMid, amaraTask.getVideo_id());
+            return Optional.of(pomsSourceMid);
         } else {
             log.info("no poms source mid found");
             return Optional.empty();

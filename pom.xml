@@ -71,6 +71,9 @@
     <assertj.version>3.17.2</assertj.version>
     <mockito.version>3.5.13</mockito.version>
     <junit.version>5.7.0</junit.version>
+
+    <spring.version>5.2.9.RELEASE</spring.version>
+
   </properties>
 
 
@@ -160,13 +163,13 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
-      <version>1.7</version>
+      <version>1.8</version>
     </dependency>
 
      <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.8</version>
+      <version>1.9</version>
     </dependency>
 
     <dependency>
@@ -196,7 +199,13 @@
     <dependency>
       <groupId>com.hierynomus</groupId>
       <artifactId>sshj</artifactId>
-      <version>0.27.0</version>
+      <version>0.30.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>${spring.version}</version>
     </dependency>
 
     <!--  <dependency>
