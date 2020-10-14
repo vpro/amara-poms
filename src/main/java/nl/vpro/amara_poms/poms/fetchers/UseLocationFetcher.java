@@ -4,6 +4,7 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URI;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -32,8 +33,9 @@ public class UseLocationFetcher implements SourceFetcher {
     @Override
     public FetchResult fetch(MediaObject program) {
         //File dest = new File(Config.getRequiredConfig("videofile.dir"), program.getMid() + ".mp4");
+        Instant now = Instant.now();
         for (Location location : program.getLocations()) {
-            if (location.isPublishable() && FORMATS.contains(location.getAvFileFormat())) {
+            if (location.isPublishable(now) && FORMATS.contains(location.getAvFileFormat())) {
                 URI uri;
                 try {
                     uri = URI.create(location.getProgramUrl());
