@@ -27,15 +27,15 @@ public class NEPFetcher extends AbstractFileFetcher {
     private final NEPItemizeService nepItemizeService;
     private final NEPDownloadService nepDownloadService;
 
-    private String nepUrl = Config.getRequiredConfig("nep.player.itemize.url");
-    private String nepKey = Config.getRequiredConfig("nep.player.itemize.key");
+    private final String nepUrl = Config.getRequiredConfig("nep.player.itemize.url");
+    private final String nepKey = Config.getRequiredConfig("nep.player.itemize.key");
 
-    private int nepBitRate = Config.getRequiredConfigAsInt("bitrate");
+    private final int nepBitRate = Config.getRequiredConfigAsInt("bitrate");
 
-    private String ftpUrl = Config.getRequiredConfig("nep.sftp.url");
-    private String username = Config.getRequiredConfig("nep.sftp.username");
-    private String password = Config.getRequiredConfig("nep.sftp.password");
-    private String hostKey = Config.getRequiredConfig("nep.sftp.hostkey");
+    private final String ftpUrl = Config.getRequiredConfig("nep.sftp.url");
+    private final String username = Config.getRequiredConfig("nep.sftp.username");
+    private final String password = Config.getRequiredConfig("nep.sftp.password");
+    private final String hostKey = Config.getRequiredConfig("nep.sftp.hostkey");
 
 
 
@@ -57,9 +57,9 @@ public class NEPFetcher extends AbstractFileFetcher {
             hostKey,
             false,
             Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
-        Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"),
+            Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"),
             5, false
-            );
+        );
     }
 
 
@@ -79,7 +79,10 @@ public class NEPFetcher extends AbstractFileFetcher {
                     File outputFile = produce(null, mid);
                     final Instant start = Instant.now();
                     log.info("Writing to {}", outputFile);
-                    nepDownloadService.download(outputFileName, () -> {
+                    nepDownloadService.download(
+                        "",
+                        outputFileName,
+                        () -> {
                         try {
                             return new FileOutputStream(outputFile);
                         } catch (FileNotFoundException fne) {
@@ -102,7 +105,7 @@ public class NEPFetcher extends AbstractFileFetcher {
     }
 
     protected String requestItem(String mid) {
-        NEPItemizeResponse response = nepItemizeService.itemize(mid, starttime,  endtime, nepBitRate);
+        NEPItemizeResponse response = nepItemizeService.itemizeMid(mid, starttime,  endtime, nepBitRate);
         String outputFileName = response.getOutput_filename();
         return outputFileName;
     }

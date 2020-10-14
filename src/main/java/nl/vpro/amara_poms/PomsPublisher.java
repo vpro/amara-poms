@@ -183,6 +183,9 @@ public class PomsPublisher {
             // already has a target mid. So nothing needs to be done.
             return null;
         } else {
+            if (StringUtils.isBlank(task.getPomsSourceMid())) {
+                throw new IllegalStateException("Source mid of " + task + " is empty");
+            }
             return createClipAndAddSubtitles(task.getPomsSourceMid(), amaraTask, amaraSubtitles, task);
         }
     }
@@ -192,10 +195,13 @@ public class PomsPublisher {
         String pomsClipId;
         try {
             pomsClipId = PomsClip.create(Config.getPomsClient(), pomsMid, amaraTask.getLanguage(), amaraSubtitles.getTitle(), amaraSubtitles.getDescription(), getCridForTask(amaraTask));
-            log.info("Poms clip created with poms id " + pomsClipId);
+            if (StringUtils.isBlank(pomsClipId)){
+                throw new IllegalStateException("Didn't create proper poms clip");
+            }
+            log.info("Poms clip created with poms id {}", pomsClipId);
         } catch (Exception exception) {
-            log.error("Error creating clip for poms mid " + pomsMid + ", language " + amaraTask.getLanguage());
-            log.error(exception.toString());
+            log.error("Error creating clip for poms mid {}, language {}",
+                pomsMid, amaraTask.getLanguage(), exception);
             return null;
         }
         Instant start = Instant.now();

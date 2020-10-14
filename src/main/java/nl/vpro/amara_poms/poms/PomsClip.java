@@ -41,6 +41,9 @@ public class PomsClip {
         // get source broadcast
         log.info("Getting {} from {}", sourcePomsMid, client);
         Program fullProgram = client.getFullProgram(sourcePomsMid);
+        if (fullProgram == null) {
+            throw new IllegalArgumentException("Could not find '" + sourcePomsMid + "'");
+        }
         ProgramUpdate sourceProgramUpdate = ProgramUpdate.create(fullProgram);
 
         // construct new CLIP
@@ -89,10 +92,10 @@ public class PomsClip {
             update.setDescriptions(sourceProgramUpdate.getDescriptions());
         }
 
-        // set duration
         update.setDuration(sourceProgramUpdate.getDuration());
 
         update.setBroadcasters(sourceProgramUpdate.getBroadcasters());
+
         update.setAVType(sourceProgramUpdate.getAVType());
 
         // set location

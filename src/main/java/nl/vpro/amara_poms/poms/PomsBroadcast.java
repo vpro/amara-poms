@@ -87,7 +87,7 @@ public class PomsBroadcast {
         try {
 
             Subtitles subtitlesObject = Config.getPomsClient().getBackendRestService()
-                .getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true);
+                .getSubtitles(mid, Locales.DUTCH, SubtitlesType.CAPTION, true, false);
             if (subtitlesObject != null) {
                 CountedIterator<StandaloneCue> parsed = SubtitlesUtil.standaloneIterator(subtitlesObject, false, true);
                 ByteArrayOutputStream subtitleBytes = new ByteArrayOutputStream();
