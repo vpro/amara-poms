@@ -3,7 +3,7 @@
 
   <groupId>nl.vpro.amara_poms</groupId>
   <artifactId>amara_poms_publisher</artifactId>
-  <version>1.8.1-SNAPSHOT</version>
+  <version>1.9</version>
 
   <packaging>jar</packaging>
 
