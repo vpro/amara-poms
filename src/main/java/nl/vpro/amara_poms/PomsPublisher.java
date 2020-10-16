@@ -32,7 +32,7 @@ public class PomsPublisher {
     private final List<String> targetLanguages = Arrays.asList(Config.getRequiredConfigAsArray("amara.task.target.languages"));
 
 
-    public void processAmaraTasks() throws IOException, InterruptedException {
+    public void processAmaraTasks()  {
         Instant after = Instant.now()
             .minus(TimeUtils.parseDuration(Config.getRequiredConfig("amara.task.fetchlastperiod"))
                 .orElseThrow(IllegalArgumentException::new));
@@ -50,70 +50,87 @@ public class PomsPublisher {
 
     private void process(Task amaraTask) throws IOException, InterruptedException {
         //find existing task or create one
-        DatabaseTask task = identifyTaskinDatabase(amaraTask);
+        DatabaseTask databaseTask = identifyTaskinDatabase(amaraTask);
+
+        if (! isValid(amaraTask)) {
+            log.debug("amara task {} is invalid, can't be processed", amaraTask);
+            return;
+        }
+        Subtitles subtitles = getSubtitles(amaraTask);
+        if (subtitles == null) {
+            log.info("No subtitles found for {}. Skipping", amaraTask);
+            return;
+        }
         //valid amaraTask? Then start processing
-        if (isValid(amaraTask) && getSubtitles(amaraTask) != null) {
-            log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
-            //add subtitles to pomsSourceMid
-            Optional<String> sourceMid = getPomsSourceMid(amaraTask);
-            if (sourceMid.isPresent()) {
-                Subtitles subtitles = getSubtitles(amaraTask);
-                if ("nl".equals(subtitles.getLanguage().toLocale().getLanguage())) {
-                    Program program =  backend.getFullProgram(sourceMid.get());
-                    if (program == null) {
-                        log.error("No program found with mid {}", sourceMid.get());
-                        return;
-                    }
-                    Optional<AvailableSubtitles> nlCaption = program.getAvailableSubtitles()
-                        .stream()
-                        .filter(av -> "nl".equals(av.getLanguage().getLanguage()) && av.getType() == SubtitlesType.CAPTION)
-                        .findFirst();
-                    if (nlCaption.isPresent()) {
-                        log.debug("Not adding dutch subtitles since dutchs captions are available");
-                    } else {
-                        nl.vpro.domain.subtitles.Subtitles pomsSubtitles = addSubtitlesToPoms(sourceMid.get(), subtitles);
-                        log.info("Added subtitles {} to poms source mid {}", pomsSubtitles.getId(), sourceMid.get());
-                    }
-                } else {
-                    nl.vpro.domain.subtitles.Subtitles pomsSubtitles = addSubtitlesToPoms(sourceMid.get(), subtitles);
-                    log.info("Added subtitles {} to poms source mid {}", pomsSubtitles.getId(), sourceMid.get());
-                }
+        log.info("Start processing video_id {}  for language {} (assigned to {})", amaraTask.getVideo_id(), amaraTask.getLanguage(), amaraTask.getAssignee().getUsername());
+        //add subtitles to pomsSourceMid
+        Optional<String> sourceMid = getPomsSourceMid(amaraTask);
+        sourceMid.ifPresent(s -> {
+            addSubtitlesToPomsWithChecks(s, subtitles);
+            if (StringUtils.isBlank(databaseTask.getPomsSourceMid())) {
+                databaseTask.setPomsSourceMid(s);
+                log.info("Corrected poms source mid of database task {}", databaseTask);
+                dbManager.addOrUpdateTask(databaseTask);
+            }
+            }
+        );
 
+
+        //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
+        String pomsTargetId = createPomsTargetIdIfNeeded(databaseTask, amaraTask, getSubtitles(amaraTask));
+
+        if (databaseTask.getSubtitlesVersionNo() == null || databaseTask.isNewer(getSubtitles(amaraTask).getVersion_no()) || pomsTargetId != null) {
+            log.info("New subtitle version detected: {}", getSubtitles(amaraTask).getVersion_no());
+
+            if (pomsTargetId != null) {
+                // This means that it was just created.
+
+                databaseTask.setPomsTargetId(pomsTargetId);
+                databaseTask.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
+                databaseTask.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
+                databaseTask.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
+                dbManager.addOrUpdateTask(databaseTask);
+
+                //write subtitles to file
+                File file = getSubtitleFile(pomsTargetId, getSubtitles(amaraTask));
+                try (OutputStream out = new FileOutputStream(file)) {
+                    log.info("Writing subtitles to {}", file);
+                    out.write(getSubtitles(amaraTask).getSubtitles().getBytes(StandardCharsets.UTF_8));
+                } catch (FileNotFoundException e) {
+                    log.error(e.getMessage(), e);
+                }
             }
 
+            // update version no in local db
+            databaseTask.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
+            databaseTask.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
 
-            //if subtitles are new and pomsclip does not yet exist, then create new clip and add subtitles
-            if (task.getSubtitlesVersionNo() == null || task.isNewer(getSubtitles(amaraTask).getVersion_no())) {
-                log.info("New subtitle version detected:" + getSubtitles(amaraTask).getVersion_no());
-                String pomsTargetId = createPomsTargetIdIfNeeded(task, amaraTask, getSubtitles(amaraTask));
+            //remove task if completed
+            dbManager.addOrUpdateTask(databaseTask);
 
-                if (pomsTargetId != null) {
-                    // This means that it was just created.
+        }
+    }
 
-                    task.setPomsTargetId(pomsTargetId);
-                    task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
-                    task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
-                    task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
-                    dbManager.addOrUpdateTask(task);
-
-                    //write subtitles to file
-                    File file = getSubtitleFile(pomsTargetId, getSubtitles(amaraTask));
-                    try (OutputStream out = new FileOutputStream(file)) {
-                        log.info("Writing subtitles to {}", file);
-                        out.write(getSubtitles(amaraTask).getSubtitles().getBytes(StandardCharsets.UTF_8));
-                    } catch (FileNotFoundException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                }
-
-                // update version no in local db
-                task.setSubtitlesVersionNo(getSubtitles(amaraTask).getVersion_no());
-                task.setStatus(DatabaseTask.STATUS_NEW_AMARA_SUBTITLES_WRITTEN);
-
-                //remove task if completed
-                dbManager.addOrUpdateTask(task);
-
+    protected void addSubtitlesToPomsWithChecks(String sourceMid, Subtitles subtitles) {
+        if ("nl".equals(subtitles.getLanguage().toLocale().getLanguage())) {
+            Program program =  backend.getFullProgram(sourceMid);
+            if (program == null) {
+                log.error("No program found with mid {}", sourceMid);
+                return;
             }
+            Optional<AvailableSubtitles> nlCaption = program.getAvailableSubtitles()
+                .stream()
+                .filter(av -> "nl".equals(av.getLanguage().getLanguage()) && av.getType() == SubtitlesType.CAPTION)
+                .findFirst();
+            if (nlCaption.isPresent()) {
+                log.debug("Not adding dutch subtitles since dutchs captions are available");
+            } else {
+                nl.vpro.domain.subtitles.Subtitles pomsSubtitles = addSubtitlesToPoms(sourceMid, subtitles);
+                log.info("Added subtitles {} to poms source mid {}", pomsSubtitles.getId(), sourceMid);
+            }
+        } else {
+            nl.vpro.domain.subtitles.Subtitles pomsSubtitles = addSubtitlesToPoms(sourceMid, subtitles);
+            log.info("Added subtitles {} to poms source mid {}", pomsSubtitles.getId(), sourceMid);
         }
     }
 
@@ -185,15 +202,15 @@ public class PomsPublisher {
         }
     }
 
-    protected String createPomsTargetIdIfNeeded(DatabaseTask task, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException, IOException {
-        if (StringUtils.isNotEmpty(task.getPomsTargetId())) {
+    protected String createPomsTargetIdIfNeeded(DatabaseTask databaseTask, Task amaraTask, Subtitles amaraSubtitles) throws InterruptedException, IOException {
+        if (StringUtils.isNotEmpty(databaseTask.getPomsTargetId())) {
             // already has a target mid. So nothing needs to be done.
             return null;
         } else {
-            if (StringUtils.isBlank(task.getPomsSourceMid())) {
-                throw new IllegalStateException("Source mid of " + task + " is empty");
+            if (StringUtils.isBlank(databaseTask.getPomsSourceMid())) {
+                throw new IllegalStateException("Source mid of " + databaseTask + " is empty");
             }
-            return createClipAndAddSubtitles(task.getPomsSourceMid(), amaraTask, amaraSubtitles, task);
+            return createClipAndAddSubtitles(databaseTask.getPomsSourceMid(), amaraTask, amaraSubtitles, databaseTask);
         }
     }
 
@@ -205,7 +222,7 @@ public class PomsPublisher {
             if (StringUtils.isBlank(pomsClipId)){
                 throw new IllegalStateException("Didn't create proper poms clip");
             }
-            log.info("Poms clip created with poms id {}", pomsClipId);
+            log.info("Poms clip created with poms id {} (translation for {})", pomsClipId, pomsMid);
         } catch (Exception exception) {
             log.error("Error creating clip for poms mid {}, language {}",
                 pomsMid, amaraTask.getLanguage(), exception);
@@ -222,12 +239,12 @@ public class PomsPublisher {
 
         }
         if (found == null) {
-            log.warn("Didn't find just created object");
+            log.warn("Didn't find just created object with id {} (translation for {})", pomsClipId, pomsMid);
         }
         task.setPomsTargetId(pomsClipId);
         task.setStatus(DatabaseTask.STATUS_UPLOADED_TO_POMS);
         dbManager.addOrUpdateTask(task);
-        log.info("Poms clip created with poms id " + pomsClipId);
+        log.info("Poms clip created with poms id {}", pomsClipId);
         addSubtitlesToPoms(pomsClipId, amaraSubtitles);
         log.info("Translation in language '{}' added to POMS clip {} and POMS mid {}", amaraTask.getLanguage(), pomsClipId, pomsMid);
         return pomsClipId;
@@ -235,7 +252,7 @@ public class PomsPublisher {
 
     protected nl.vpro.domain.subtitles.Subtitles addSubtitlesToPoms(String mid, Subtitles subs) {
         nl.vpro.domain.subtitles.Subtitles subtitles = amaraToPomsSubtitles(subs, mid);
-        log.info("Creating {} in {}", subtitles.getId(), backend);
+        log.info("Creating subtitles '{}' in {}", subtitles.getId(), backend);
         backend.setSubtitles(subtitles);
         return subtitles;
 
@@ -253,7 +270,7 @@ public class PomsPublisher {
             pomsSubtitles.setContent(new SubtitlesContent(SubtitlesFormat.WEBVTT, subtitles.getSubtitles()));
         }
 
-        // There is a bug in poms 5.5: it can't except subtitles without cue numbers.
+        // There is a bug in poms 5.5: it can't accept subtitles without cue numbers.
         //nl.vpro.domain.subtitles.Subtitles corrected = nl.vpro.domain.subtitles.Subtitles.from(pomsSubtitles.getId(), SubtitlesUtil.fillCueNumber(SubtitlesUtil.parse(pomsSubtitles, false)).iterator());
 
         return pomsSubtitles;
