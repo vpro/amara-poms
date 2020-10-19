@@ -62,7 +62,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <poms.version>5.16.0</poms.version>
+    <poms.version>5.17.1</poms.version>
     <jackson2.version>2.11.3</jackson2.version>
     <amara-java.version>0.10</amara-java.version>
     <vpro.shared.version>2.16.0</vpro.shared.version>
