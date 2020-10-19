@@ -43,7 +43,7 @@ public class PomsPublisher {
             try {
                 process(task);
             } catch (Exception e) {
-                log.error("Failure for {}: {}. Continuing with the next one", task, e.getMessage(), e);
+                log.error("Failure for {}: {}. Continuing with the next one", task, e.getClass() + ":" + e.getMessage(), e);
             }
         }
     }
