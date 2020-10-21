@@ -214,7 +214,7 @@ public class PomsPublisher {
         }
     }
 
-    protected String createClipAndAddSubtitles(String pomsMid, Task amaraTask, Subtitles amaraSubtitles, DatabaseTask task) throws InterruptedException, IOException {
+    protected String createClipAndAddSubtitles(String pomsMid, Task amaraTask, Subtitles amaraSubtitles, DatabaseTask task) throws InterruptedException {
         // no poms target id, so create new Poms Clip
         String pomsClipId;
         try {
@@ -253,7 +253,7 @@ public class PomsPublisher {
     protected nl.vpro.domain.subtitles.Subtitles addSubtitlesToPoms(String mid, Subtitles subs) {
         nl.vpro.domain.subtitles.Subtitles subtitles = amaraToPomsSubtitles(subs, mid);
         log.info("Creating subtitles '{}' in {}", subtitles.getId(), backend);
-        backend.setSubtitles(subtitles);
+        log.info("{}", backend.setSubtitles(subtitles));
         return subtitles;
 
     }

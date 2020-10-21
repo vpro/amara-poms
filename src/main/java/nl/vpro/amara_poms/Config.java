@@ -3,6 +3,7 @@ package nl.vpro.amara_poms;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
+import java.time.Duration;
 import java.util.*;
 
 import org.apache.commons.text.StringSubstitutor;
@@ -103,23 +104,20 @@ public class Config {
 
     public static MediaRestClient getPomsClient() {
         if (pomsClient == null) {
-            // get config
-            String username = getRequiredConfig("poms.username");
-            String password = getRequiredConfig("poms.password");
-            String url = getRequiredConfig("poms.url");
-            String errors = getRequiredConfig("poms.errors");
 
             pomsClient = MediaRestClient.builder()
-                .userName(username)
-                .password(password)
-                .errors(errors)
-                .baseUrl(url)
+                .userName(getRequiredConfig("poms.username"))
+                .password(getRequiredConfig("poms.password"))
+                .errors(getRequiredConfig("poms.errors"))
+                .baseUrl(getRequiredConfig("poms.url"))
                 .waitForRetry(true)
                 .lookupCrids(false)
+                .connectTimeout(Duration.ofSeconds(5))
+                .connectionRequestTimeout(Duration.ofSeconds(5))
+                .socketTimeout(Duration.ofSeconds(5))
+                .throttleRate(50d)
                 .build()
             ;
-
-            pomsClient.setThrottleRate(50);
         }
 
         return pomsClient;
