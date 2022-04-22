@@ -73,7 +73,7 @@
     <mockito.version>3.6.0</mockito.version>
     <junit.version>5.7.0</junit.version>
 
-    <spring.version>5.3.18</spring.version>
+    <spring.version>5.3.19</spring.version>
 
   </properties>
 
