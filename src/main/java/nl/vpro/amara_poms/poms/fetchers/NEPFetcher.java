@@ -58,7 +58,9 @@ public class NEPFetcher extends AbstractFileFetcher {
             false,
             Arrays.asList("/local/bin/scp", "/usr/bin/scp"),
             Arrays.asList("/usr/bin/sshpass", "/opt/local/bin/sshpass"),
-            5, false
+            5,
+            5,
+            false
         );
     }
 
