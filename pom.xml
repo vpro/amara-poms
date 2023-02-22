@@ -62,14 +62,14 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <poms.version>7.2.0</poms.version>
+    <poms.version>7.2.2</poms.version>
     <jackson2.version>2.14.2</jackson2.version>
     <amara-java.version>0.11-SNAPSHOT</amara-java.version>
     <vpro.shared.version>3.1.0</vpro.shared.version>
     <slf4j.version>1.7.25</slf4j.version>
-    <lombok.version>1.18.24</lombok.version>
+    <lombok.version>1.18.26</lombok.version>
     <assertj.version>3.24.2</assertj.version>
-    <mockito.version>5.1.0</mockito.version>
+    <mockito.version>5.1.1</mockito.version>
     <junit.version>5.9.2</junit.version>
 
     <spring.version>5.3.25</spring.version>
@@ -167,7 +167,7 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-csv</artifactId>
-      <version>1.9.0</version>
+      <version>1.10.0</version>
     </dependency>
 
      <dependency>
@@ -203,7 +203,7 @@
     <dependency>
       <groupId>com.hierynomus</groupId>
       <artifactId>sshj</artifactId>
-      <version>0.34.0</version>
+      <version>0.35.0</version>
     </dependency>
 
     <dependency>
