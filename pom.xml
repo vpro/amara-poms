@@ -72,7 +72,7 @@
     <mockito.version>5.1.1</mockito.version>
     <junit.version>5.9.2</junit.version>
 
-    <spring.version>5.3.25</spring.version>
+    <spring.version>5.3.26</spring.version>
 
   </properties>
 
